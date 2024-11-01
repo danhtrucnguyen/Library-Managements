@@ -22,7 +22,7 @@ public class Book {
 	
 	private String title;
 	
-	private Author author;
+	private String description; 
 	
-	private Publisher publisher;
+
 }
