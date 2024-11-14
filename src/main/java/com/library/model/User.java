@@ -49,7 +49,7 @@ public class User {
 
 	private Date lockTime;
 //	
-//	private String resetToken;
+	private String resetToken;
 
 
 }

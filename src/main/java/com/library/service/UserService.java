@@ -22,4 +22,10 @@ public interface UserService {
 	public boolean unlockAccountTimeExpired(User user);
 
 	public void resetAttempt(int userId);
+	
+	public void updateUserResetToken(String email, String resetToken);
+	
+	public User getUserByToken(String token);
+	
+	public User updateUser(User user);
 }
