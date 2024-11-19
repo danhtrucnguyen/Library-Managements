@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.util.List;
 //import java.util.List;
 //import java.util.Random;
 import java.util.UUID;
@@ -28,7 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import com.library.model.User;
-
+import com.library.model.Category;
+import com.library.service.CategoryService;
 import com.library.service.UserService;
 import com.library.util.CommonUtil;
 
@@ -49,6 +51,9 @@ public class HomeController {
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private CategoryService categoryService;
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m) {
@@ -57,6 +62,9 @@ public class HomeController {
 			User userDtls = userService.getUserByEmail(email);
 			m.addAttribute("user", userDtls);
 		}
+		
+		List<Category> allActiveCategory = categoryService.getAllActiveCategory();
+		m.addAttribute("categorys", allActiveCategory);
 
 	}
 
@@ -143,6 +151,7 @@ public class HomeController {
 	
 	@GetMapping("/reset-password")
 	public String showResetPassword(@RequestParam String token, HttpSession session, Model m) {
+
 		User userByToken = userService.getUserByToken(token);
 
 		if (userByToken == null) {
@@ -152,7 +161,7 @@ public class HomeController {
 		m.addAttribute("token", token);
 		return "reset_password";
 	}
-	
+
 	@PostMapping("/reset-password")
 	public String resetPassword(@RequestParam String token, @RequestParam String password, HttpSession session,
 			Model m) {
@@ -165,9 +174,9 @@ public class HomeController {
 			userByToken.setPassword(passwordEncoder.encode(password));
 			userByToken.setResetToken(null);
 			userService.updateUser(userByToken);
-			//session.setAttribute("succMsg", "Password change successfully");
-			m.addAttribute("msg","Password change successfully");
-			
+			// session.setAttribute("succMsg", "Password change successfully");
+			m.addAttribute("msg", "Password change successfully");
+
 			return "message";
 		}
 

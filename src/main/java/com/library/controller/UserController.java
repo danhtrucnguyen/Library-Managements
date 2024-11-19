@@ -2,6 +2,7 @@ package com.library.controller;
 
 import java.security.Principal;
 //import java.util.List;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,9 +13,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RequestParam;
 
-
+import com.library.model.Category;
 import com.library.model.User;
-
+import com.library.service.CategoryService;
 import com.library.service.UserService;
 
 //import jakarta.servlet.http.HttpSession;
@@ -25,6 +26,9 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private CategoryService categoryService;
 
 	@GetMapping("/")
 	public String home() {
@@ -38,6 +42,9 @@ public class UserController {
 			User userDtls = userService.getUserByEmail(email);
 			m.addAttribute("user", userDtls);
 		}
+		
+		List<Category> allActiveCategory = categoryService.getAllActiveCategory();
+		m.addAttribute("categorys", allActiveCategory);
 
 	}
 

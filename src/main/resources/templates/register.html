@@ -1,122 +1,138 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-	>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Register Template</title>
+	<link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/login.css">
 </head>
+
 <body>
-	<section>
-		<div class="container mt-5 p-5">
+	<main>
+		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-5 p-5">
-					<img alt="" src="img/ecom.png" width="100%" height="400px">
-				</div>
-				<div class="col-md-7 p-2">
-					<div class="card shadow p-3 mb-5 bg-body-tertiary rounded">
-						<div class="card-header text-center">
-							<p class="fs-4 text-center">Register</p>
-							<th:block th:if="${session.succMsg}">
-								<p class="text-success fw-bold">[[${session.succMsg}]]</p>
-								<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
-							</th:block>
-
-							<th:block th:if="${session.errorMsg}">
-								<p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
-								<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
-							</th:block>
-						</div>
-						<div class="card-body">
-							<form action="/saveUser" enctype="multipart/form-data"
-								method="post">
-								<div class="row">
-									<div class="col">
-										<label class="form-label">Full Name</label> <input required
-											class="form-control" name="name" type="text">
-									</div>
-
-									<div class="col">
-										<label class="form-label">Mobile Number</label> <input
-											required class="form-control" name="mobileNumber"
-											type="number">
-									</div>
-
-								</div>
-
-								<div class="mb-3">
-									<label class="form-label">Email</label> <input required
-										class="form-control" name="email" type="email">
-								</div>
-
-
-								<div class="row">
-									<div class="col">
-										<label class="form-label">Address</label> <input required
-											class="form-control" name="address" type="text">
-									</div>
-
-									<div class="col">
-										<label class="form-label">City</label> <input required
-											class="form-control" name="city" type="text">
-									</div>
-
-								</div>
-
-								<div class="row">
-									<div class="col">
-										<label class="form-label">State</label> <input required
-											class="form-control" name="state" type="text">
-									</div>
-
-								<!--	<div class="col">
-										<label class="form-label">Pincode</label> <input required
-											class="form-control" name="pincode" type="number">
-									</div>  -->
-
-								</div>
-
-
-								<div class="row">
-									<div class="col">
-										<label class="form-label">Password</label> <input required
-											class="form-control" name="password" type="password">
-									</div>
-
-									<div class="col">
-										<label class="form-label">Confirm Password</label> <input
-											required class="form-control" name="cpassword"
-											type="password">
-									</div>
-
-								</div>
-
-
-
-								<div class="mb-3">
-									<label class="form-label">Profile Image</label> <input
-										class="form-control" name="img" type="file">
-								</div>
-
-
-
-
-
-
-								<button type="submit"
-									class="btn bg-primary text-white col-md-12">Register</button>
-							</form>
-						</div>
-
-						<div class="card-footer text-center">
-
-							have an account ? <a href="/login" class="text-decoration-none">Login
-							</a>
-						</div>
+				<div class="col-sm-6 login-section-wrapper">
+					<div class="brand-wrapper">
+						<img src="/images/logo1.jpg" alt="logo" class="logo">
 					</div>
+					<div class="register-wrapper my-auto">
+						<h1 class="login-title">Register</h1>
+						<th:block th:if="${session.succMsg}">
+							<p class="text-success fw-bold">[[${session.succMsg}]]</p>
+							<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+						</th:block>
+
+						<th:block th:if="${session.errorMsg}">
+							<p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
+							<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+						</th:block>
+						<form id="registerForm" action="/saveUser" enctype="multipart/form-data" method="post">
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label for="fullName">Full Name</label>
+									<input type="text" name="fullName" id="fullName" class="form-control"
+										placeholder="Enter your full name" required>
+								</div>
+								<div class="form-group col-md-6">
+									<label for="phoneNumber">Phone Number</label>
+									<input type="text" name="phoneNumber" id="phoneNumber" class="form-control"
+										placeholder="Enter your phone number" maxlength="10" required>
+									<small class="form-text text-muted">Please enter a valid 10-digit phone
+										number.</small>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label for="email">Email</label>
+									<input type="email" name="email" id="email" class="form-control"
+										placeholder="email@example.com" required>
+								</div>
+								<div class="form-group col-md-6">
+									<label for="address">Address</label>
+									<input type="text" name="address" id="address" class="form-control"
+										placeholder="Enter your address" required>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label for="district">District</label>
+									<input type="text" name="district" id="district" class="form-control"
+										placeholder="Enter your district" required>
+								</div>
+								<div class="form-group col-md-6">
+									<label for="city">City</label>
+									<input type="text" name="city" id="city" class="form-control"
+										placeholder="Enter your city" required>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label for="password">Password</label>
+									<input type="password" name="password" id="password" class="form-control"
+										placeholder="Enter your password" required>
+								</div>
+								<div class="form-group col-md-6">
+									<label for="confirmPassword">Confirm Password</label>
+									<input type="password" name="confirmPassword" id="confirmPassword"
+										class="form-control" placeholder="Confirm your password" required>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="profileImage">Profile Image</label>
+								<input type="file" name="profileImage" id="profileImage" class="form-control"
+									accept="image/*">
+							</div>
+
+							<button name="login" id="login" type="submit" class="btn btn-block login-btn">REGISTER</button>
+						</form>
+						<p class="register-wrapper-footer-text">Already have an account? <a href="/signin"
+								class="text-reset">Log in here</a></p>
+					</div>
+				</div>
+				<div class="col-sm-6 px-0 d-none d-sm-block">
+					<img src="/images/login1.jpg" alt="register image" class="login-img">
+					<p class="text-white font-weight-medium text-center flex-grow align-self-end footer-link">
+						“Sách là phép màu độc nhất và diệu kỳ trong đời thực” <a href="https://www.bootstrapdash.com/"
+							target="_blank" class="text-white"></a> – Stephen King
+					</p>
 				</div>
 			</div>
 		</div>
+	</main>
 
-	</section>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	<script>
+		// Phone number validation
+		$('#phoneNumber').on('input', function () {
+			var phone = $(this).val();
+			if (phone.length === 10 && !/^\d{10}$/.test(phone)) {
+				alert('Phone number must be 10 digits.');
+				$(this).val('');
+			}
+		});
+
+		// Password confirmation validation
+		$('#registerForm').submit(function (event) {
+			var password = $('#password').val();
+			var confirmPassword = $('#confirmPassword').val();
+
+			if (password !== confirmPassword) {
+				alert('Passwords do not match!');
+				event.preventDefault();
+			}
+		});
+	</script>
 </body>
+
 </html>
