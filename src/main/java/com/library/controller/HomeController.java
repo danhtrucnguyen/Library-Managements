@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 //import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,7 +30,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import com.library.model.User;
+import com.library.model.Book;
 import com.library.model.Category;
+import com.library.service.BookService;
 import com.library.service.CategoryService;
 import com.library.service.UserService;
 import com.library.util.CommonUtil;
@@ -54,6 +57,9 @@ public class HomeController {
 	
 	@Autowired
 	private CategoryService categoryService;
+	
+	@Autowired
+	private BookService bookService;
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m) {
@@ -180,5 +186,23 @@ public class HomeController {
 			return "message";
 		}
 
+	}
+	
+	@GetMapping("/books")
+	public String books(Model m, @RequestParam(value = "category", defaultValue = "") String category) {
+		// System.out.println("category="+category);
+		List<Category> categories = categoryService.getAllActiveCategory();
+		List<Book> books = bookService.getAllActiveBooks(category);
+		m.addAttribute("categories", categories);
+		m.addAttribute("books", books);
+		m.addAttribute("paramValue", category);
+		return "book";
+	}
+
+	@GetMapping("/book/{id}")
+	public String book(@PathVariable int id, Model m) {
+		Book productById = bookService.getBookById(id);
+		m.addAttribute("book", productById);
+		return "view_book";
 	}
 }
