@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Book</title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="/css/style.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+
+<body>
+	<section class="single-product padding-large">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="d-flex gap-3 product-preview">
+						<div class="swiper thumb-swiper w-50">
+
+						</div>
+						<div class="swiper large-swiper border rounded-3 overflow-hidden">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide bg-white">
+									<img th:src="@{'/images/book_img/'+${book.image}}" alt="single-product"
+										class="img-fluid">
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="product-info ps-lg-5 pt-3 pt-lg-0">
+						<div class="element-header">
+							<h1 class="product-title">[[${book.bookName}]]</h1>
+
+						</div>
+						<div class="rating text-warning d-flex align-items-center mb-2">
+							<svg class="star star-fill">
+								<use xlink:href="#star-fill"></use>
+							</svg>
+							<svg class="star star-fill">
+								<use xlink:href="#star-fill"></use>
+							</svg>
+							<svg class="star star-fill">
+								<use xlink:href="#star-fill"></use>
+							</svg>
+							<svg class="star star-fill">
+								<use xlink:href="#star-fill"></use>
+							</svg>
+							<svg class="star star-fill">
+								<use xlink:href="#star-fill"></use>
+							</svg>
+						</div>
+					</div>
+					<p>[[${book.description}]]</p>
+					<hr>
+
+
+					<div class="product-quantity my-3">
+						<div class="item-title">
+							<l>2 in stock</l>
+						</div>
+						<div class="stock-button-wrap mt-2 d-flex flex-wrap align-items-center">
+							<div class="product-quantity">
+								<div class="input-group product-qty align-items-center" style="max-width: 150px;">
+									<span class="input-group-btn">
+										<button type="button"
+											class="bg-white shadow border rounded-3 fw-light quantity-left-minus"
+											data-type="minus" data-field="">
+											<svg width="16" height="16">
+												<use xlink:href="#minus"></use>
+											</svg>
+										</button>
+									</span>
+									<input type="text" id="quantity" name="quantity"
+										class="form-control bg-white shadow border rounded-3 py-2 mx-2 input-number text-center"
+										value="1" min="1" max="100" required>
+									<span class="input-group-btn">
+										<button type="button"
+											class="bg-white shadow border rounded-3 fw-light quantity-right-plus"
+											data-type="plus" data-field="">
+											<svg width="16" height="16">
+												<use xlink:href="#plus"></use>
+											</svg>
+										</button>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="action-buttons my-3 d-flex flex-wrap gap-3">
+						<a href="#" class="btn">Order now</a>
+						<a href="#" class="btn btn-dark">Add to cart</a>
+						<a href="#" class="btn btn-dark">
+							<svg class="heart" width="21" height="21">
+								<use xlink:href="#heart"></use>
+							</svg>
+						</a>
+					</div>
+					<div class="meta-product my-3">
+										<div class="meta-item d-flex mb-1">
+											<span class="fw-medium me-2">Số lượng: </span>
+											<ul class="select-list list-unstyled d-flex mb-0">
+												<li data-value="S" class="select-item">[[${book.stock}]]</li>
+											</ul>
+										</div>
+										<div class="meta-item d-flex mb-1">
+											<span class="fw-medium me-2"></span>
+											<ul class="select-list list-unstyled d-flex mb-0">
+												<li data-value="S" class="select-item">
+													<a href="#">Danh mục: </a>[[${book.category}]]
+												</li>
+
+											</ul>
+										</div>
+										<div class="meta-item d-flex mb-1">
+											<span class="fw-medium me-2">Tác Giả:</span>
+											<ul class="select-list list-unstyled d-flex mb-0">
+												<li data-value="S" class="select-item">
+													<a href="#">[[${book.author}]]</a>
+												</li>
+
+											</ul>
+										</div>
+									</div>
+				</div>
+				
+				<hr>
+
+			</div>
+		</div>
+		</div>
+	</section>
+
+</body>
+
+</html>
