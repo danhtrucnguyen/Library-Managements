@@ -49,7 +49,7 @@
 						<tbody>
 							<tr th:each="p,c:${books}">
 								<th scope="row">[[${c.count}]]</th>
-								<td><img th:src="@{'/img/product_img/'+${p.image}}"
+								<td><img th:src="@{'/images/book_img/'+${p.image}}"
 									width="70px" height="70px"></td>
 								<td>[[${p.bookName}]]</td>
 								<td>[[${p.author}]]</td>
@@ -60,10 +60,10 @@
 								<td>[[${p.isbn}]]</td>
 								<td><a th:href="@{'/admin/editBook/'+${p.id}}"
 									class="btn btn-sm btn-primary"><i
-										class="fa-solid fa-pen-to-square"></i>Edit</a> <a
+										class="fa-solid fa-pen-to-square"></i>Sửa</a> <a
 									th:href="@{'/admin/deleteBook/'+${p.id}}"
 									class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i>
-										Delete</a></td>
+										Xóa</a></td>
 							</tr>
 
 						</tbody>

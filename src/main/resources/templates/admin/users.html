@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="ISO-8859-1">
+<meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
@@ -26,14 +26,14 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th scope="col">Sl No</th>
-								<th scope="col">Profile</th>
-								<th scope="col">Name</th>
+								<th scope="col">Số thứ tự</th>
+								<th scope="col">Ảnh</th>
+								<th scope="col">Họ tên</th>
 								<th scope="col">Email</th>
-								<th scope="col">Mobile No</th>
-								<th scope="col">Address</th>
-								<th scope="col">Status</th>
-								<th scope="col">Action</th>
+								<th scope="col">Số điện thoại</th>
+								<th scope="col">Địa chỉ</th>
+								<th scope="col">Trạng thái</th>
+								<th scope="col">Hoạt động</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -44,7 +44,7 @@
 								<td>[[${u.name}]]</td>
 								<td>[[${u.email}]]</td>
 								<td>[[${u.mobileNumber}]]</td>
-								<td>[[${u.address+','+u.city+','+u.state+','+u.pincode}]]</td>
+								<td>[[${u.address+','+u.city+','+u.state}]]</td>
 								<td>[[${u.isEnable}]]</td>
 								<td><a th:href="@{'/admin/updateSts?status=true&id='+${u.id}}"
 									class="btn btn-sm btn-primary">Active</a> 
