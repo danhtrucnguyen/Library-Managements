@@ -13,6 +13,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -77,5 +78,38 @@ public class BookController {
 	public String loadViewBook(Model m) {
 		m.addAttribute("books", bookService.getAllBooks());
 		return "admin/view_admin_book";
+	}
+	
+	@GetMapping("/deleteBook/{id}")
+	public String deleteBook(@PathVariable int id, HttpSession session) {
+		Boolean deleteBook = bookService.deleteBook(id);
+		if (deleteBook) {
+			session.setAttribute("succMsg", "Sách được xóa khỏi hệ thống");
+		} else {
+			session.setAttribute("errorMsg", "Có lỗi xảy ra");
+		}
+		return "redirect:/admin/view_admin_book";
+	}
+
+	@GetMapping("/editBook/{id}")
+	public String editBook(@PathVariable int id, Model m) {
+		m.addAttribute("book", bookService.getBookById(id));
+		m.addAttribute("categories", categoryService.getAllCategory());
+		return "admin/edit_book";
+	}
+	
+	@PostMapping("/updateBook")
+	public String updateBook(@ModelAttribute Book book, @RequestParam("file") MultipartFile image,
+			HttpSession session, Model m) {
+
+		
+			Book updateBook = bookService.updateBook(book, image);
+			if (!ObjectUtils.isEmpty(updateBook)) {
+				session.setAttribute("succMsg", "Sách được cập nhật thành công");
+			} else {
+				session.setAttribute("errorMsg", "Có lỗi xảy ra");
+			}
+		
+		return "redirect:/admin/editBook/" + book.getId();
 	}
 }
