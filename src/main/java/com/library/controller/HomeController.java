@@ -32,8 +32,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.library.model.User;
 import com.library.model.Book;
 import com.library.model.Category;
+import com.library.model.Publisher;
 import com.library.service.BookService;
+import com.library.service.CartService;
 import com.library.service.CategoryService;
+import com.library.service.PublisherService;
 import com.library.service.UserService;
 import com.library.util.CommonUtil;
 
@@ -59,7 +62,13 @@ public class HomeController {
 	private CategoryService categoryService;
 	
 	@Autowired
+	private CartService cartService;
+	
+	@Autowired
 	private BookService bookService;
+	
+	@Autowired
+	private PublisherService publisherService;
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m) {
@@ -67,6 +76,8 @@ public class HomeController {
 			String email = p.getName();
 			User userDtls = userService.getUserByEmail(email);
 			m.addAttribute("user", userDtls);
+			Integer countCart = cartService.getCountCart(userDtls.getId());
+			m.addAttribute("countCart", countCart);
 		}
 		
 		List<Category> allActiveCategory = categoryService.getAllActiveCategory();
@@ -189,20 +200,59 @@ public class HomeController {
 	}
 	
 	@GetMapping("/books")
-	public String books(Model m, @RequestParam(value = "category", defaultValue = "") String category) {
-		// System.out.println("category="+category);
-		List<Category> categories = categoryService.getAllActiveCategory();
-		List<Book> books = bookService.getAllActiveBooks(category);
-		m.addAttribute("categories", categories);
-		m.addAttribute("books", books);
-		m.addAttribute("paramValue", category);
-		return "book";
+	public String books(Model m, 
+	                    @RequestParam(value = "category", defaultValue = "") String category, 
+	                    @RequestParam(value = "publisher", defaultValue = "") String publisher) {
+	    // Lấy danh sách các danh mục
+	    List<Category> categories = categoryService.getAllActiveCategory();
+	    
+	    // Lấy danh sách các nhà xuất bản (giả sử bạn có dịch vụ nhà xuất bản)
+	    List<Publisher> publishers = publisherService.getAllActivePublisher(); // Bạn cần tạo dịch vụ này
+	    
+	    // Lấy sách theo danh mục hoặc nhà xuất bản
+	    List<Book> books = bookService.getAllActiveBooks(category, publisher); // Cập nhật phương thức này để hỗ trợ publisher
+	    
+	    // Truyền dữ liệu vào mô hình
+	    m.addAttribute("categories", categories);
+	    m.addAttribute("publishers", publishers);  // Truyền các nhà xuất bản vào
+	    m.addAttribute("books", books);
+	    m.addAttribute("paramCategory", category);  // Truyền giá trị category
+	    m.addAttribute("paramPublisher", publisher); // Truyền giá trị publisher
+	    
+	    return "book";  // Trả về view sách
 	}
+
+	
+//	@GetMapping("/books")
+//	public String books(Model m, @RequestParam(value = "category", defaultValue = "") String category) {
+//		// System.out.println("category="+category);
+//		List<Category> categories = categoryService.getAllActiveCategory();
+//		List<Book> books = bookService.getAllActiveBooks(category);
+//		m.addAttribute("categories", categories);
+//		m.addAttribute("books", books);
+//		m.addAttribute("paramValue", category);
+//		return "book";
+//	}
 
 	@GetMapping("/book/{id}")
 	public String book(@PathVariable int id, Model m) {
-		Book productById = bookService.getBookById(id);
-		m.addAttribute("book", productById);
+		Book bookById = bookService.getBookById(id);
+		m.addAttribute("book", bookById);
 		return "view_book";
 	}
+	
+	@GetMapping("/search")
+	public String searchBook(@RequestParam String ch, Model m) {
+		List<Book> searchBooks = bookService.searchBook(ch);
+		if (searchBooks.isEmpty()) {
+	        m.addAttribute("message", "Không tìm thấy sách");
+	    } else {
+	        m.addAttribute("books", searchBooks);
+	    }
+		List<Category> categories = categoryService.getAllActiveCategory();
+		m.addAttribute("categories", categories);
+		return "book";
+
+	}
+
 }
