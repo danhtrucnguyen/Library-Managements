@@ -21,8 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.library.model.Book;
 import com.library.model.Category;
+import com.library.model.Publisher;
 import com.library.service.BookService;
 import com.library.service.CategoryService;
+import com.library.service.PublisherService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -35,6 +37,9 @@ import org.springframework.util.ObjectUtils;
 public class BookController {
 	
 	@Autowired
+	private PublisherService publisherService;
+	
+	@Autowired
 	private CategoryService categoryService;
 	
 	@Autowired
@@ -44,6 +49,8 @@ public class BookController {
 	public String loadAddProduct(Model m) {
 		List<Category> categories = categoryService.getAllCategory();
 		m.addAttribute("categories", categories);
+		List<Publisher> publishers = publisherService.getAllPublisher();
+		m.addAttribute("publishers", publishers);
 		return "admin/add_book";
 	}
 	
@@ -95,6 +102,7 @@ public class BookController {
 	public String editBook(@PathVariable int id, Model m) {
 		m.addAttribute("book", bookService.getBookById(id));
 		m.addAttribute("categories", categoryService.getAllCategory());
+		m.addAttribute("publishers", publisherService.getAllPublisher());
 		return "admin/edit_book";
 	}
 	

@@ -20,6 +20,12 @@ public interface BookService {
 	
 	public Book updateBook(Book product, MultipartFile file);
 
-	public List<Book> getAllActiveBooks(String category);
+	public List<Book> getAllActiveBooks(String category, String publisher);
+	
+//	public List<Book> getAllActiveBooksPublisher(String publisher);
+	
+	public List<Book> searchBook(String ch);
+	
+	
 	
 }

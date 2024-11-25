@@ -40,16 +40,28 @@ public class BookServiceImpl implements BookService {
 	}
 	
 	@Override
-	public List<Book> getAllActiveBooks(String category) {
-		List<Book> books = null;
-		if (ObjectUtils.isEmpty(category)) {
-			books = bookRepository.findByIsActiveTrue();
-		}else {
-			books=bookRepository.findByCategory(category);
-		}
+	public List<Book> getAllActiveBooks(String category, String publisher) {
+	    List<Book> books = null;
 
-		return books;
+	    if (ObjectUtils.isEmpty(category) && ObjectUtils.isEmpty(publisher)) {
+	        // Nếu không có category và publisher, trả về tất cả sách đang hoạt động
+	        books = bookRepository.findByIsActiveTrue();
+	    } else if (!ObjectUtils.isEmpty(category) && !ObjectUtils.isEmpty(publisher)) {
+	        // Nếu có cả category và publisher, lọc theo cả hai
+	        books = bookRepository.findByCategoryAndPublisherAndIsActiveTrue(category, publisher);
+	    } else if (!ObjectUtils.isEmpty(category)) {
+	        // Nếu chỉ có category, lọc theo category
+	        books = bookRepository.findByCategoryAndIsActiveTrue(category);
+	    } else if (!ObjectUtils.isEmpty(publisher)) {
+	        // Nếu chỉ có publisher, lọc theo publisher
+	        books = bookRepository.findByPublisherAndIsActiveTrue(publisher);
+	    }
+
+	    return books;
 	}
+
+	
+
 	
 	@Override
 	public Boolean deleteBook(Integer id) {
@@ -73,6 +85,7 @@ public class BookServiceImpl implements BookService {
 		dbBook.setDescription(book.getDescription());
 		dbBook.setAuthor(book.getAuthor());
 		dbBook.setCategory(book.getCategory());
+		dbBook.setPublisher(book.getPublisher());
 		dbBook.setStock(book.getStock());
 		dbBook.setImage(imageName);
 		dbBook.setIsActive(book.getIsActive());
@@ -100,5 +113,10 @@ public class BookServiceImpl implements BookService {
 			return book;
 		}
 		return null;
+	}
+	
+	@Override
+	public List<Book> searchBook(String ch) {
+		return bookRepository.findByBookNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(ch, ch);
 	}
 }

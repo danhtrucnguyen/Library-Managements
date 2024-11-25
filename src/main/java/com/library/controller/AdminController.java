@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import com.library.model.User;
+import com.library.service.CartService;
 import com.library.service.CategoryService;
 import com.library.service.UserService	;
 import com.library.model.Category;
@@ -39,6 +40,9 @@ public class AdminController {
 	private UserService userService;
 	
 	@Autowired
+	private CartService cartService;
+	
+	@Autowired
 	private CategoryService categoryService;
 
 	@ModelAttribute
@@ -47,6 +51,8 @@ public class AdminController {
 			String email = p.getName();
 			User userDtls = userService.getUserByEmail(email);
 			m.addAttribute("user", userDtls);
+			Integer countCart = cartService.getCountCart(userDtls.getId());
+			m.addAttribute("countCart", countCart);
 		}
 
 		List<Category> allActiveCategory = categoryService.getAllActiveCategory();
