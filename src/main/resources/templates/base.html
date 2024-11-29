@@ -20,7 +20,29 @@
 	<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
 		rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-	
+	<style>
+		#feedbackButton {
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			z-index: 1000;
+			background-color: #007bff;
+			color: white;
+			border: none;
+			border-radius: 50%;
+			width: 60px;
+			height: 60px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			cursor: pointer;
+		}
+
+		#feedbackButton:hover {
+			background-color: #0056b3;
+		}
+	</style>
 </head>
 
 <body>
@@ -420,7 +442,121 @@
 	
 	<div th:replace="${content}"></div>
 
+	<!-- Feedback Button -->
+	<button id="feedbackButton">
+		<span>+</span>
+	</button>
 
+	<!-- Feedback Modal -->
+	<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="feedbackModalLabel">Phản hồi</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="feedbackForm">
+						<div class="mb-3">
+							<label for="fname" class="form-label">Họ và tên</label>
+							<input type="text" id="fname" class="form-control" placeholder="Họ và tên" required>
+						</div>
+						<div class="mb-3">
+							<label for="userEmail" class="form-label">Email</label>
+							<input type="email" id="userEmail" class="form-control" placeholder="Địa chỉ email" required>
+						</div>
+						<div class="mb-3">
+							<label for="fcontent" class="form-label">Nội dung</label>
+							<textarea id="fcontent" class="form-control" rows="4" placeholder="Nội dung phản hồi" required></textarea>
+						</div>
+						<button type="submit" class="btn btn-primary w-100" id="submitBtn">
+							Gửi phản hồi
+						</button>
+						<div id="loadingSpinner" style="display:none;" class="spinner-border text-primary" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Bootstrap JS -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		// Display modal on button click
+		const feedbackButton = document.getElementById('feedbackButton');
+		const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+
+		feedbackButton.addEventListener('click', () => {
+			feedbackModal.show();
+		});
+
+		// Handle feedback form submission
+		document.getElementById('feedbackForm').addEventListener('submit', function (e) {
+			e.preventDefault();
+
+			// Show loading spinner and hide submit button
+			document.getElementById('submitBtn').style.display = 'none';
+			document.getElementById('loadingSpinner').style.display = 'inline-block';
+
+			// Collect data from form
+			const fname = document.getElementById('fname').value;
+			const userEmail = document.getElementById('userEmail').value;
+			const fcontent = document.getElementById('fcontent').value;
+
+			// Basic validation for feedback content
+			if (!fcontent) {
+				alert('Nội dung phản hồi không được để trống!');
+				resetForm();
+				return;
+			}
+
+			// Basic email validation
+			if (!userEmail || !/\S+@\S+\.\S+/.test(userEmail)) {
+				alert('Vui lòng nhập địa chỉ email hợp lệ.');
+				resetForm();
+				return;
+			}
+
+			// Send feedback to backend
+			fetch('/feedback', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					name: fname,
+					userEmail: userEmail,
+					content: fcontent })
+			})
+					.then(response => {
+						if (response.ok) {
+							alert('Phản hồi đã được gửi thành công!');
+							resetForm();
+							feedbackModal.hide();  // Close modal after successful submission
+						} else if (response.status === 400) {
+							alert('Dữ liệu không hợp lệ. Vui lòng kiểm tra lại thông tin.');
+						} else {
+							alert('Có lỗi xảy ra khi gửi phản hồi. Vui lòng thử lại.');
+						}
+					})
+					.catch(error => {
+						console.error('Error:', error);
+						alert('Có lỗi xảy ra khi gửi phản hồi. Vui lòng thử lại.');
+					})
+					.finally(() => {
+						// Hide loading spinner and show submit button again
+						document.getElementById('loadingSpinner').style.display = 'none';
+						document.getElementById('submitBtn').style.display = 'inline-block';
+					});
+		});
+
+		// Reset form and hide loading spinner
+		function resetForm() {
+			document.getElementById('feedbackForm').reset();
+			document.getElementById('loadingSpinner').style.display = 'none';
+			document.getElementById('submitBtn').style.display = 'inline-block';
+		}
+	</script>
 
 	<script src="/js/jquery-1.11.0.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
