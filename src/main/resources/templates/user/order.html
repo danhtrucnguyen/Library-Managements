@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+
+<head>
+	<meta charset="UTF-8">
+
+	<title th:text="${title}">View Book</title>
+
+
+</head>
+
+<body>
+
+	<section class="hero-section position-relative padding-large"
+		style="background-image: url(/images/banner-image-bg-1.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 400px;">
+		<div class="hero-content">
+			<div class="container">
+				<div class="row">
+					<div class="text-center">
+						<h1>Thông tin thanh toán</h1>
+						<div class="breadcrumbs">
+							<span class="item">
+								<a href="/">Trang chủ > </a>
+							</span>
+							<span class="item text-decoration-underline">Thông tin thanh toán</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="checkout-wrap padding-large">
+		<div class="container">
+			<form class="form-group" action="/user/save-order" method="post">
+				<div class="row d-flex flex-wrap">
+					<div class="col-lg-6">
+						<h3 class="mb-3">Chi tiết thanh toán</h3>
+						<div class="billing-details">
+							<label for="fname">Họ*</label>
+							<input type="text" id="lname" name="lastName" class="form-control mt-2 mb-4 ps-3">
+							<label for="lname">Tên*</label>
+							<input type="text" id="fname" name="firstName" class="form-control mt-2 mb-4 ps-3">
+
+
+
+							<label for="address">Địa chỉ *</label>
+							<input type="text" id="adr" name="address" class="form-control mt-3 ps-3 mb-3">
+
+							<label for="district">Quận / Huyện *</label>
+							<input type="text" id="district" name="district" class="form-control mt-3 ps-3 mb-4">
+							<label for="city">Tỉnh/Thành phố *</label>
+							<input type="text" id="city" name="city" class="form-control mt-2 mb-4 ps-3">
+							<label for="phone">Số điện thoại *</label>
+							<input type="text" id="phone" name="mobileNo" class="form-control mt-2 mb-4 ps-3">
+							<label for="email">Email *</label>
+							<input type="text" id="email" name="email" class="form-control mt-2 mb-4 ps-3">
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div>
+							<h3 class="mb-3">Ghi chú</h3>
+							<div class="billing-details">
+								<textarea name="note" class="form-control pt-3 pb-3 ps-3 mt-2"></textarea>
+							</div>
+						</div>
+
+						<div class="cart-totals padding-medium pb-0">
+							<h3 class="mb-3">Thanh toán</h3>
+							<div class="total-price pb-3">
+								<table cellspacing="0" class="table text-capitalize">
+									<tbody>
+										<tr class="subtotal pt-2 pb-2 border-top border-bottom">
+											<th>Giá sản phẩm</th>
+											<td data-title="Subtotal">
+												<span class="price-amount amount text-primary ps-5 fw-light">
+													<bdi>
+														<span class="price-currency-symbol">[[${orderPrice}]]</span>đ
+													</bdi>
+												</span>
+											</td>
+										</tr>
+										<tr class="subtotal pt-2 pb-2 border-top border-bottom">
+											<th>Phí vận chuyển</th>
+											<td data-title="Subtotal">
+												<span class="price-amount amount text-primary ps-5 fw-light">
+													<bdi>
+														<span class="price-currency-symbol">20000</span>đ
+													</bdi>
+												</span>
+											</td>
+										</tr>
+										<tr class="order-total pt-2 pb-2 border-bottom">
+											<th>Tổng thanh toán</th>
+											<td data-title="Total">
+												<span class="price-amount amount text-primary ps-5 fw-light">
+													<bdi>
+														<span class="price-currency-symbol">[[${totalOrderPrice}]]</span>đ</bdi>
+												</span>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="list-group">
+								<label class="list-group-item d-flex gap-2 border-0">
+									<input class="form-check-input flex-shrink-0" type="radio" name="listGroupRadios"
+										id="listGroupRadios1" value="" checked>
+									<span>
+										<p class="mb-1">Thanh toán qua ví VN Pay</p>
+
+									</span>
+								</label>
+								<label class="list-group-item d-flex gap-2 border-0">
+									<input class="form-check-input flex-shrink-0" type="radio" name="listGroupRadios"
+										id="listGroupRadios2" value="">
+									<span>
+										<p class="mb-1">Thanh toán khi nhận hàng</p>
+
+									</span>
+
+							</div>
+							<div class="button-wrap mt-3">
+								<button type="submit" name="submit" class="btn">Đặt hàng</button>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			</form>
+		</div>
+	</section>
+
+	<section id="instagram">
+		<div class="container">
+			<div class="text-center mb-4">
+				<h3>Instagram</h3>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+					<figure class="instagram-item position-relative rounded-3">
+						<a href="https://templatesjungle.com/" class="image-link position-relative">
+							<div class="icon-overlay position-absolute d-flex justify-content-center">
+								<svg class="instagram">
+									<use xlink:href="#instagram"></use>
+								</svg>
+							</div>
+							<img src="images/insta-item1.jpg" alt="instagram" class="img-fluid rounded-3 insta-image">
+						</a>
+					</figure>
+				</div>
+				<div class="col-md-2">
+					<figure class="instagram-item position-relative rounded-3">
+						<a href="https://templatesjungle.com/" class="image-link position-relative">
+							<div class="icon-overlay position-absolute d-flex justify-content-center">
+								<svg class="instagram">
+									<use xlink:href="#instagram"></use>
+								</svg>
+							</div>
+							<img src="images/insta-item2.jpg" alt="instagram" class="img-fluid rounded-3 insta-image">
+						</a>
+					</figure>
+				</div>
+				<div class="col-md-2">
+					<figure class="instagram-item position-relative rounded-3">
+						<a href="https://templatesjungle.com/" class="image-link position-relative">
+							<div class="icon-overlay position-absolute d-flex justify-content-center">
+								<svg class="instagram">
+									<use xlink:href="#instagram"></use>
+								</svg>
+							</div>
+							<img src="images/insta-item3.jpg" alt="instagram" class="img-fluid rounded-3 insta-image">
+						</a>
+					</figure>
+				</div>
+				<div class="col-md-2">
+					<figure class="instagram-item position-relative rounded-3">
+						<a href="https://templatesjungle.com/" class="image-link position-relative">
+							<div class="icon-overlay position-absolute d-flex justify-content-center">
+								<svg class="instagram">
+									<use xlink:href="#instagram"></use>
+								</svg>
+							</div>
+							<img src="images/insta-item4.jpg" alt="instagram" class="img-fluid rounded-3 insta-image">
+						</a>
+					</figure>
+				</div>
+				<div class="col-md-2">
+					<figure class="instagram-item position-relative rounded-3">
+						<a href="https://templatesjungle.com/" class="image-link position-relative">
+							<div class="icon-overlay position-absolute d-flex justify-content-center">
+								<svg class="instagram">
+									<use xlink:href="#instagram"></use>
+								</svg>
+							</div>
+							<img src="images/insta-item5.jpg" alt="instagram" class="img-fluid rounded-3 insta-image">
+						</a>
+					</figure>
+				</div>
+				<div class="col-md-2">
+					<figure class="instagram-item position-relative rounded-3">
+						<a href="https://templatesjungle.com/" class="image-link position-relative">
+							<div class="icon-overlay position-absolute d-flex justify-content-center">
+								<svg class="instagram">
+									<use xlink:href="#instagram"></use>
+								</svg>
+							</div>
+							<img src="images/insta-item6.jpg" alt="instagram" class="img-fluid rounded-3 insta-image">
+						</a>
+					</figure>
+				</div>
+			</div>
+		</div>
+	</section>
+
+</body>
+
+</html>

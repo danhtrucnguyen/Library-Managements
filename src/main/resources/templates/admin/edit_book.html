@@ -69,6 +69,21 @@
 
 								<div class="row">
 									<div class="mb-3 col">
+										<label>Giá niêm yết</label> <input type="number" name="price"
+											th:value="${book.price}" class="form-control">
+									</div>
+									<div class="mb-3 col">
+										<label>Giảm giá</label> <input type="number" name="discount"
+											th:value="${book.discount}" class="form-control">
+									</div>
+									<div class="mb-3 col">
+										<label>Giá chiết khấu</label> <input type="number" readonly
+											th:value="${book.discountPrice}" class="form-control">
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="mb-3 col">
 										<label>Số lượng</label> <input type="number" name="stock"
 											th:value="${book.stock}" class="form-control">
 									</div>
