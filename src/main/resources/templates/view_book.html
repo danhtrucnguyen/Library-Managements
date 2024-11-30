@@ -9,6 +9,25 @@
 </head>
 
 <body>
+	<section class="hero-section position-relative padding-large"
+		style="background-image: url(/images/banner-image-bg-1.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 400px;">
+		<div class="hero-content">
+			<div class="container">
+				<div class="row">
+					<div class="text-center">
+						<h1>Chi tiết sách</h1>
+						<div class="breadcrumbs">
+							<span class="item">
+								<a href="index.html">Trang chủ > </a>
+							</span>
+							<span class="item text-decoration-underline">Chi tiết sách</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
 	<section class="single-product padding-large">
 		<div class="container">
 			<div class="row">
@@ -25,7 +44,20 @@
 				<div class="col-lg-6">
 					<div class="d-flex gap-3 product-preview">
 						<div class="swiper thumb-swiper w-50">
-
+							<div class="swiper-wrapper d-flex flex-wrap gap-3 align-content-start">
+								<div class="swiper-slide bg-white">
+									<img th:src="@{'/images/book_img/'+${book.image}}" alt="product-thumb"
+										class="img-fluid border rounded-3">
+								</div>
+								<div class="swiper-slide bg-white">
+									<img src="/images/product-thumbnail-2.png" alt="product-thumb"
+										class="img-fluid border rounded-3">
+								</div>
+								<div class="swiper-slide bg-white">
+									<img src="/images/product-thumbnail-3.png" alt="product-thumb"
+										class="img-fluid border rounded-3">
+								</div>
+							</div>
 						</div>
 						<div class="swiper large-swiper border rounded-3 overflow-hidden">
 							<div class="swiper-wrapper">
@@ -33,7 +65,12 @@
 									<img th:src="@{'/images/book_img/'+${book.image}}" alt="single-product"
 										class="img-fluid">
 								</div>
-
+								<div class="swiper-slide bg-white">
+									<img src="/images/product-large-2.png" alt="single-product" class="img-fluid">
+								</div>
+								<div class="swiper-slide bg-white">
+									<img src="/images/product-large-3.png" alt="single-product" class="img-fluid">
+								</div>
 							</div>
 						</div>
 					</div>
@@ -42,112 +79,115 @@
 					<div class="product-info ps-lg-5 pt-3 pt-lg-0">
 						<div class="element-header">
 							<h1 class="product-title">[[${book.bookName}]]</h1>
-
+							<div class="product-price d-flex align-items-center mt-2">
+								<span class="fs-2 fw-light text-primary me-2">[[${book.discountPrice}]]đ</span>
+								<del>[[${book.price}]]đ</del>
+							</div>
+							<div class="rating text-warning d-flex align-items-center mb-2">
+								<svg class="star star-fill">
+									<use xlink:href="#star-fill"></use>
+								</svg>
+								<svg class="star star-fill">
+									<use xlink:href="#star-fill"></use>
+								</svg>
+								<svg class="star star-fill">
+									<use xlink:href="#star-fill"></use>
+								</svg>
+								<svg class="star star-fill">
+									<use xlink:href="#star-fill"></use>
+								</svg>
+								<svg class="star star-fill">
+									<use xlink:href="#star-fill"></use>
+								</svg>
+							</div>
 						</div>
-						<div class="rating text-warning d-flex align-items-center mb-2">
-							<svg class="star star-fill">
-								<use xlink:href="#star-fill"></use>
-							</svg>
-							<svg class="star star-fill">
-								<use xlink:href="#star-fill"></use>
-							</svg>
-							<svg class="star star-fill">
-								<use xlink:href="#star-fill"></use>
-							</svg>
-							<svg class="star star-fill">
-								<use xlink:href="#star-fill"></use>
-							</svg>
-							<svg class="star star-fill">
-								<use xlink:href="#star-fill"></use>
-							</svg>
-						</div>
-					</div>
-					<p>[[${book.description}]]</p>
-					<hr>
+						<p>Tác giả: [[${book.author}]].</p>
+						<hr>
+						<div class="cart-wrap">
 
-
-					<div class="product-quantity my-3">
-						<div class="item-title">
-							<l>2 in stock</l>
-						</div>
-						<div class="stock-button-wrap mt-2 d-flex flex-wrap align-items-center">
-							<div class="product-quantity">
-								<div class="input-group product-qty align-items-center" style="max-width: 150px;">
-									<span class="input-group-btn">
-										<button type="button"
-											class="bg-white shadow border rounded-3 fw-light quantity-left-minus"
-											data-type="minus" data-field="">
-											<i class="fa-solid fa-minus"></i>
-										</button>
-									</span>
-									<input type="text" id="quantity" name="quantity"
-										class="form-control bg-white shadow border rounded-3 py-2 mx-2 input-number text-center"
-										value="1" min="1" max="100" required>
-									<span class="input-group-btn">
-										<button type="button"
-											class="bg-white shadow border rounded-3 fw-light quantity-right-plus"
-											data-type="plus" data-field="">
-											<i class="fa-solid fa-plus"></i>
-										</button>
-									</span>
+							<div class="product-quantity my-3" >
+								<div class="item-title">
+									<l>Chọn số lượng:</l>
 								</div>
+								<div class="stock-button-wrap mt-2 d-flex flex-wrap align-items-center">
+									<div class="product-quantity">
+										<div class="input-group product-qty align-items-center"
+											style="max-width: 150px;">
+											<span class="input-group-btn">
+												<button type="button"
+													class="bg-white shadow border rounded-3 fw-light quantity-left-minus"
+													data-type="minus" data-field="">
+													<i class="fa-solid fa-minus"></i>
+												</button>
+											</span>
+											<input type="text" id="quantity" name="quantity"
+												class="form-control bg-white shadow border rounded-3 py-2 mx-2 input-number text-center"
+												value="1" min="1" max="100" required>
+											<span class="input-group-btn">
+												<button type="button"
+													class="bg-white shadow border rounded-3 fw-light quantity-right-plus"
+													data-type="plus" data-field="">
+													<i class="fa-solid fa-plus"></i>
+												</button>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="action-buttons my-3 d-flex flex-wrap gap-3">
+								<!--<a href="#" class="btn">Order now</a>-->
+								<th:block th:if="${book.stock>0}">
+									<th:block th:if="${user==null}">
+										<a href="/signin" class="btn btn-dark">Thêm giỏ hàng</a>
+									</th:block>
+									<th:block th:unless="${user==null}">
+										<a th:href="@{'/user/addCart?pid='+${book.id}+'&uid='+${user.id}}"
+											class="btn btn-dark">Thêm giỏ hàng</a>
+									</th:block>
+								</th:block>
+								<th:block th:unless="${book.stock>0}">
+									<a href="#" class="btn btn-dark">Sách tạm hết</a>
+								</th:block>
+								<a href="#" class="btn btn-dark">
+									<svg class="heart" width="21" height="21">
+										<use xlink:href="#heart"></use>
+									</svg>
+								</a>
+							</div>
+						</div>
+						<hr>
+						<div class="meta-product my-3">
+							<div class="meta-item d-flex mb-1">
+								<span class="fw-medium me-2">Số lượng: </span>
+								<ul class="select-list list-unstyled d-flex mb-0">
+									<li data-value="S" class="select-item">[[${book.stock}]]</li>
+								</ul>
+							</div>
+							<div class="meta-item d-flex mb-1">
+								<span class="fw-medium me-2">Danh mục:</span>
+								<ul class="select-list list-unstyled d-flex mb-0">
+									<li data-value="S" class="select-item">
+										<a href="#">[[${book.category}]]</a>
+									</li>
+
+								</ul>
+							</div>
+							<div class="meta-item d-flex mb-1">
+								<span class="fw-medium me-2">Nhà xuất bản:</span>
+								<ul class="select-list list-unstyled d-flex mb-0">
+									<li data-value="S" class="select-item">
+										<a href="#">[[${book.publisher}]]</a>
+									</li>
+								</ul>
 							</div>
 						</div>
 					</div>
-					<div class="action-buttons my-3 d-flex flex-wrap gap-3">
-						<a href="#" class="btn">Mượn</a>
-						<th:block th:if="${book.stock>0}">
-							<th:block th:if="${user==null}">
-								<a href="/signin" class="btn btn-dark">Thêm sách</a>
-							</th:block>
-							<th:block th:unless="${user==null}">
-								<a th:href="@{'/user/addCart?pid='+${book.id}+'&uid='+${user.id}}"
-									class="btn btn-dark">Thêm sách</a>
-							</th:block>
-						</th:block>
-						<th:block th:unless="${book.stock>0}">
-							<a href="#" class="btn btn-dark">Sách tạm hết</a>
-						</th:block>
-						<a href="#" class="btn btn-dark">
-							<svg class="heart" width="21" height="21">
-								<use xlink:href="#heart"></use>
-							</svg>
-						</a>
-					</div>
-					<div class="meta-product my-3">
-						<div class="meta-item d-flex mb-1">
-							<span class="fw-medium me-2">Số lượng: </span>
-							<ul class="select-list list-unstyled d-flex mb-0">
-								<li data-value="S" class="select-item">[[${book.stock}]]</li>
-							</ul>
-						</div>
-						<div class="meta-item d-flex mb-1">
-							<span class="fw-medium me-2"></span>
-							<ul class="select-list list-unstyled d-flex mb-0">
-								<li data-value="S" class="select-item">
-									<a href="#">Danh mục: </a>[[${book.category}]]
-								</li>
-
-							</ul>
-						</div>
-						<div class="meta-item d-flex mb-1">
-							<span class="fw-medium me-2">Tác Giả:</span>
-							<ul class="select-list list-unstyled d-flex mb-0">
-								<li data-value="S" class="select-item">
-									<a href="#">[[${book.author}]]</a>
-								</li>
-
-							</ul>
-						</div>
-					</div>
 				</div>
-
-				<hr>
-
 			</div>
 		</div>
-		</div>
 	</section>
+
+
 
 
 </body>

@@ -25,48 +25,135 @@ public class CartServiceImpl implements CartService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private BookRepository productRepository;
+	private BookRepository bookRepository;
 
+//	@Override
+//	public Cart saveCart(Integer bookId, Integer userId) {
+//
+//		User userDtls = userRepository.findById(userId).get();
+//		Book book = bookRepository.findById(bookId).get();
+//
+//		Cart cartStatus = cartRepository.findByBookIdAndUserId(bookId, userId);
+//
+//		Cart cart = null;
+//
+//		if (ObjectUtils.isEmpty(cartStatus)) {
+//			cart = new Cart();
+//			cart.setBook(book);
+//			cart.setUser(userDtls);
+//			cart.setQuantity(1);
+//			cart.setTotalPrice((int) (1 * book.getDiscountPrice()));
+//		} else {
+//			cart = cartStatus;
+//			cart.setQuantity(cart.getQuantity() + 1);
+//			 cart.setTotalPrice((int) (cart.getQuantity() * cart.getBook().getDiscountPrice()));
+//		}
+//		Cart saveCart = cartRepository.save(cart);
+//
+//		return saveCart;
+//	}
+	
+//	@Override
+//	public Cart saveCart(Integer bookId, Integer userId) {
+//	    User userDtls = userRepository.findById(userId).get();
+//	    Book book = bookRepository.findById(bookId).get();
+//
+//	    Cart cartStatus = cartRepository.findByBookIdAndUserId(bookId, userId);
+//
+//	    Cart cart = null;
+//
+//	    if (ObjectUtils.isEmpty(cartStatus)) {
+//	        cart = new Cart();
+//	        cart.setBook(book);
+//	        cart.setUser(userDtls);
+//	        cart.setQuantity(1);
+//	        
+//	        // Kiểm tra discountPrice trước khi ép kiểu
+//	        Integer discountPrice = book.getDiscountPrice() != null ? book.getDiscountPrice() : 0;
+//	        cart.setTotalPrice(discountPrice); // Làm tròn nếu cần thiết
+//	    } else {
+//	        cart = cartStatus;
+//	        cart.setQuantity(cart.getQuantity() + 1);
+//	        
+//	        Integer discountPrice = book.getDiscountPrice() != null ? book.getDiscountPrice() : 0;
+//	        cart.setTotalPrice(cart.getQuantity() * discountPrice);
+//	    }
+//	    
+//	    Cart saveCart = cartRepository.save(cart);
+//	    return saveCart;
+//	}
+	
 	@Override
-	public Cart saveCart(Integer bookId, Integer userId) {
+	public Cart saveCart(Integer bookId, Integer userId, Integer quantity) { // Thêm tham số quantity
+	    User userDtls = userRepository.findById(userId).get();
+	    Book book = bookRepository.findById(bookId).get();
 
-		User userDtls = userRepository.findById(userId).get();
-		Book book = productRepository.findById(bookId).get();
+	    Cart cartStatus = cartRepository.findByBookIdAndUserId(bookId, userId);
 
-		Cart cartStatus = cartRepository.findByBookIdAndUserId(bookId, userId);
+	    Cart cart = null;
 
-		Cart cart = null;
+	    if (ObjectUtils.isEmpty(cartStatus)) {
+	        cart = new Cart();
+	        cart.setBook(book);
+	        cart.setUser(userDtls);
+	        cart.setQuantity(quantity);  // Sử dụng quantity truyền vào
+	        Integer discountPrice = book.getDiscountPrice() != null ? book.getDiscountPrice() : 0;
+	        cart.setTotalPrice(discountPrice * quantity);  // Tính toán tổng giá
+	    } else {
+	        cart = cartStatus;
+	        cart.setQuantity(cart.getQuantity() + quantity);  // Cộng thêm số lượng mới vào giỏ
+	        Integer discountPrice = book.getDiscountPrice() != null ? book.getDiscountPrice() : 0;
+	        cart.setTotalPrice(cart.getQuantity() * discountPrice);  // Tính toán lại tổng giá
+	    }
 
-		if (ObjectUtils.isEmpty(cartStatus)) {
-			cart = new Cart();
-			cart.setBook(book);
-			cart.setUser(userDtls);
-			cart.setQuantity(1);
-//			cart.setTotalPrice(1 * product.getDiscountPrice());
-		} else {
-			cart = cartStatus;
-			cart.setQuantity(cart.getQuantity() + 1);
-//			cart.setTotalPrice(cart.getQuantity() * cart.getProduct().getDiscountPrice());
-		}
-		Cart saveCart = cartRepository.save(cart);
-
-		return saveCart;
+	    Cart saveCart = cartRepository.save(cart);
+	    return saveCart;
 	}
-	@Override
-	public List<Cart> getCartsByUser(Integer userId) {
-		List<Cart> carts = cartRepository.findByUserId(userId);
 
-//		Double totalOrderPrice = 0.0;
-		List<Cart> updateCarts = new ArrayList<>();
-		for (Cart c : carts) {
-//			Double totalPrice = (c.getProduct().getDiscountPrice() * c.getQuantity());
+
+
+//	@Override
+//	public List<Cart> getCartsByUser(Integer userId) {
+//		List<Cart> carts = cartRepository.findByUserId(userId);
+//
+//		Integer totalOrderPrice = 0;
+//		List<Cart> updateCarts = new ArrayList<>();
+//		for (Cart c : carts) {
+//			Integer totalPrice = (int) (c.getBook().getDiscountPrice() * c.getQuantity());
 //			c.setTotalPrice(totalPrice);
 //			totalOrderPrice = totalOrderPrice + totalPrice;
 //			c.setTotalOrderPrice(totalOrderPrice);
-			updateCarts.add(c);
-		}
+//			updateCarts.add(c);
+//		}
+//
+//		return updateCarts;
+//	}
+	
+	@Override
+	public List<Cart> getCartsByUser(Integer userId) {
+	    List<Cart> carts = cartRepository.findByUserId(userId);
 
-		return updateCarts;
+	    Integer totalOrderPrice = 0;
+	    List<Cart> updateCarts = new ArrayList<>();
+	    for (Cart c : carts) {
+	        Integer discountPrice = c.getBook().getDiscountPrice();
+	        
+	        // Kiểm tra discountPrice có null không
+	        if (discountPrice != null) {
+	            Integer totalPrice = discountPrice * c.getQuantity();
+	            c.setTotalPrice(totalPrice);
+	            totalOrderPrice += totalPrice;
+	            c.setTotalOrderPrice(totalOrderPrice);
+	        } else {
+	            // Xử lý khi discountPrice là null (có thể đặt giá trị mặc định hoặc báo lỗi)
+	            c.setTotalPrice(0); // Ví dụ: đặt giá trị mặc định là 0
+	            c.setTotalOrderPrice(totalOrderPrice);
+	        }
+	        
+	        updateCarts.add(c);
+	    }
+
+	    return updateCarts;
 	}
 
 	@Override
@@ -98,7 +185,14 @@ public class CartServiceImpl implements CartService {
 		}
 
 	}
-
+	
+	public void clearCartByUser(Integer userId) {
+	    // Tìm tất cả các giỏ hàng của người dùng và xóa chúng
+	    List<Cart> carts = cartRepository.findByUserId(userId);
+	    for (Cart cart : carts) {
+	        cartRepository.delete(cart); // Hoặc tùy theo cách bạn lưu trữ giỏ hàng, có thể là delete từng item
+	    }
+	}
 
 
 }

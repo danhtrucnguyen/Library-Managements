@@ -212,6 +212,7 @@ public class HomeController {
 	    // Lấy sách theo danh mục hoặc nhà xuất bản
 	    List<Book> books = bookService.getAllActiveBooks(category, publisher); // Cập nhật phương thức này để hỗ trợ publisher
 	    
+	    
 	    // Truyền dữ liệu vào mô hình
 	    m.addAttribute("categories", categories);
 	    m.addAttribute("publishers", publishers);  // Truyền các nhà xuất bản vào

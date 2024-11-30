@@ -61,6 +61,8 @@ public class BookController {
 		String imageName = image.isEmpty() ? "default.jpg" : image.getOriginalFilename();
 
 		book.setImage(imageName);
+		book.setDiscount(0);
+		book.setDiscountPrice(book.getPrice());
 		Book saveBook = bookService.saveBook(book);
 
 		if (!ObjectUtils.isEmpty(saveBook)) {

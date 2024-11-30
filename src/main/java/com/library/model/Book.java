@@ -16,31 +16,36 @@ import lombok.Setter;
 @Setter
 @Entity
 public class Book {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	
+
 	private int id;
-	
+
 	@Column(length = 500)
 	private String bookName;
 
 	@Column(length = 5000)
 	private String description;
-	
+
 	private String author;
-	
+
 	private String category;
-	
+
 	private String publisher;
 	
+	private Integer price;
+
 	private int stock;
-	
+
 	private String image;
-	
+
+	private int discount;
+
+	private Integer discountPrice;
+
 	private String isbn;
-	
+
 	private Boolean isActive;
-	
 
 }

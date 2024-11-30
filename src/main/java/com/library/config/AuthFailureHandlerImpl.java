@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class AuthFailureHandlerImpl extends SimpleUrlAuthenticationFailureHandler {
 
-    @Autowired
+	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
@@ -35,29 +35,34 @@ public class AuthFailureHandlerImpl extends SimpleUrlAuthenticationFailureHandle
 
 		User userDtls = userRepository.findByEmail(email);
 
-		if (userDtls.getIsEnable()) {
+		if (userDtls != null) {
 
-			if (userDtls.getAccountNonLocked()) {
+			if (userDtls.getIsEnable()) {
 
-				if (userDtls.getFailedAttempt() < AppConstant.ATTEMPT_TIME) {
-					userService.increaseFailedAttempt(userDtls);
+				if (userDtls.getAccountNonLocked()) {
+
+					if (userDtls.getFailedAttempt() < AppConstant.ATTEMPT_TIME) {
+						userService.increaseFailedAttempt(userDtls);
+					} else {
+						userService.userAccountLock(userDtls);
+						exception = new LockedException("Đăng nhập lần 3 không thành công!! Tài khoản của bạn tạm thời bị khóa");
+					}
 				} else {
-					userService.userAccountLock(userDtls);
-					exception = new LockedException("Your account is locked !! failed attempt 3");
+
+					if (userService.unlockAccountTimeExpired(userDtls)) {
+						exception = new LockedException("Tài khoản của bạn đã được mở khóa !! Đăng nhập ngay");
+					} else {
+						exception = new LockedException("Tài khoản của bạn đã bị khóa!! Hãy thử lại");
+					}
 				}
+
 			} else {
-
-				if (userService.unlockAccountTimeExpired(userDtls)) {
-					exception = new LockedException("Your account is unlocked !! Please try to login");
-				} else {
-					exception = new LockedException("your account is Locked !! Please try after sometimes");
-				}
+				exception = new LockedException("Tài khoản của bạn không hoạt động");
 			}
-
 		} else {
-			exception = new LockedException("your account is inactive");
+			exception = new LockedException("Thông tin đăng nhập không chính xác");
 		}
-		
+
 		super.setDefaultFailureUrl("/signin?error");
 		super.onAuthenticationFailure(request, response, exception);
 	}

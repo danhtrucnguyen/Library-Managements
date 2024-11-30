@@ -1,0 +1,119 @@
+<section class="cart padding-large">
+		<div class="container">
+			<div class="row">
+				<th:block th:if="${session.succMsg}">
+					<p class="text-success fw-bold">[[${session.succMsg}]]</p>
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+
+				<th:block th:if="${session.errorMsg}">
+					<p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+				<div class="cart-table" >
+					<div class="cart-header border-bottom border-top">
+						<div class="row d-flex text-capitalize">
+							<h4 class="col-lg-4 py-3 m-0">Sách</h4>
+							<h4 class="col-lg-3 py-3 m-0">Số lượng</h4>
+							<h4 class="col-lg-4 py-3 m-0">Tổng</h4>
+						</div>
+					</div>
+
+					<div class="cart-item border-bottom padding-small" th:each="cart,c:${carts}" >
+						<div class="row align-items-center">
+							<div class="col-lg-4 col-md-3">
+								<div class="cart-info d-flex gap-2 flex-wrap align-items-center">
+									<div class="col-lg-5">
+										<div class="card-image">
+											<img th:src="@{'/images/book_img/'+${cart.book.image}}" alt="cart-img"
+												class="img-fluid border rounded-3">
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="card-detail">
+											<h5 class="mt-2"><a href="#">[[${cart.book.bookName}]]</a></h5>
+											<div class="card-price">
+												<span class="price text-primary fw-light"
+													>[[${cart.book.author}]]</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-7">
+								<div class="row d-flex">
+									<div class="col-md-6">
+										<div class="product-quantity my-2 my-2">
+											<div class="input-group product-qty align-items-center"
+												style="max-width: 150px;">
+												<span class="input-group-btn">
+													<a th:href="@{'/user/cartQuantityUpdate?sy=de&cid='+${cart.id}}"
+														
+														>
+														<i class="fa-solid fa-minus"></i>
+													</a>
+												</span>
+												[[${cart.quantity}]]
+												<span class="input-group-btn">
+													<a th:href="@{'/user/cartQuantityUpdate?sy=in&cid='+${cart.id}}"
+														
+														 >
+														<i class="fa-solid fa-plus"></i>
+													</a>
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="total-price">
+											<span class="money fs-2 fw-light text-primary">[[${cart.quantity}]]</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-2">
+								<div class="cart-cross-outline">
+									<a href="#">
+										<i class="fa-solid fa-book-open-reader"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--<div class="cart-totals padding-medium pb-0">
+					<h3 class="mb-3">Cart Totals</h3>
+					<div class="total-price pb-3">
+						<table cellspacing="0" class="table text-capitalize">
+							<tbody>
+								<tr class="subtotal pt-2 pb-2 border-top border-bottom">
+									<th>Subtotal</th>
+									<td data-title="Subtotal">
+										<span class="price-amount amount text-primary ps-5 fw-light">
+											<bdi>
+												<span class="price-currency-symbol">$</span>2,400.00
+											</bdi>
+										</span>
+									</td>
+								</tr>
+								<tr class="order-total pt-2 pb-2 border-bottom">
+									<th>Total</th>
+									<td data-title="Total">
+										<span class="price-amount amount text-primary ps-5 fw-light">
+											<bdi>
+												<span class="price-currency-symbol">$</span>2,400.00</bdi>
+										</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>-->
+					<div class="button-wrap d-flex flex-wrap gap-3">
+						<!--<button class="btn">Update Cart</button>-->
+						<!--<button class="btn">Thu viện</button>-->
+						<button class="btn">Mượn sách</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
