@@ -128,5 +128,10 @@ public class OrderServiceImpl implements OrderService {
 		}
 		return false;
 	}
+	
+	@Override
+	public List<BookOrder> getAllOrders() {
+		return orderRepository.findAll();
+	}
 
 }

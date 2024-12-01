@@ -119,9 +119,9 @@ public class PublisherController {
 				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 			}
 
-			session.setAttribute("succMsg", "Danh mục sách cập nhật thành công");
+			session.setAttribute("succMsg", "Cập nhật nhà xuất bản thành công");
 		} else {
-			session.setAttribute("errorMsg", "Danh mục sách cập nhật không thành công");
+			session.setAttribute("errorMsg", "Cập nhật nhà xuất bản không thành công");
 		}
 
 		return "redirect:/admin/loadEditPublisher/" + publisher.getId();

@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.text.DecimalFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.library.model.User;
 import com.library.service.CartService;
 import com.library.service.CategoryService;
+import com.library.service.OrderService;
 import com.library.service.UserService	;
+import com.library.util.OrderStatus;
+import com.library.model.BookOrder;
+import com.library.model.BookOrderItem;
 import com.library.model.Category;
 
 import jakarta.servlet.http.HttpSession;
@@ -44,6 +50,9 @@ public class AdminController {
 	
 	@Autowired
 	private CategoryService categoryService;
+	
+	@Autowired
+	private OrderService orderService;
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m) {
@@ -75,9 +84,9 @@ public class AdminController {
 	public String updateUserAccountStatus(@RequestParam Boolean status, @RequestParam Integer id, HttpSession session) {
 		Boolean f = userService.updateAccountStatus(id, status);
 		if (f) {
-			session.setAttribute("succMsg", "Account Status Updated");
+			session.setAttribute("succMsg", "Đã cập nhật tài khoản");
 		} else {
-			session.setAttribute("errorMsg", "Something wrong on server");
+			session.setAttribute("errorMsg", "Đã xảy ra lỗi");
 		}
 		return "redirect:/admin/users";
 	}
@@ -98,13 +107,13 @@ public class AdminController {
 		Boolean existCategory = categoryService.existCategory(category.getImageName());
 
 		if (existCategory) {
-			session.setAttribute("errorMsg", "Category Name already exists");
+			session.setAttribute("errorMsg", "Tên danh mục đã tồn tại");
 		} else {
 
 			Category saveCategory = categoryService.saveCategory(category);
 
 			if (ObjectUtils.isEmpty(saveCategory)) {
-				session.setAttribute("errorMsg", "Not saved ! internal server error");
+				session.setAttribute("errorMsg", "Lưu không thành công! lỗi máy chủ");
 			} else {
 
 				File saveFile = new ClassPathResource("static/images").getFile();
@@ -115,7 +124,7 @@ public class AdminController {
 				// System.out.println(path);
 				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-				session.setAttribute("succMsg", "Saved successfully");
+				session.setAttribute("succMsg", "Lưu thành công");
 			}
 		}
 
@@ -127,9 +136,9 @@ public class AdminController {
 		Boolean deleteCategory = categoryService.deleteCategory(id);
 
 		if (deleteCategory) {
-			session.setAttribute("succMsg", "category delete success");
+			session.setAttribute("succMsg", "Xóa danh mục thành công");
 		} else {
-			session.setAttribute("errorMsg", "something wrong on server");
+			session.setAttribute("errorMsg", "Lỗi máy chủ");
 		}
 
 		return "redirect:/admin/category";
@@ -176,5 +185,61 @@ public class AdminController {
 
 		return "redirect:/admin/loadEditCategory/" + category.getId();
 	}
+	
+	@GetMapping("/orders")
+	public String getAllOrders(Model m) {
+		List<BookOrder> allOrders = orderService.getAllOrders();
+		
+		 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+		    // Tạo DecimalFormat để định dạng totalAmount
+		    DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+
+		    for (BookOrder order : allOrders) {
+		        // Đổi ngày giờ theo định dạng dd/MM/yyyy HH:mm:ss
+		        if (order.getOrderDate() != null) {
+		            String formattedDateTime = order.getOrderDate().format(formatter);
+		            order.setFormattedOrderDate(formattedDateTime); // Cập nhật ngày giờ đã định dạng
+		        }
+
+		        // Tính tổng giá trị của đơn hàng và định dạng số tiền
+		        int totalAmount = 20000;
+		        for (BookOrderItem item : order.getItems()) {
+		            totalAmount += item.getBook().getDiscountPrice() * item.getQuantity();
+		        }
+		        order.setTotalAmount(totalAmount); // Lưu tổng giá trị vào đơn hàng
+
+		        // Định dạng totalAmount với dấu phân cách hàng nghìn
+		        String formattedTotalAmount = decimalFormat.format(totalAmount);
+		        order.setFormattedTotalAmount(formattedTotalAmount); // Lưu tổng giá trị đã định dạng
+		    }
+		m.addAttribute("orders", allOrders);
+		
+		
+		return "/admin/orders";
+	}
+	
+	@PostMapping("/update-order-status")
+	public String updateOrderStatus(@RequestParam Integer id, @RequestParam Integer st, HttpSession session) {
+
+		OrderStatus[] values = OrderStatus.values();
+		String status = null;
+
+		for (OrderStatus orderSt : values) {
+			if (orderSt.getId().equals(st)) {
+				status = orderSt.getName();
+			}
+		}
+
+		Boolean updateOrder = orderService.updateOrderStatus(id, status);
+
+		if (updateOrder) {
+			session.setAttribute("succMsg", "Đã cập nhật trạng thái");
+		} else {
+			session.setAttribute("errorMsg", "Trạng thái chưa được cập nhật");
+		}
+		return "redirect:/admin/orders";
+	}
+
 
 }
