@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-	th:fragment="layout(content)">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+
 <head>
 	<title th:text="${title}">Book Library</title>
 	<meta charset="utf-8">
@@ -17,9 +17,10 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
-		rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
+
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 	<style>
 		#feedbackButton {
 			position: fixed;
@@ -43,6 +44,7 @@
 			background-color: #0056b3;
 		}
 	</style>
+
 </head>
 
 <body>
@@ -146,12 +148,12 @@
 		</symbol>
 	</svg>
 
-	
+
 
 	<div class="search-popup">
 		<div class="search-popup-container">
 
-			<form role="search" method="get" class="search-form" action="search" >
+			<form role="search" method="get" class="search-form" action="search">
 				<input type="search" id="search-form" class="search-field" placeholder="Type and press enter" value=""
 					name="ch" />
 				<button type="submit" class="search-submit"><svg class="search">
@@ -190,7 +192,7 @@
 
 	<header id="header" class="site-header">
 
-	<!--	<div class="top-info border-bottom d-none d-md-block ">
+		<!--	<div class="top-info border-bottom d-none d-md-block ">
 			<div class="container-fluid">
 				<div class="row g-0">
 					<div class="col-md-4">
@@ -210,7 +212,7 @@
 		<nav id="header-nav" class="navbar navbar-expand-lg py-3">
 			<div class="container">
 				<a class="navbar-brand" href="/">
-					<img src="images/main-logo.png" class="logo">
+					<img src="/images/main-logo.png" class="logo">
 				</a>
 				<button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button" data-bs-toggle="offcanvas"
 					data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false"
@@ -224,7 +226,7 @@
 					<div class="offcanvas-header px-4 pb-0">
 						<a class="navbar-brand" href="/">
 							<img src="images/main-logo.png" class="logo">
-							
+
 						</a>
 						<button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas"
 							aria-label="Close" data-bs-target="#bdNavbar"></button>
@@ -363,61 +365,27 @@
 									</div>
 								</li>
 								<th:block th:if="${user!=null}">
-								<li class="cart-dropdown dropdown">
-									<a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button"
-										aria-expanded="false">
-										<svg class="cart">
-											<use xlink:href="#cart"></use>
-										</svg><span class="fs-6 fw-light">[[${countCart}]]</span>
-									</a>
-									<div
-										class="dropdown-menu animate slide dropdown-menu-start dropdown-menu-lg-end p-3">
-										<h4 class="d-flex justify-content-between align-items-center mb-3">
-											<span class="text-primary">Your cart</span>
-											<span class="badge bg-primary rounded-pill">([[${countCart}]])</span>
-										</h4>
-										<ul class="list-group mb-3">
-											<li
-												class="list-group-item bg-transparent d-flex justify-content-between lh-sm">
-												<div>
-													<h5>
-														<a href="index.html">Secrets of the Alchemist</a>
-													</h5>
-													<small>High quality in good price.</small>
-												</div>
-												<span class="text-primary">$870</span>
-											</li>
-											<li
-												class="list-group-item bg-transparent d-flex justify-content-between lh-sm">
-												<div>
-													<h5>
-														<a href="index.html">Quest for the Lost City</a>
-													</h5>
-													<small>Professional Quest for the Lost City.</small>
-												</div>
-												<span class="text-primary">$600</span>
-											</li>
-											<li class="list-group-item bg-transparent d-flex justify-content-between">
-												<span class="text-capitalize"><b>Total (USD)</b></span>
-												<strong>$1470</strong>
-											</li>
-										</ul>
-										<div class="d-flex flex-wrap justify-content-center">
-											<a href="index.html" class="w-100 btn btn-dark mb-1" type="submit">View
-												Cart</a>
-											<a href="index.html" class="w-100 btn btn-primary" type="submit">Go to
-												checkout</a>
-										</div>
-									</div>
-								</li>
-								
+									<li class="cart-dropdown dropdown" >
+										<a href="/user/cart"  role="button" aria-expanded="false">
+										    <svg class="cart">
+										        <use xlink:href="#cart"></use>
+										    </svg>
+										    <!--<span class="fs-6 fw-light">[[${countCart}]]</span>-->
+										    <span class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.8rem; padding: 0.25rem 0.5rem;">
+										        [[${countCart}]]
+										    </span>
+										</a>
+										
+									</li>
+
 									<li class="nav-item dropdown"><a class="nav-link dropdown-toggle active" href="#"
-											role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 17px;padding-top: 4px;  padding-left: 15px; padding-right: 15px;"> <i
-												class="fa-solid fa-user"></i> [[${user.name}]]
+											role="button" data-bs-toggle="dropdown" aria-expanded="false"
+											style="font-size: 17px;padding-top: 4px;  padding-left: 15px; padding-right: 15px;">
+											<i class="fa-solid fa-user"></i> [[${user.name}]]
 										</a>
 										<ul class="dropdown-menu">
-											<li><a class="dropdown-item" href="#">Profile</a></li>
-											<li><a class="dropdown-item" href="#">Another action</a></li>
+											<li><a class="dropdown-item" href="#">Hồ sơ</a></li>
+											<li><a class="dropdown-item" href="/user/user-orders">Đơn hàng của tôi</a></li>
 
 
 										</ul>
@@ -439,7 +407,7 @@
 		</nav>
 
 	</header>
-	
+
 	<div th:replace="${content}"></div>
 
 	<!-- Feedback Button -->
@@ -482,7 +450,10 @@
 	</div>
 
 	<!-- Bootstrap JS -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@2.11.6/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+	<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>-->
 	<script>
 		// Display modal on button click
 		const feedbackButton = document.getElementById('feedbackButton');

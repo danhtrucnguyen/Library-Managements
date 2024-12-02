@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+
+<head>
+	<meta charset="UTF-8">
+
+	<title th:text="${title}">View Book</title>
+	
+
+
+
+</head>
+
+<body>
+	
+	<section class="hero-section position-relative padding-large"
+			style="background-image: url(/images/banner-image-bg-1.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 400px;">
+			<div class="hero-content">
+				<div class="container">
+					<div class="row">
+						<div class="text-center">
+							<h1>Chi tiết đơn hàng </h1>
+							<div class="breadcrumbs">
+								<span class="item">
+									<a href="/">Trang chủ > </a>
+								</span>
+								<span class="item text-decoration-underline">Chi tiết đơn hàng</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+	<section>
+		<div class="container mt-5 p-5">
+			<div class="row">
+				
+				<th:block th:if="${session.succMsg}">
+					<p class="text-success fw-bold text-center">[[${session.succMsg}]]</p>
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+
+				<th:block th:if="${session.errorMsg}">
+					<p class="text-danger fw-bold text-center">[[${session.errorMsg}]]</p>
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+				<div class="col-md-12 ">
+
+					<table class="table table-bordered card-sh">
+						<thead>
+							<tr>
+								<th scope="col">Mã vận đơn</th>
+								<th scope="col">Thời gian đặt hàng</th>
+								<th scope="col">Chi tiết sách</th>
+								<th scope="col">Thành tiền</th>
+								<th scope="col">Trạng thái</th>
+								<th scope="col"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="o:${orders}">
+								<th scope="row">[[${o.orderId}]]</th>
+								<td>[[${o.formattedOrderDate}]]</td>
+								<td>
+								    <ul style="list-style-type: none; padding-left: 0;">
+								        <li th:each="item : ${o.items}">
+								            [[${item.book.bookName}]] <br> x[[${item.quantity}]]
+								        </li>
+								    </ul>
+								</td>
+								<td>[[${o.formattedTotalAmount}]]đ</td>
+								<td>[[${o.status}]]</td>
+								<td >
+									<th:block th:if="${o.status!='Đã hủy'}">
+										<a th:href="@{'/user/update-status?id='+${o.id}+'&st=6' }"
+											class="btn btn-sm btn-danger">Hủy đơn</a>
+									</th:block>
+									<th:block th:unless="${o.status!='Đã hủy'}">
+										<a href="#" class="btn btn-sm btn-danger disabled">Hủy đơn</a>
+									</th:block>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+</body>
+
+</html>

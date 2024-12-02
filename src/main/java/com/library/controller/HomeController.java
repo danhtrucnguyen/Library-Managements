@@ -121,9 +121,9 @@ public class HomeController {
 //				System.out.println(path);
 				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 			}
-			session.setAttribute("succMsg", "Register successfully");
+			session.setAttribute("succMsg", "Đăng ký thành công");
 		} else {
-			session.setAttribute("errorMsg", "something wrong on server");
+			session.setAttribute("errorMsg", "Lỗi máy chủ");
 		}
 
 		return "redirect:/register";
@@ -143,7 +143,7 @@ public class HomeController {
 		User userByEmail = userService.getUserByEmail(email);
 
 		if (ObjectUtils.isEmpty(userByEmail)) {
-			session.setAttribute("errorMsg", "Invalid email");
+			session.setAttribute("errorMsg", "Email không hợp lệ");
 		} else {
 
 			String resetToken = UUID.randomUUID().toString();
@@ -157,9 +157,9 @@ public class HomeController {
 			Boolean sendMail = commonUtil.sendMail(url, email);
 
 			if (sendMail) {
-				session.setAttribute("succMsg", "Please check your email..Password Reset link sent");
+				session.setAttribute("succMsg", "Vui lòng kiểm tra email của bạn..Đã gửi liên kết đặt lại mật khẩu");
 			} else {
-				session.setAttribute("errorMsg", "Somethong wrong on server ! Email not send");
+				session.setAttribute("errorMsg", "Đã xảy ra lỗi trên máy chủ! Email không gửi được");
 			}
 		}
 
@@ -172,7 +172,7 @@ public class HomeController {
 		User userByToken = userService.getUserByToken(token);
 
 		if (userByToken == null) {
-			m.addAttribute("msg", "Your link is invalid or expired !!");
+			m.addAttribute("msg", "Liên kết của bạn không hợp lệ hoặc đã hết hạn !!");
 			return "message";
 		}
 		m.addAttribute("token", token);
@@ -185,14 +185,14 @@ public class HomeController {
 
 		User userByToken = userService.getUserByToken(token);
 		if (userByToken == null) {
-			m.addAttribute("errorMsg", "Your link is invalid or expired !!");
+			m.addAttribute("errorMsg", "Liên kết của bạn không hợp lệ hoặc đã hết hạn !!");
 			return "message";
 		} else {
 			userByToken.setPassword(passwordEncoder.encode(password));
 			userByToken.setResetToken(null);
 			userService.updateUser(userByToken);
 			// session.setAttribute("succMsg", "Password change successfully");
-			m.addAttribute("msg", "Password change successfully");
+			m.addAttribute("msg", "Đổi mật khẩu thành công");
 
 			return "message";
 		}
@@ -211,6 +211,7 @@ public class HomeController {
 	    
 	    // Lấy sách theo danh mục hoặc nhà xuất bản
 	    List<Book> books = bookService.getAllActiveBooks(category, publisher); // Cập nhật phương thức này để hỗ trợ publisher
+	    
 	    
 	    // Truyền dữ liệu vào mô hình
 	    m.addAttribute("categories", categories);

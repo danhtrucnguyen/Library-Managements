@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Register Template</title>
-	<link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/css/login.css">
@@ -21,7 +21,7 @@
 						<img src="/images/logo1.jpg" alt="logo" class="logo">
 					</div>
 					<div class="register-wrapper my-auto">
-						<h1 class="login-title">Register</h1>
+						<h1 class="login-title">Đăng kí</h1>
 						<th:block th:if="${session.succMsg}">
 							<p class="text-success fw-bold">[[${session.succMsg}]]</p>
 							<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
@@ -34,16 +34,15 @@
 						<form id="registerForm" action="/saveUser" enctype="multipart/form-data" method="post">
 							<div class="form-row">
 								<div class="form-group col-md-6">
-									<label for="fullName">Full Name</label>
+									<label for="fullName">Họ và tên</label>
 									<input type="text" name="name" id="fullName" class="form-control"
 										placeholder="Enter your full name" required>
 								</div>
 								<div class="form-group col-md-6">
-									<label for="phoneNumber">Phone Number</label>
+									<label for="phoneNumber">Số điện thoại</label>
 									<input type="text" name="mobileNumber" id="phoneNumber" class="form-control"
 										placeholder="Enter your phone number" maxlength="10" required>
-									<small class="form-text text-muted">Please enter a valid 10-digit phone
-										number.</small>
+									<small class="form-text text-muted">Vui lòng nhập số điện thoại hợp lệ gồm 10 chữ số.</small>
 								</div>
 							</div>
 
@@ -54,7 +53,7 @@
 										placeholder="email@example.com" required>
 								</div>
 								<div class="form-group col-md-6">
-									<label for="address">Address</label>
+									<label for="address">Địa chỉ</label>
 									<input type="text" name="address" id="address" class="form-control"
 										placeholder="Enter your address" required>
 								</div>
@@ -62,12 +61,12 @@
 
 							<div class="form-row">
 								<div class="form-group col-md-6">
-									<label for="district">District</label>
+									<label for="district">Quận/Huyện</label>
 									<input type="text" name="state" id="district" class="form-control"
 										placeholder="Enter your district" required>
 								</div>
 								<div class="form-group col-md-6">
-									<label for="city">City</label>
+									<label for="city">Tỉnh/Thành phố</label>
 									<input type="text" name="city" id="city" class="form-control"
 										placeholder="Enter your city" required>
 								</div>
@@ -75,27 +74,27 @@
 
 							<div class="form-row">
 								<div class="form-group col-md-6">
-									<label for="password">Password</label>
+									<label for="password">Mật khẩu</label>
 									<input type="password" name="password" id="password" class="form-control"
 										placeholder="Enter your password" required>
 								</div>
 								<div class="form-group col-md-6">
-									<label for="confirmPassword">Confirm Password</label>
+									<label for="confirmPassword">Nhập lại mật khẩu</label>
 									<input type="password" name="cpassword" id="confirmPassword"
 										class="form-control" placeholder="Confirm your password" required>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label for="profileImage">Profile Image</label>
+								<label for="profileImage">Ảnh đại diện</label>
 								<input type="file" name="img" id="profileImage" class="form-control"
 									>
 							</div>
 
-							<button name="login" id="login" type="submit" class="btn btn-block login-btn">REGISTER</button>
+							<button name="login" id="login" type="submit" class="btn btn-block login-btn">ĐĂNG KÍ</button>
 						</form>
-						<p class="register-wrapper-footer-text">Already have an account? <a href="/signin"
-								class="text-reset">Log in here</a></p>
+						<p class="register-wrapper-footer-text">Bạn đã có tài khoản? <a href="/signin"
+								class="text-reset" style="text-decoration: underline;">Đăng nhập ngay</a></p>
 					</div>
 				</div>
 				<div class="col-sm-6 px-0 d-none d-sm-block">

@@ -17,6 +17,25 @@
 </head>
 
 <body>
+	<section class="hero-section position-relative padding-large"
+		style="background-image: url(/images/banner-image-bg-1.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 400px;">
+		<div class="hero-content">
+			<div class="container">
+				<div class="row">
+					<div class="text-center">
+						<h1>Giỏ hàng</h1>
+						<div class="breadcrumbs">
+							<span class="item">
+								<a href="/">Trang chủ > </a>
+							</span>
+							<span class="item text-decoration-underline">Cart</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
 	<section class="cart padding-large">
 		<div class="container">
 			<div class="row">
@@ -29,16 +48,24 @@
 					<p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
 					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
 				</th:block>
-				<div class="cart-table" >
+				<div th:if="${emptyCartMsg != null}" class="alert alert-warning" style="text-align: center;" role="alert">
+				       <span th:text="${emptyCartMsg}"></span>
+				   </div>
+				   
+				<div th:unless="${emptyCartMsg != null}">
+				<div class="cart-table"  >
 					<div class="cart-header border-bottom border-top">
 						<div class="row d-flex text-capitalize">
 							<h4 class="col-lg-4 py-3 m-0">Sách</h4>
 							<h4 class="col-lg-3 py-3 m-0">Số lượng</h4>
-							<h4 class="col-lg-4 py-3 m-0">Tổng</h4>
+							<h4 class="col-lg-3 py-3 m-0">Giá</h4>
+							<h4 class="col-lg-1 py-3 m-0">Tổng</h4>
+
 						</div>
 					</div>
 
-					<div class="cart-item border-bottom padding-small" th:each="cart,c:${carts}" >
+
+					<div class="cart-item border-bottom padding-small" th:each="cart,c:${carts}">
 						<div class="row align-items-center">
 							<div class="col-lg-4 col-md-3">
 								<div class="cart-info d-flex gap-2 flex-wrap align-items-center">
@@ -52,8 +79,9 @@
 										<div class="card-detail">
 											<h5 class="mt-2"><a href="#">[[${cart.book.bookName}]]</a></h5>
 											<div class="card-price">
-												<span class="price text-primary fw-light"
-													>[[${cart.book.author}]]</span>
+												<span class="price text-primary fw-light" data-currency-usd="$2000.00">[[${cart.book.author}]]
+													<td>
+												</span>
 											</div>
 										</div>
 									</div>
@@ -61,51 +89,50 @@
 							</div>
 							<div class="col-lg-6 col-md-7">
 								<div class="row d-flex">
-									<div class="col-md-6">
-										<div class="product-quantity my-2 my-2">
+									<div class="col-lg-6" style="padding-left: 40px;">
+										<div class="product-quantity my-2 my-2" >
 											<div class="input-group product-qty align-items-center"
 												style="max-width: 150px;">
 												<span class="input-group-btn">
-													<a th:href="@{'/user/cartQuantityUpdate?sy=de&cid='+${cart.id}}"
-														
-														>
+													<a th:href="@{'/user/cartQuantityUpdate?sy=de&cid='+${cart.id}}" style=" padding-right: 10px;">
 														<i class="fa-solid fa-minus"></i>
 													</a>
 												</span>
 												[[${cart.quantity}]]
 												<span class="input-group-btn">
-													<a th:href="@{'/user/cartQuantityUpdate?sy=in&cid='+${cart.id}}"
-														
-														 >
+													<a th:href="@{'/user/cartQuantityUpdate?sy=in&cid='+${cart.id}}" style="padding-left: 10px; ">
 														<i class="fa-solid fa-plus"></i>
 													</a>
 												</span>
 											</div>
 										</div>
 									</div>
-									<div class="col-md-4">
+									<div class="col-lg-4">
 										<div class="total-price">
-											<span class="money fs-2 fw-light text-primary">[[${cart.quantity}]]</span>
+											<span class="money fs-2 fw-light text-primary" >[[${cart.book.discountPrice}]]
+												<td>
+											</span>
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="col-lg-1 col-md-2">
 								<div class="cart-cross-outline">
-									<a href="#">
-										<i class="fa-solid fa-book-open-reader"></i>
-									</a>
+									<div class="total-price">
+										<span
+											class="money fs-2 fw-light text-primary">[[${cart.totalPrice}]]</span>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="cart-totals padding-medium pb-0">
-					<h3 class="mb-3">Cart Totals</h3>
+					<h3 class="mb-3">Thanh toán</h3>
 					<div class="total-price pb-3">
 						<table cellspacing="0" class="table text-capitalize">
 							<tbody>
-								<tr class="subtotal pt-2 pb-2 border-top border-bottom">
+								<!--<tr class="subtotal pt-2 pb-2 border-top border-bottom">
 									<th>Subtotal</th>
 									<td data-title="Subtotal">
 										<span class="price-amount amount text-primary ps-5 fw-light">
@@ -114,13 +141,13 @@
 											</bdi>
 										</span>
 									</td>
-								</tr>
+								</tr>-->
 								<tr class="order-total pt-2 pb-2 border-bottom">
-									<th>Total</th>
+									<th>Tạm tính:</th>
 									<td data-title="Total">
 										<span class="price-amount amount text-primary ps-5 fw-light">
 											<bdi>
-												<span class="price-currency-symbol">$</span>2,400.00</bdi>
+												<span class="price-currency-symbol">[[${totalOrderPrice}]]</span>đ</bdi>
 										</span>
 									</td>
 								</tr>
@@ -128,10 +155,12 @@
 						</table>
 					</div>
 					<div class="button-wrap d-flex flex-wrap gap-3">
-						<button class="btn">Update Cart</button>
-						<button class="btn">Continue Shopping</button>
-						<button class="btn">Proceed to checkout</button>
+						<!--<button class="btn">Update Cart</button>-->
+						<a href="/books" class="btn ">Tiếp tục mua sắm</a>
+						<!--<button class="btn" >Đặt hàng</button>-->
+						<a href="/user/orders" class="btn ">Đặt hàng</a>
 					</div>
+				</div>
 				</div>
 			</div>
 		</div>

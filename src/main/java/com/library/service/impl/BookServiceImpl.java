@@ -87,10 +87,15 @@ public class BookServiceImpl implements BookService {
 		dbBook.setAuthor(book.getAuthor());
 		dbBook.setCategory(book.getCategory());
 		dbBook.setPublisher(book.getPublisher());
+		dbBook.setPrice(book.getPrice());
 		dbBook.setStock(book.getStock());
 		dbBook.setImage(imageName);
 		dbBook.setIsActive(book.getIsActive());
 		dbBook.setIsbn(book.getIsbn());
+		dbBook.setDiscount(book.getDiscount());
+		Integer discount = (int)(book.getPrice() * (book.getDiscount() / 100.0));
+		Integer discountPrice = book.getPrice() - discount;
+		dbBook.setDiscountPrice(discountPrice);
 
 		Book updateProduct = bookRepository.save(dbBook);
 

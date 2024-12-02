@@ -1,13 +1,14 @@
 package com.library.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,33 +16,36 @@ import java.util.List;
 @Setter
 @Entity
 public class Book {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	
+
 	private int id;
-	
+
 	@Column(length = 500)
 	private String bookName;
 
 	@Column(length = 5000)
 	private String description;
-	
+
 	private String author;
-	
+
 	private String category;
-	
+
 	private String publisher;
 	
-	private int stock;
-	
-	private String image;
-	
-	private String isbn;
-	
-	private Boolean isActive;
+	private Integer price;
 
-	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Comment> comments = new ArrayList<>();
+	private int stock;
+
+	private String image;
+
+	private int discount;
+
+	private Integer discountPrice;
+
+	private String isbn;
+
+	private Boolean isActive;
 
 }
