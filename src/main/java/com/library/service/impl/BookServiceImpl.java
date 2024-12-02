@@ -1,11 +1,15 @@
 package com.library.service.impl;
 
 import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -59,9 +63,6 @@ public class BookServiceImpl implements BookService {
 
 	    return books;
 	}
-
-	
-
 	
 	@Override
 	public Boolean deleteBook(Integer id) {
@@ -91,21 +92,16 @@ public class BookServiceImpl implements BookService {
 		dbBook.setIsActive(book.getIsActive());
 		dbBook.setIsbn(book.getIsbn());
 
-		
-
 		Book updateProduct = bookRepository.save(dbBook);
 
 		if (!ObjectUtils.isEmpty(updateProduct)) {
-
 			if (!image.isEmpty()) {
-
 				try {
 					File saveFile = new ClassPathResource("static/images").getFile();
 
 					Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "book_img" + File.separator
 							+ image.getOriginalFilename());
 					Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -118,5 +114,30 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public List<Book> searchBook(String ch) {
 		return bookRepository.findByBookNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(ch, ch);
+	}
+
+	@Override
+	public void saveBooksFromExcel(MultipartFile file) throws Exception {
+		List<Book> books = new ArrayList<>();
+		try (InputStream inputStream = file.getInputStream(); Workbook workbook = new XSSFWorkbook(inputStream)) {
+			Sheet sheet = workbook.getSheetAt(0);
+			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+				Row row = sheet.getRow(i);
+				if (row != null) {
+					Book book = new Book();
+					book.setBookName(row.getCell(0).getStringCellValue());
+					book.setDescription(row.getCell(1).getStringCellValue());
+					book.setAuthor(row.getCell(2).getStringCellValue());
+					book.setCategory(row.getCell(3).getStringCellValue());
+					book.setPublisher(row.getCell(4).getStringCellValue());
+					book.setStock((int) row.getCell(5).getNumericCellValue());
+					book.setImage(row.getCell(6).getStringCellValue());
+					book.setIsbn(row.getCell(7).getStringCellValue());
+					book.setIsActive(row.getCell(8).getBooleanCellValue());
+					books.add(book);
+				}
+			}
+		}
+		bookRepository.saveAll(books);
 	}
 }
