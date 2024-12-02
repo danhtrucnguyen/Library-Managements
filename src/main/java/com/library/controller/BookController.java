@@ -129,7 +129,7 @@ public class BookController {
 		try {
 			if (file.isEmpty()) {
 				session.setAttribute("errorMsg", "Vui lòng chọn file Excel!");
-				return "redirect:/admin/view_admin_book";
+				return "redirect:/admin/add_book";
 			}
 
 			bookService.saveBooksFromExcel(file);

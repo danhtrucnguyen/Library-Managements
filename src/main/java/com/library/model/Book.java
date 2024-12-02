@@ -50,4 +50,12 @@ public class Book {
 	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comment> comments = new ArrayList<>();
 
+	public void calculateDiscountPrice() {
+		if (price != null && discount >= 0 && discount <= 100) {
+			this.discountPrice = price - (price * discount / 100);
+		} else {
+			this.discountPrice = this.price;
+		}
+	}
+
 }

@@ -124,21 +124,64 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public void saveBooksFromExcel(MultipartFile file) throws Exception {
 		List<Book> books = new ArrayList<>();
-		try (InputStream inputStream = file.getInputStream(); Workbook workbook = new XSSFWorkbook(inputStream)) {
+		try (InputStream inputStream = file.getInputStream();
+			 Workbook workbook = new XSSFWorkbook(inputStream)) {
 			Sheet sheet = workbook.getSheetAt(0);
 			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 				Row row = sheet.getRow(i);
 				if (row != null) {
 					Book book = new Book();
-					book.setBookName(row.getCell(0).getStringCellValue());
-					book.setDescription(row.getCell(1).getStringCellValue());
-					book.setAuthor(row.getCell(2).getStringCellValue());
-					book.setCategory(row.getCell(3).getStringCellValue());
-					book.setPublisher(row.getCell(4).getStringCellValue());
-					book.setStock((int) row.getCell(5).getNumericCellValue());
-					book.setImage(row.getCell(6).getStringCellValue());
-					book.setIsbn(row.getCell(7).getStringCellValue());
-					book.setIsActive(row.getCell(8).getBooleanCellValue());
+					Cell cell = row.getCell(1); // Tên sách
+					if (cell != null) {
+						book.setBookName(cell.getStringCellValue());
+					}
+
+					cell = row.getCell(2); // Miêu tả sách
+					if (cell != null) {
+						book.setDescription(cell.getStringCellValue());
+					}
+
+					cell = row.getCell(3); // Tác giả
+					if (cell != null) {
+						book.setAuthor(cell.getStringCellValue());
+					}
+
+					cell = row.getCell(4); // Danh mục
+					if (cell != null) {
+						book.setCategory(cell.getStringCellValue());
+					}
+
+					cell = row.getCell(5); // Nhà xuất bản
+					if (cell != null) {
+						book.setPublisher(cell.getStringCellValue());
+					}
+
+					cell = row.getCell(6); // Giá niêm yết
+					if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+						book.setPrice((int) cell.getNumericCellValue());
+					}
+
+					cell = row.getCell(7); // Số lượng
+					if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+						book.setStock((int) cell.getNumericCellValue());
+					}
+
+					cell = row.getCell(8); // Ảnh
+					if (cell != null) {
+						book.setImage(cell.getStringCellValue());
+					}
+
+					cell = row.getCell(9); // Giảm giá
+					if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+						book.setDiscount((int) cell.getNumericCellValue());
+					}
+
+					cell = row.getCell(10); // ISBN
+					if (cell != null) {
+						book.setIsbn(cell.getStringCellValue());
+					}
+					book.setIsActive(true);
+					book.calculateDiscountPrice();
 					books.add(book);
 				}
 			}
