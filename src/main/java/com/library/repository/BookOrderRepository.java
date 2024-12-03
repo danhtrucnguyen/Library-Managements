@@ -9,5 +9,7 @@ import com.library.model.BookOrder;
 public interface BookOrderRepository extends JpaRepository<BookOrder, Integer> {
 
 	List<BookOrder> findByUserId(Integer userId);
+	
+	List<BookOrder> findByUserIdOrderByOrderDateDesc(Integer userId);
 
 }

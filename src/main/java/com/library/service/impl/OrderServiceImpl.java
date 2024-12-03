@@ -2,7 +2,11 @@ package com.library.service.impl;
 
 
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 //import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -37,47 +41,36 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public void saveOrder(Integer userid, OrderRequest orderRequest) {
 
-//		List<Cart> carts = cartRepository.findByUserId(userid);
-//
-//		for (Cart cart : carts) {
-//
-//			BookOrder order = new BookOrder();
-//
-//			order.setOrderId(UUID.randomUUID().toString());
-//			order.setOrderDate(LocalDate.now());
-//
-//			order.setBook(cart.getBook());
-//			order.setPrice(cart.getBook().getDiscountPrice());
-//
-//			order.setQuantity(cart.getQuantity());
-//			order.setUser(cart.getUser());
-//
-//			order.setStatus(OrderStatus.IN_PROGRESS.getName());
-//			order.setPaymentType(orderRequest.getPaymentType());
-//
-//			OrderAddress address = new OrderAddress();
-//			address.setFirstName(orderRequest.getFirstName());
-//			address.setLastName(orderRequest.getLastName());
-//			address.setEmail(orderRequest.getEmail());
-//			address.setMobileNo(orderRequest.getMobileNo());
-//			address.setAddress(orderRequest.getAddress());
-//			address.setCity(orderRequest.getCity());
-//			address.setDistrict(orderRequest.getDistrict());
-//			address.setNote(orderRequest.getNote());
-//
-//			order.setOrderAddress(address);
-//
-//			orderRepository.save(order);
+
 		
 		 List<Cart> carts = cartRepository.findByUserId(userid);
 
 		    // Tạo một đơn hàng duy nhất cho người dùng
 		    BookOrder order = new BookOrder();
-		    order.setOrderId(UUID.randomUUID().toString());
+		    String orderId = "BLY-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "-" + (int)(Math.random() * 1000);
+		    order.setOrderId(orderId);
 		    order.setOrderDate(LocalDateTime.now());
 		    order.setUser(carts.get(0).getUser()); // Đảm bảo lấy thông tin người dùng từ giỏ hàng
 		    order.setStatus(OrderStatus.IN_PROGRESS.getName());
 		    order.setPaymentType(orderRequest.getPaymentType());
+		    
+		    
+		    DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		    String formattedDateTime = order.getOrderDate().format(formatters);
+            order.setFormattedOrderDate(formattedDateTime);
+            
+		    int totalAmount = carts.stream()
+		            .mapToInt(cart -> cart.getBook().getDiscountPrice() * cart.getQuantity())
+		            .sum();
+		    int shippingFee = 20000;
+		    totalAmount += shippingFee;
+		    order.setTotalAmount(totalAmount);
+		    
+		 // Định dạng tổng giá trị đơn hàng
+		    DecimalFormat formatter = new DecimalFormat("#,###");
+		    String formattedTotalAmount = formatter.format(totalAmount);
+		    order.setFormattedTotalAmount(formattedTotalAmount);
+
 
 		    // Thiết lập địa chỉ giao hàng
 		    OrderAddress address = new OrderAddress();
@@ -113,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public List<BookOrder> getOrdersByUser(Integer userId) {
-		List<BookOrder> orders = orderRepository.findByUserId(userId);
+		List<BookOrder> orders = orderRepository.findByUserIdOrderByOrderDateDesc(userId);
 		return orders;
 	}
 
