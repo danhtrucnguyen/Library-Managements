@@ -51,7 +51,16 @@
 						<tbody>
 							<tr th:each="p,c:${books}">
 								<th scope="row">[[${c.count}]]</th>
-								<td><img th:src="@{'/images/book_img/'+${p.image}}" width="70px" height="70px"></td>
+								<td>
+									<img th:if="${#strings.startsWith(p.image, 'http')}"
+										 th:src="${p.image}"
+										 width="70px" height="70px"
+										 alt="Image from URL" />
+									<img th:if="${#strings.startsWith(p.image, '/images')}"
+										 th:src="@{'/images/book_img/' + ${p.image}}"
+										 width="70px" height="70px"
+										 alt="Local image" />
+								</td>
 								<td>[[${p.bookName}]]</td>
 								<td>[[${p.author}]]</td>
 								<td>[[${p.category}]]</td>

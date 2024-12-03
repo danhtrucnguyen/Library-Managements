@@ -25,7 +25,7 @@ public interface BookService {
 //	public List<Book> getAllActiveBooksPublisher(String publisher);
 	
 	public List<Book> searchBook(String ch);
-	
-	
-	
+
+	void saveBooksFromExcel(MultipartFile file) throws Exception;
+
 }
