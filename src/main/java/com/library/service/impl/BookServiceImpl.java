@@ -1,11 +1,15 @@
 package com.library.service.impl;
 
 import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -59,9 +63,6 @@ public class BookServiceImpl implements BookService {
 
 	    return books;
 	}
-
-	
-
 	
 	@Override
 	public Boolean deleteBook(Integer id) {
@@ -96,21 +97,16 @@ public class BookServiceImpl implements BookService {
 		Integer discountPrice = book.getPrice() - discount;
 		dbBook.setDiscountPrice(discountPrice);
 
-		
-
 		Book updateProduct = bookRepository.save(dbBook);
 
 		if (!ObjectUtils.isEmpty(updateProduct)) {
-
 			if (!image.isEmpty()) {
-
 				try {
 					File saveFile = new ClassPathResource("static/images").getFile();
 
 					Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "book_img" + File.separator
 							+ image.getOriginalFilename());
 					Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -123,5 +119,73 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public List<Book> searchBook(String ch) {
 		return bookRepository.findByBookNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(ch, ch);
+	}
+
+	@Override
+	public void saveBooksFromExcel(MultipartFile file) throws Exception {
+		List<Book> books = new ArrayList<>();
+		try (InputStream inputStream = file.getInputStream();
+			 Workbook workbook = new XSSFWorkbook(inputStream)) {
+			Sheet sheet = workbook.getSheetAt(0);
+			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+				Row row = sheet.getRow(i);
+				if (row != null) {
+					Book book = new Book();
+					Cell cell = row.getCell(1); // Tên sách
+					if (cell != null) {
+						book.setBookName(cell.getStringCellValue());
+					}
+
+					cell = row.getCell(2); // Miêu tả sách
+					if (cell != null) {
+						book.setDescription(cell.getStringCellValue());
+					}
+
+					cell = row.getCell(3); // Tác giả
+					if (cell != null) {
+						book.setAuthor(cell.getStringCellValue());
+					}
+
+					cell = row.getCell(4); // Danh mục
+					if (cell != null) {
+						book.setCategory(cell.getStringCellValue());
+					}
+
+					cell = row.getCell(5); // Nhà xuất bản
+					if (cell != null) {
+						book.setPublisher(cell.getStringCellValue());
+					}
+
+					cell = row.getCell(6); // Giá niêm yết
+					if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+						book.setPrice((int) cell.getNumericCellValue());
+					}
+
+					cell = row.getCell(7); // Số lượng
+					if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+						book.setStock((int) cell.getNumericCellValue());
+					}
+
+					cell = row.getCell(8); // Ảnh
+					if (cell != null) {
+						book.setImage(cell.getStringCellValue());
+					}
+
+					cell = row.getCell(9); // Giảm giá
+					if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+						book.setDiscount((int) cell.getNumericCellValue());
+					}
+
+					cell = row.getCell(10); // ISBN
+					if (cell != null) {
+						book.setIsbn(cell.getStringCellValue());
+					}
+					book.setIsActive(true);
+					book.calculateDiscountPrice();
+					books.add(book);
+				}
+			}
+		}
+		bookRepository.saveAll(books);
 	}
 }

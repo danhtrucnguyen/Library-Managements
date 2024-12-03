@@ -44,7 +44,7 @@ public class BookController {
 	
 	@Autowired
 	private BookService bookService;
-	
+
 	@GetMapping("/loadAddBook")
 	public String loadAddProduct(Model m) {
 		List<Category> categories = categoryService.getAllCategory();
@@ -121,5 +121,22 @@ public class BookController {
 			}
 		
 		return "redirect:/admin/editBook/" + book.getId();
+	}
+
+	// Add book từ file excel
+	@PostMapping("/uploadBooks")
+	public String uploadBooks(@RequestParam("file") MultipartFile file, HttpSession session) {
+		try {
+			if (file.isEmpty()) {
+				session.setAttribute("errorMsg", "Vui lòng chọn file Excel!");
+				return "redirect:/admin/add_book";
+			}
+
+			bookService.saveBooksFromExcel(file);
+			session.setAttribute("succMsg", "Sách được thêm thành công từ file Excel!");
+		} catch (Exception e) {
+			session.setAttribute("errorMsg", "Lỗi khi thêm sách: " + e.getMessage());
+		}
+		return "redirect:/admin/view_admin_book";
 	}
 }
