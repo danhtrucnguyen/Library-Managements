@@ -57,5 +57,7 @@ public class Book {
 			this.discountPrice = this.price;
 		}
 	}
+	
+	private double averageRating;
 
 }

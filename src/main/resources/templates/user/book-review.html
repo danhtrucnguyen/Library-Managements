@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Đánh Giá Sản Phẩm</title>
+
+	<!-- Bootstrap CSS -->
+
+
+
+</head>
+
+<body>
+	<section>
+		<div class="container mt-5">
+			<h2>Đánh Giá Sản Phẩm: <span th:text="${book.bookName}"></span></h2>
+
+			<!-- Form Đánh Giá -->
+			<div class="card my-4">
+				<div class="card-body">
+					<!--<h5 class="card-title">Thêm Đánh Giá</h5>-->
+					<form id="rating-form" th:action="@{/saveReview}" method="post">
+						<input type="hidden" name="bookId" th:value="${book.id}" />
+						<th:block th:if="${user!=null}">
+							<input type="hidden" name="userId" th:value="${user.id}" />
+						</th:block>
+						<div class="mb-3">
+							<label for="score" class="form-label">Lựa chọn đánh giá</label>
+							<!-- Sử dụng sao để chọn điểm đánh giá -->
+							<div class="custom-rating">
+								<span class="custom-star" data-score="1">&#9733;</span>
+								<span class="custom-star" data-score="2">&#9733;</span>
+								<span class="custom-star" data-score="3">&#9733;</span>
+								<span class="custom-star" data-score="4">&#9733;</span>
+								<span class="custom-star" data-score="5">&#9733;</span>
+							</div>
+							<!-- Input hidden để lưu giá trị điểm đánh giá -->
+							<input type="hidden" id="score" name="score">
+						</div>
+						<div class="mb-3">
+							<label for="review" class="form-label">Đánh giá của bạn</label>
+							<textarea id="review" class="form-control" name="review" rows="3" required></textarea>
+						</div>
+						<div style="text-align: right;">
+							<button type="submit" class="btn btn-primary">Gửi</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<!-- Điểm Trung Bình -->
+			<div class="card my-4">
+				<div class="card-body">
+					<h5 class="card-title">Đánh giá sản phẩm</h5>
+					<h3 th:text="${averageRating} + '/5'">Chưa có đánh giá</h3>
+				</div>
+
+			</div>
+
+			<!-- Danh Sách Đánh Giá -->
+			<!-- <div class="card my-4">
+            <div class="card-body">
+                <h5 class="card-title">Danh Sách Đánh Giá</h5>
+                <ul id="rating-list" class="list-group">
+                    
+                    <li class="list-group-item" th:each="rating : ${ratings}">
+                        <strong th:text="${rating.user.name}"></strong>: <span th:text="${rating.score}"></span> sao - <span th:text="${rating.review}"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>-->
+			<div class="card my-4">
+				<div class="card-body">
+					<h5 class="card-title" style="padding-bottom: 20px;">Danh Sách Đánh Giá</h5>
+					<ul id="rating-list" class="list-group">
+						<!-- Lặp qua các đánh giá và hiển thị -->
+						<li class="list-group-item" th:each="rating : ${ratings}" >
+							<!-- Dòng 1: Tên người đánh giá -->
+							<!--<img th:src="@{${rating.user.profileImage} != null ? ${rating.user.profileImage} : '/path/to/default-avatar.png'}"
+								alt="User Avatar" class="rounded-circle" width="40" height="40">-->
+							<!--<img th:src="@{'/images/profile_img/'+${rating.user.profileImage}}"
+								alt="User Avatar" class="rounded-circle" width="40" height="40">-->
+								<span th:if="${rating.user.profileImage != null and rating.user.profileImage != '' and rating.user.profileImage != 'default.jpg'}">
+								    <!-- Nếu có ảnh khác ngoài default.jpg -->
+								    <img th:src="@{'/images/profile_img/' + ${rating.user.profileImage}}" 
+								         alt="User Avatar" class="rounded-circle" width="40" height="40" style="vertical-align: middle;">
+										 <strong th:text="${rating.user.name}" style="display: inline-flex; align-items: center; margin-left: 8px; vertical-align: middle;"></strong>
+								</span>
+
+								<span th:unless="${rating.user.profileImage != null and rating.user.profileImage != '' and rating.user.profileImage != 'default.jpg'}" 
+								      style="display: inline-flex; align-items: center;">
+								    <!-- Nếu không có ảnh hoặc ảnh là default.jpg -->
+								    <i class="fa-solid fa-user" style="font-size: 35px;
+								        padding-top: 6px;
+								        width: 40px;
+								        height: 40px;
+								        border-radius: 50%;
+								        background-color: #ccc;
+								        display: flex;
+								        align-items: center;
+								        justify-content: center;
+								        color: white;"></i>
+										<strong th:text="${rating.user.name}" style="display: inline-flex; align-items: center; margin-left: 8px; vertical-align: middle;"></strong>
+										
+								</span>
+
+								<!-- Tên người dùng -->
+								
+
+
+							<!-- Dòng 2: Hiển thị sao theo số lượng điểm -->
+							<div class="custom-rating-stars">
+								<span class="custom-star"
+									th:class="${rating.score >= 1 ? 'highlightedhh' : ''}">&#9733;</span>
+								<span class="custom-star"
+									th:class="${rating.score >= 2 ? 'highlightedhh' : ''}">&#9733;</span>
+								<span class="custom-star"
+									th:class="${rating.score >= 3 ? 'highlightedhh' : ''}">&#9733;</span>
+								<span class="custom-star"
+									th:class="${rating.score >= 4 ? 'highlightedhh' : ''}">&#9733;</span>
+								<span class="custom-star"
+									th:class="${rating.score >= 5 ? 'highlightedhh' : ''}">&#9733;</span>
+							</div>
+
+							<!-- Dòng 3: Bình luận -->
+							<p th:text="${rating.review}" style="							
+							   border: 1px solid #ddd; /* Viền mỏng màu xám */
+							   padding: 10px;  /* Khoảng cách giữa viền và nội dung */
+							   border-radius: 5px;  /* Bo góc viền */
+							   margin-top: 5px;  /* Khoảng cách giữa phần sao và bình luận */
+							   background-color: #f9f9f9; /* Màu nền nhẹ cho bình luận */
+							   font-size: 1rem; /* Kích thước chữ */
+							   color: #333; /* Màu chữ */"></p>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<!-- Bootstrap JS và Popper.js -->
+
+
+
+</body>
+
+</html>
