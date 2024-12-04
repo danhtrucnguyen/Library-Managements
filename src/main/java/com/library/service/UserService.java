@@ -28,4 +28,6 @@ public interface UserService {
 	public User getUserByToken(String token);
 	
 	public User updateUser(User user);
+
+
 }

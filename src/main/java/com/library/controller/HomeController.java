@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 //import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,10 +34,12 @@ import com.library.model.User;
 import com.library.model.Book;
 import com.library.model.Category;
 import com.library.model.Publisher;
+import com.library.model.Rating;
 import com.library.service.BookService;
 import com.library.service.CartService;
 import com.library.service.CategoryService;
 import com.library.service.PublisherService;
+import com.library.service.RatingService;
 import com.library.service.UserService;
 import com.library.util.CommonUtil;
 
@@ -69,6 +72,9 @@ public class HomeController {
 	
 	@Autowired
 	private PublisherService publisherService;
+	
+	@Autowired
+	private RatingService ratingService;
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m) {
@@ -240,6 +246,57 @@ public class HomeController {
 		Book bookById = bookService.getBookById(id);
 		m.addAttribute("book", bookById);
 		return "view_book";
+	}
+	
+	
+	@PostMapping("/book/{id}/review")
+    public String redirectToBookReview(@PathVariable("id") Integer id) {
+        return "redirect:/review/" + id;
+    }
+
+	
+    @GetMapping("/review/{id}")
+    public String viewProductReviewPage(@PathVariable("id") Integer id, Model model) {
+        Book book = bookService.getBookById(id);
+        double averageRating = ratingService.getAverageRating(id);
+        List<Rating> ratings = ratingService.getRatingsForBook(id);
+        if (book != null ) {
+        	model.addAttribute("averageRating", averageRating);
+            model.addAttribute("ratings", ratings);
+            model.addAttribute("book", book);
+          
+            return "/user/book-review";
+        }
+        return "book-not-found";  // Nếu không tìm thấy sách
+    }
+    
+	
+    @PostMapping("/saveReview")
+    public String addRating( @RequestParam Integer bookId, 
+                             @RequestParam Integer userId, 
+                             @RequestParam int score, 
+                             @RequestParam String review, 
+                             Model model) {
+ 
+        // Thêm đánh giá vào cơ sở dữ liệu
+        Rating savedRating = ratingService.addRating(bookId, userId, score, review);
+
+        // Cập nhật lại thông tin sách và các đánh giá
+        double averageRating = ratingService.getAverageRating(bookId);
+        model.addAttribute("averageRating", averageRating);
+        model.addAttribute("ratings", ratingService.getRatingsForBook(bookId));
+        model.addAttribute("bookId", bookId);
+        model.addAttribute("userId", userId);
+        
+        // Chuyển đến trang chi tiết sách, hiển thị đánh giá mới
+        return "redirect:/review/" + bookId;  // Tên của template Thymeleaf
+    
+    }
+    
+    private User getLoggedInUserDetails(Principal p) {
+		String email = p.getName();
+		User userDtls = userService.getUserByEmail(email);
+		return userDtls;
 	}
 	
 	@GetMapping("/search")

@@ -43,6 +43,44 @@
 		#feedbackButton:hover {
 			background-color: #0056b3;
 		}
+		
+		.custom-rating {
+					    display: flex;
+					    justify-content: space-around;
+					    font-size: 4rem;
+					    cursor: pointer;
+						margin-right: 700px;
+					}
+
+					.custom-star {
+					    color: #ccc;  /* Màu sao khi chưa chọn */
+						margin: 0 5px;
+					}
+
+					.custom-star.selected {
+					    color: gold;  /* Màu sao khi được chọn */
+					}
+
+					.custom-star:hover,
+					.custom-star.hover {
+					    color: gold;  /* Màu sao khi hover */
+					}
+					
+					.custom-rating-stars {
+					    display: flex;
+					    justify-content: start;
+					    font-size: 1.5rem;
+					}
+
+					.custom-stars {
+					    color: #ccc;  /* Màu sao khi chưa chọn */
+					    cursor: pointer;
+					}
+
+					.highlightedhh {
+					    color: gold;  /* Màu sao khi được chọn */
+					}
+
 	</style>
 
 </head>
@@ -527,6 +565,36 @@
 			document.getElementById('loadingSpinner').style.display = 'none';
 			document.getElementById('submitBtn').style.display = 'inline-block';
 		}
+		
+		const stars = document.querySelectorAll('.custom-star');
+				const scoreInput = document.getElementById('score'); // Input hidden để lưu giá trị điểm đánh giá
+
+				stars.forEach(star => {
+				    // Sự kiện khi click vào sao
+				    star.addEventListener('click', function () {
+				        const score = this.getAttribute('data-score');  // Lấy giá trị điểm số từ data-score
+				        scoreInput.value = score;  // Cập nhật điểm vào input hidden
+
+				        // Cập nhật giao diện: Đánh dấu các sao đã chọn
+				        stars.forEach(s => s.classList.remove('selected'));
+				        for (let i = 0; i < score; i++) {
+				            stars[i].classList.add('selected');  // Đánh dấu sao đã chọn
+				        }
+				    });
+
+				    // Sự kiện hover khi di chuột qua sao
+				    star.addEventListener('mouseenter', function () {
+				        stars.forEach(s => s.classList.remove('hover'));  // Loại bỏ hiệu ứng hover cũ
+				        for (let i = 0; i < this.getAttribute('data-score'); i++) {
+				            stars[i].classList.add('hover');  // Thêm hiệu ứng hover
+				        }
+				    });
+
+				    // Sự kiện khi chuột rời khỏi sao
+				    star.addEventListener('mouseleave', function () {
+				        stars.forEach(s => s.classList.remove('hover'));  // Loại bỏ hiệu ứng hover khi chuột rời khỏi sao
+				    });
+				});
 	</script>
 
 	<script src="/js/jquery-1.11.0.min.js"></script>
