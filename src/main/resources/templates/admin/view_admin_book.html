@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{/admin/bases::layout(~{::section})}">
 
 <head>
 	<meta charset="ISO-8859-1">
@@ -15,7 +15,9 @@
 <body>
 	<section>
 		<div class="container-fluid mt-5 p-5">
-
+			<div style="text-align: right;  margin-bottom: 20px;">
+				<a href="/admin/loadAddBook" class="btn btn-sm btn-primary" style="font-size: 20px">+ Thêm sách</a>
+			</div>
 			<div class="card card-sh">
 				<div class="card-header text-center">
 					<p class="fs-4">Sách</p>
@@ -34,7 +36,7 @@
 						<thead>
 							<tr>
 								<th scope="col">Số Thứ tự</th>
-								<th scope="col">Ảnh</th>
+							<!--	<th scope="col">Ảnh</th>-->
 								<th scope="col">Tên Sách</th>
 								<th scope="col">Tên Tác giả</th>
 								<th scope="col">Danh mục</th>
@@ -51,15 +53,12 @@
 						<tbody>
 							<tr th:each="p,c:${books}">
 								<th scope="row">[[${c.count}]]</th>
-								<td>
-									<img th:if="${#strings.startsWith(p.image, 'http')}"
-										 th:src="${p.image}"
-										 width="70px" height="70px"
-										 alt="Image from URL" />
+								<!--<td>
+									<img th:if="${#strings.startsWith(p.image, 'http')}" th:src="${p.image}"
+										width="70px" height="70px" alt="Image from URL" />
 									<img th:if="${#strings.startsWith(p.image, '/images')}"
-										 th:src="@{'/images/book_img/' + ${p.image}}"
-										 width="70px" height="70px"
-										 alt="Local image" />
+										th:src="@{'/images/book_img/' + ${p.image}}" width="70px" height="70px"
+										alt="Local image" />-->
 								</td>
 								<td>[[${p.bookName}]]</td>
 								<td>[[${p.author}]]</td>
