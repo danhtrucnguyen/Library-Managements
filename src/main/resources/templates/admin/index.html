@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 
 
+
 </head>
 
 <body>
@@ -23,48 +24,95 @@
 		</nav>
 		<div id="content" class="content-wrapper">
 			<div class="container ">
-			       <h1 class="mb-3">THỐNG KÊ</h1>
-			       <p>Trang thống kê</p>
-			       <div class="row">
-			           <div class="col-md-3">
-			               <div class="card card-blue">
-			                   <div class="card-body">
-			                       <h7 class="card-title">TỔNG SỐ ĐƠN HÀNG (3)</h5>
-			                        <hr style="border-top: 2px solid black;">
-			                       <a href="#" class="btn btn-light btn-sm">Chi tiết &gt;</a>
-			                   </div>
-			               </div>
-			           </div>
-			           <div class="col-md-3">
-			               <div class="card card-yellow">
-			                   <div class="card-body">
-			                       <h7 class="card-title">ĐÁNH GIÁ (15)</h5>
-			                        <hr style="border-top: 2px solid black;">
-			                       <a href="#" class="btn btn-light btn-sm">Chi tiết &gt;</a>
-			                   </div>
-			               </div>
-			           </div>
-			           <div class="col-md-3">
-			               <div class="card card-green">
-			                   <div class="card-body">
-			                       <h7 class="card-title">SẢN PHẨM (6)</h5>
-			                        <hr style="border-top: 2px solid black;">
-			                       <a href="#" class="btn btn-light btn-sm">Chi tiết &gt;</a>
-			                   </div>
-			               </div>
-			           </div>
-			           <div class="col-md-3">
-			               <div class="card card-red">
-			                   <div class="card-body">
-			                       <h7 class="card-title">THÀNH VIÊN (13)</h1>
-			                        <hr style="border-top: 2px solid black;">
-			                       <a href="#" class="btn btn-light btn-sm">Chi tiết &gt;</a>
-			                   </div>
-			               </div>
-			           </div>
-			       </div>
-			   </div>
-		</div>
+				<h1 class="mb-3">BOOKLY</h1>
+				<p>Trang thống kê</p>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="card card-blue">
+							<div class="card-body">
+								<h7 class="card-title">TỔNG SỐ ĐƠN HÀNG (3)</h5>
+									<hr style="border-top: 2px solid black;">
+									<a href="#" class="btn btn-light btn-sm">Chi tiết &gt;</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="card card-yellow">
+							<div class="card-body">
+								<h7 class="card-title">ĐÁNH GIÁ (15)</h5>
+									<hr style="border-top: 2px solid black;">
+									<a href="#" class="btn btn-light btn-sm">Chi tiết &gt;</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="card card-green">
+							<div class="card-body">
+								<h7 class="card-title">SẢN PHẨM (6)</h5>
+									<hr style="border-top: 2px solid black;">
+									<a href="#" class="btn btn-light btn-sm">Chi tiết &gt;</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="card card-red">
+							<div class="card-body">
+								<h7 class="card-title">THÀNH VIÊN (13)</h1>
+									<hr style="border-top: 2px solid black;">
+									<a href="#" class="btn btn-light btn-sm">Chi tiết &gt;</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div>
+				<div class="chart-container">
+					<div class="chart-box" style="width: 90%;">
+						<label for="yearSelector" style="padding-top: 30px;">Chọn năm:</label>
+						<input id="yearSelector" type="number" min="2000" max="2100" step="1" value="2024">
+						<div>
+						    <canvas id="revenueChart" width="800" height="600"></canvas>
+						</div>
+					</div>
+					<div class="chart-box">
+					        <div class="filter-container" style="font-family: Arial, sans-serif; padding: 20px; max-width: 150px; display: flex; flex-direction: column; ">
+					            <label for="filterType" style="margin-bottom: 5px; font-weight: bold;">Loại thống kê</label>
+					            <select id="filterType" onchange="handleFilterChange()" style="padding: 8px; margin-bottom: 20px; font-size: 14px;">
+					                <option value="day">Ngày</option>
+					                <option value="month" selected>Tháng</option>
+					                <option value="year">Năm</option>
+					            </select>
+
+					            <div id="inputContainer">
+					                <label id="inputLabel" for="startDate" style="padding-bottom: 10px;">Chọn ngày</label>
+					                <div class="date-range" style="display: flex; align-items: center;">
+					                    <input type="date" id="startDate" style="padding: 8px; font-size: 14px; margin-right: 5px;">
+					                    <span class="separator" style="font-size: 20px; margin: 0 5px;">-</span>
+					                    <input type="date" id="endDate" style="padding: 8px; font-size: 14px; margin-right: 5px;">
+					                </div>
+					            </div>
+								
+					        </div>
+							<canvas id="orderStatusChart" width="300" height="300"></canvas>
+					    </div>
+
+					    
+				</div>
+				<div>
+					<div class="container" style="padding-top: 40px;">
+						<label for="monthSelector" >Chọn tháng:</label>
+						<input type="text" id="monthSelector">
+					</div>
+					<canvas id="dailyRevenueChart"></canvas>
+				</div>
+
+			</div>
+			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+			<link rel="stylesheet"
+				href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+			<script
+				src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 	</section>
 </body>
 

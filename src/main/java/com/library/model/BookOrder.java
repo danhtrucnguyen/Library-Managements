@@ -68,6 +68,8 @@ public class BookOrder {
     
     private int totalAmount; // tổng giá trị đơn hàng
     
+    private int totalPrice;
+    
     private String formattedTotalAmount;
 
     @OneToOne(cascade = CascadeType.ALL)
