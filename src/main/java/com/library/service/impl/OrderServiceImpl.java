@@ -1,16 +1,20 @@
 package com.library.service.impl;
 
-
-
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 //import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private BookOrderRepository orderRepository;
-	
+
 	@Autowired
 	private BookOrderItemRepository bookOrderItemRepository;
 
@@ -41,67 +45,58 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public void saveOrder(Integer userid, OrderRequest orderRequest) {
 
+		List<Cart> carts = cartRepository.findByUserId(userid);
 
-		
-		 List<Cart> carts = cartRepository.findByUserId(userid);
+		BookOrder order = new BookOrder();
+		String orderId = "BLY-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "-"
+				+ (int) (Math.random() * 1000);
+		order.setOrderId(orderId);
+		order.setOrderDate(LocalDateTime.now());
+		order.setUser(carts.get(0).getUser()); 
+		order.setStatus(OrderStatus.IN_PROGRESS.getName());
+		order.setPaymentType(orderRequest.getPaymentType());
 
-		    // Tạo một đơn hàng duy nhất cho người dùng
-		    BookOrder order = new BookOrder();
-		    String orderId = "BLY-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "-" + (int)(Math.random() * 1000);
-		    order.setOrderId(orderId);
-		    order.setOrderDate(LocalDateTime.now());
-		    order.setUser(carts.get(0).getUser()); // Đảm bảo lấy thông tin người dùng từ giỏ hàng
-		    order.setStatus(OrderStatus.IN_PROGRESS.getName());
-		    order.setPaymentType(orderRequest.getPaymentType());
-		    
-		    
-		    DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-		    String formattedDateTime = order.getOrderDate().format(formatters);
-            order.setFormattedOrderDate(formattedDateTime);
-            
-		    int totalAmount = carts.stream()
-		            .mapToInt(cart -> cart.getBook().getDiscountPrice() * cart.getQuantity())
-		            .sum();
-		    int shippingFee = 20000;
-		    totalAmount += shippingFee;
-		    order.setTotalAmount(totalAmount);
-		    
-		 // Định dạng tổng giá trị đơn hàng
-		    DecimalFormat formatter = new DecimalFormat("#,###");
-		    String formattedTotalAmount = formatter.format(totalAmount);
-		    order.setFormattedTotalAmount(formattedTotalAmount);
+		DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		String formattedDateTime = order.getOrderDate().format(formatters);
+		order.setFormattedOrderDate(formattedDateTime);
+
+		int totalAmount = carts.stream().mapToInt(cart -> cart.getBook().getDiscountPrice() * cart.getQuantity()).sum();
+		int shippingFee = 20000;
+		totalAmount += shippingFee;
+		order.setTotalAmount(totalAmount);
+
+		int totalPrice = carts.stream().mapToInt(cart -> cart.getBook().getDiscountPrice() * cart.getQuantity()).sum();
+		order.setTotalPrice(totalPrice);
+
+		DecimalFormat formatter = new DecimalFormat("#,###");
+		String formattedTotalAmount = formatter.format(totalAmount);
+		order.setFormattedTotalAmount(formattedTotalAmount);
+
+		OrderAddress address = new OrderAddress();
+		address.setFirstName(orderRequest.getFirstName());
+		address.setLastName(orderRequest.getLastName());
+		address.setEmail(orderRequest.getEmail());
+		address.setMobileNo(orderRequest.getMobileNo());
+		address.setAddress(orderRequest.getAddress());
+		address.setCity(orderRequest.getCity());
+		address.setDistrict(orderRequest.getDistrict());
+		address.setNote(orderRequest.getNote());
+
+		order.setOrderAddress(address);
+
+		orderRepository.save(order);
 
 
-		    // Thiết lập địa chỉ giao hàng
-		    OrderAddress address = new OrderAddress();
-		    address.setFirstName(orderRequest.getFirstName());
-		    address.setLastName(orderRequest.getLastName());
-		    address.setEmail(orderRequest.getEmail());
-		    address.setMobileNo(orderRequest.getMobileNo());
-		    address.setAddress(orderRequest.getAddress());
-		    address.setCity(orderRequest.getCity());
-		    address.setDistrict(orderRequest.getDistrict());
-		    address.setNote(orderRequest.getNote());
+		for (Cart cart : carts) {
+			BookOrderItem orderItem = new BookOrderItem();
+			orderItem.setBookOrder(order); 
+			orderItem.setBook(cart.getBook());
+			orderItem.setQuantity(cart.getQuantity());
+			orderItem.setPrice(cart.getBook().getDiscountPrice());
 
-		    order.setOrderAddress(address);
+			bookOrderItemRepository.save(orderItem);
+		}
 
-		    // Lưu đơn hàng
-		    orderRepository.save(order);
-
-		    // Duyệt qua tất cả các giỏ hàng của người dùng và thêm các sản phẩm vào đơn hàng
-		    for (Cart cart : carts) {
-		        // Lưu từng sản phẩm của giỏ hàng vào đơn hàng
-		        BookOrderItem orderItem = new BookOrderItem();
-		        orderItem.setBookOrder(order);  // Liên kết với đơn hàng
-		        orderItem.setBook(cart.getBook());
-		        orderItem.setQuantity(cart.getQuantity());
-		        orderItem.setPrice(cart.getBook().getDiscountPrice());
-
-		        // Lưu chi tiết sản phẩm vào cơ sở dữ liệu
-		        bookOrderItemRepository.save(orderItem);
-		    }
-
-		
 	}
 
 	@Override
@@ -121,10 +116,59 @@ public class OrderServiceImpl implements OrderService {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public List<BookOrder> getAllOrders() {
 		return orderRepository.findAll();
 	}
 
+	@Override
+	public Map<Integer, Integer> getMonthlyRevenue(int year) {
+		List<Object[]> revenueData = orderRepository.getMonthlyRevenue(year);
+
+		Map<Integer, Integer> monthlyRevenue = new HashMap<>();
+		for (Object[] data : revenueData) {
+			int month = (int) data[0]; 
+			int revenue = ((Number) data[1]).intValue(); 
+			monthlyRevenue.put(month, revenue);
+		}
+
+		for (int i = 1; i <= 12; i++) {
+			monthlyRevenue.putIfAbsent(i, 0);
+		}
+
+		return monthlyRevenue;
+	}
+
+	@Override
+	public Map<Integer, Integer> getDailyRevenue(int year, int month) {
+		Map<Integer, Integer> dailyRevenue = new HashMap<>();
+
+		List<BookOrder> orders = orderRepository.findOrdersByMonthAndYear(year, month);
+
+		for (BookOrder order : orders) {
+			LocalDateTime orderDate = order.getOrderDate();
+
+			if (orderDate.getYear() == year && orderDate.getMonthValue() == month) {
+				int day = orderDate.getDayOfMonth();
+				int totalPrice = order.getTotalPrice(); 
+
+				dailyRevenue.put(day, dailyRevenue.getOrDefault(day, 0) + totalPrice);
+			}
+		}
+
+		return dailyRevenue;
+	}
+	
+	@Override
+	public Map<String, Long> getOrderStatistics(LocalDateTime startDate, LocalDateTime endDate) {
+        List<Object[]> results = orderRepository.countOrdersByStatusAndDateRange(startDate, endDate);
+        Map<String, Long> statistics = new HashMap<>();
+        for (Object[] result : results) {
+            String status = (String) result[0];
+            Long count = (Long) result[1];
+            statistics.put(status, count);
+        }
+        return statistics;
+    }
 }

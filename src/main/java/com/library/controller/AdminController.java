@@ -8,11 +8,17 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -24,12 +30,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import com.library.model.User;
 import com.library.service.CartService;
 import com.library.service.CategoryService;
 import com.library.service.OrderService;
-import com.library.service.UserService	;
+import com.library.service.UserService;
 import com.library.util.OrderStatus;
 import com.library.model.BookOrder;
 import com.library.model.BookOrderItem;
@@ -41,16 +46,15 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/admin")
 public class AdminController {
 
-
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private CartService cartService;
-	
+
 	@Autowired
 	private CategoryService categoryService;
-	
+
 	@Autowired
 	private OrderService orderService;
 
@@ -72,7 +76,7 @@ public class AdminController {
 	public String index() {
 		return "admin/index";
 	}
-	
+
 	@GetMapping("/users")
 	public String getAllUsers(Model m) {
 		List<User> users = userService.getUsers("ROLE_USER");
@@ -90,7 +94,7 @@ public class AdminController {
 		}
 		return "redirect:/admin/users";
 	}
-	
+
 	@GetMapping("/category")
 	public String category(Model m) {
 		m.addAttribute("categorys", categoryService.getAllCategory());
@@ -185,40 +189,39 @@ public class AdminController {
 
 		return "redirect:/admin/loadEditCategory/" + category.getId();
 	}
-	
+
 	@GetMapping("/orders")
 	public String getAllOrders(Model m) {
 		List<BookOrder> allOrders = orderService.getAllOrders();
-		
-		 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-		    // Tạo DecimalFormat để định dạng totalAmount
-		    DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-		    for (BookOrder order : allOrders) {
-		        // Đổi ngày giờ theo định dạng dd/MM/yyyy HH:mm:ss
-		        if (order.getOrderDate() != null) {
-		            String formattedDateTime = order.getOrderDate().format(formatter);
-		            order.setFormattedOrderDate(formattedDateTime); // Cập nhật ngày giờ đã định dạng
-		        }
+		// Tạo DecimalFormat để định dạng totalAmount
+		DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
 
-		        // Tính tổng giá trị của đơn hàng và định dạng số tiền
-		        int totalAmount = 20000;
-		        for (BookOrderItem item : order.getItems()) {
-		            totalAmount += item.getBook().getDiscountPrice() * item.getQuantity();
-		        }
-		        order.setTotalAmount(totalAmount); // Lưu tổng giá trị vào đơn hàng
+		for (BookOrder order : allOrders) {
+			// Đổi ngày giờ theo định dạng dd/MM/yyyy HH:mm:ss
+			if (order.getOrderDate() != null) {
+				String formattedDateTime = order.getOrderDate().format(formatter);
+				order.setFormattedOrderDate(formattedDateTime); // Cập nhật ngày giờ đã định dạng
+			}
 
-		        // Định dạng totalAmount với dấu phân cách hàng nghìn
-		        String formattedTotalAmount = decimalFormat.format(totalAmount);
-		        order.setFormattedTotalAmount(formattedTotalAmount); // Lưu tổng giá trị đã định dạng
-		    }
+			// Tính tổng giá trị của đơn hàng và định dạng số tiền
+			int totalAmount = 20000;
+			for (BookOrderItem item : order.getItems()) {
+				totalAmount += item.getBook().getDiscountPrice() * item.getQuantity();
+			}
+			order.setTotalAmount(totalAmount); // Lưu tổng giá trị vào đơn hàng
+
+			// Định dạng totalAmount với dấu phân cách hàng nghìn
+			String formattedTotalAmount = decimalFormat.format(totalAmount);
+			order.setFormattedTotalAmount(formattedTotalAmount); // Lưu tổng giá trị đã định dạng
+		}
 		m.addAttribute("orders", allOrders);
-		
-		
+
 		return "/admin/orders";
 	}
-	
+
 	@PostMapping("/update-order-status")
 	public String updateOrderStatus(@RequestParam Integer id, @RequestParam Integer st, HttpSession session) {
 
@@ -241,5 +244,29 @@ public class AdminController {
 		return "redirect:/admin/orders";
 	}
 
+	@GetMapping("/monthly")
+	public ResponseEntity<Map<Integer, Integer>> getMonthlyRevenue(
+			@RequestParam(name = "year", defaultValue = "2024") int year) {
+		Map<Integer, Integer> monthlyRevenue = orderService.getMonthlyRevenue(year);
+		return ResponseEntity.ok(monthlyRevenue);
+	}
+
+	@GetMapping("/daily-revenue")
+	public ResponseEntity<Map<Integer, Integer>> getDailyRevenue(@RequestParam int year, @RequestParam int month) {
+
+
+		Map<Integer, Integer> dailyRevenue = orderService.getDailyRevenue(year, month);
+
+
+		return ResponseEntity.ok(dailyRevenue);
+	}
+
+	
+	@GetMapping("/statistics")
+    public ResponseEntity<Map<String, Long>> getOrderStatistics(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+        return ResponseEntity.ok(orderService.getOrderStatistics(startDate, endDate));
+    }
 
 }
