@@ -35,6 +35,7 @@ import com.library.service.CartService;
 import com.library.service.CategoryService;
 import com.library.service.OrderService;
 import com.library.service.UserService;
+import com.library.util.CommonUtil;
 import com.library.util.OrderStatus;
 import com.library.model.BookOrder;
 import com.library.model.BookOrderItem;
@@ -57,6 +58,9 @@ public class AdminController {
 
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m) {
@@ -234,9 +238,15 @@ public class AdminController {
 			}
 		}
 
-		Boolean updateOrder = orderService.updateOrderStatus(id, status);
+		BookOrder updateOrder = orderService.updateOrderStatus(id, status);
+		
+		try {
+			commonUtil.sendMailForBookOrder(updateOrder, status);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-		if (updateOrder) {
+		if (!ObjectUtils.isEmpty(updateOrder)) {
 			session.setAttribute("succMsg", "Đã cập nhật trạng thái");
 		} else {
 			session.setAttribute("errorMsg", "Trạng thái chưa được cập nhật");

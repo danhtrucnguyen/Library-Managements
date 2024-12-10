@@ -10,11 +10,11 @@ import com.library.model.BookOrder;
 
 public interface OrderService {
 
-	public void saveOrder(Integer userid,OrderRequest orderRequest);
+	public void saveOrder(Integer userid,OrderRequest orderRequest) throws Exception;
 	
 	public List<BookOrder> getOrdersByUser(Integer userId);
 	
-	public Boolean updateOrderStatus(Integer id,String status);
+	public BookOrder updateOrderStatus(Integer id,String status);
 
 	public List<BookOrder> getAllOrders();
 	

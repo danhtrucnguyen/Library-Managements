@@ -28,6 +28,7 @@ import com.library.repository.CartRepository;
 import com.library.repository.BookOrderItemRepository;
 import com.library.repository.BookOrderRepository;
 import com.library.service.OrderService;
+import com.library.util.CommonUtil;
 import com.library.util.OrderStatus;
 
 @Service
@@ -41,9 +42,12 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private CartRepository cartRepository;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 
 	@Override
-	public void saveOrder(Integer userid, OrderRequest orderRequest) {
+	public void saveOrder(Integer userid, OrderRequest orderRequest) throws Exception {
 
 		List<Cart> carts = cartRepository.findByUserId(userid);
 
@@ -84,7 +88,8 @@ public class OrderServiceImpl implements OrderService {
 
 		order.setOrderAddress(address);
 
-		orderRepository.save(order);
+		BookOrder saveOrder = orderRepository.save(order);
+		commonUtil.sendMailForBookOrder(saveOrder, "success");
 
 
 		for (Cart cart : carts) {
@@ -106,15 +111,15 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Boolean updateOrderStatus(Integer id, String status) {
+	public BookOrder updateOrderStatus(Integer id, String status) {
 		Optional<BookOrder> findById = orderRepository.findById(id);
 		if (findById.isPresent()) {
 			BookOrder bookOrder = findById.get();
 			bookOrder.setStatus(status);
-			orderRepository.save(bookOrder);
-			return true;
+			BookOrder updateOrder = orderRepository.save(bookOrder);
+			return updateOrder;
 		}
-		return false;
+		return null;
 	}
 
 	@Override
