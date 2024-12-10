@@ -2,6 +2,8 @@ package com.library.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.library.model.User;
 
 
@@ -28,6 +30,8 @@ public interface UserService {
 	public User getUserByToken(String token);
 	
 	public User updateUser(User user);
+	
+	public User updateUserProfile(User user,MultipartFile img);
 
 
 }

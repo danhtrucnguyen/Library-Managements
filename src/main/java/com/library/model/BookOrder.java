@@ -23,31 +23,6 @@ import lombok.Setter;
 @Setter
 @Entity
 public class BookOrder {
-
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
-//	private Integer id;
-//
-//	private String orderId;
-//
-//	private LocalDate orderDate;
-//
-//	@ManyToOne
-//	private Book book;
-//
-//	private Integer price;
-//
-//	private Integer quantity;
-//
-//	@ManyToOne
-//	private User user;
-//
-//	private String status;
-//
-//	private String paymentType;
-//
-//	@OneToOne(cascade = CascadeType.ALL)
-//	private OrderAddress orderAddress;
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

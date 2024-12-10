@@ -7,6 +7,7 @@ import java.util.List;
 import java.text.DecimalFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.library.model.BookOrder;
 import com.library.model.BookOrderItem;
@@ -28,6 +30,7 @@ import com.library.service.OrderService;
 import com.library.service.CartService;
 import com.library.service.CategoryService;
 import com.library.service.UserService;
+import com.library.util.CommonUtil;
 import com.library.util.OrderStatus;
 
 import jakarta.servlet.http.HttpSession;
@@ -49,6 +52,12 @@ public class UserController {
 
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private CommonUtil commonUtil;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@GetMapping("/")
 	public String home() {
@@ -126,7 +135,7 @@ public class UserController {
 	}
 
 	@PostMapping("/save-order")
-	public String saveOrder(@ModelAttribute OrderRequest request, Principal p) {
+	public String saveOrder(@ModelAttribute OrderRequest request, Principal p) throws Exception {
 		// System.out.println(request);
 		User user = getLoggedInUserDetails(p);
 		orderService.saveOrder(user.getId(), request);
@@ -217,14 +226,59 @@ public class UserController {
 			}
 		}
 
-		Boolean updateOrder = orderService.updateOrderStatus(id, status);
+		BookOrder updateOrder = orderService.updateOrderStatus(id, status);
+		
+		try {
+			commonUtil.sendMailForBookOrder(updateOrder, status);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-		if (updateOrder) {
+		if (!ObjectUtils.isEmpty(updateOrder)) {
 			session.setAttribute("succMsg", "Đã cập nhật trạng thái");
 		} else {
 			session.setAttribute("errorMsg", "Trạng thái chưa được cập nhật");
 		}
 		return "redirect:/user/user-orders";
+	}
+	
+	@GetMapping("/profile")
+	public String profile() {
+		return "/user/profile";
+	}
+
+	@PostMapping("/update-profile")
+	public String updateProfile(@ModelAttribute User user, @RequestParam MultipartFile img, HttpSession session) {
+		User updateUserProfile = userService.updateUserProfile(user, img);
+		if (ObjectUtils.isEmpty(updateUserProfile)) {
+			session.setAttribute("errorMsg", "Thay đổi hồ sơ không thành công");
+		} else {
+			session.setAttribute("succMsg", "Hồ sơ của bạn đã được thay đổi");
+		}
+		return "redirect:/user/profile";
+	}
+
+	@PostMapping("/change-password")
+	public String changePassword(@RequestParam String newPassword, @RequestParam String currentPassword, Principal p,
+			HttpSession session) {
+		User loggedInUserDetails = getLoggedInUserDetails(p);
+
+		boolean matches = passwordEncoder.matches(currentPassword, loggedInUserDetails.getPassword());
+
+		if (matches) {
+			String encodePassword = passwordEncoder.encode(newPassword);
+			loggedInUserDetails.setPassword(encodePassword);
+			User updateUser = userService.updateUser(loggedInUserDetails);
+			if (ObjectUtils.isEmpty(updateUser)) {
+				session.setAttribute("errorMsg", "Mật khẩu chưa được cập nhật, lỗi máy chủ");
+			} else {
+				session.setAttribute("succMsg", "Cập nhật mật khẩu thành công");
+			}
+		} else {
+			session.setAttribute("errorMsg", "Thông tin điền không chính xác");
+		}
+
+		return "redirect:/user/profile";
 	}
 
 }
