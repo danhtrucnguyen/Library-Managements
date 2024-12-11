@@ -19,7 +19,7 @@
 		<div class="container-fluid p-5 mt-5">
 			<div class="row">
 				<div class="col-md-3">
-					<div class="card card-sh">
+					<div class="card card-sh" style="color: black;">
 						<div class="card-header text-center ">
 							<p class="fs-4">Thêm Nhà xuất bản</p>
 							<th:block th:if="${session.succMsg}">
@@ -36,7 +36,7 @@
 						<div class="card-body">
 							<form action="/admin/savePublisher" method="post"
 								enctype="multipart/form-data">
-								<div class="mb-3">
+								<div class="mb-3" >
 									<label>Tên nhà xuất bản</label> <input type="text" name="name"
 										class="form-control">
 								</div>
@@ -70,7 +70,7 @@
 				</div>
 
 				<div class="col-md-8">
-					<div class="card card-sh">
+					<div class="card card-sh" style="color: black;">
 						<div class="card-header text-center fs-4">Nhà Xuất Bản</div>
 						<div class="card-body">
 							<table class="table">

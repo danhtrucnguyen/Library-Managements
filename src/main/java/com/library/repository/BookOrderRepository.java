@@ -31,4 +31,5 @@ public interface BookOrderRepository extends JpaRepository<BookOrder, Integer> {
 	    List<Object[]> countOrdersByStatusAndDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
 
+	BookOrder findByOrderId(String orderId);
 }

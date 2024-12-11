@@ -24,4 +24,6 @@ public interface OrderService {
 	
 	public Map<String, Long> getOrderStatistics(LocalDateTime startDate, LocalDateTime endDate);
 	
+	public BookOrder getOrdersByOrderId(String orderId);
+	
 }

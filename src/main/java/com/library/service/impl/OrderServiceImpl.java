@@ -176,4 +176,9 @@ public class OrderServiceImpl implements OrderService {
         }
         return statistics;
     }
+	
+	@Override
+	public BookOrder getOrdersByOrderId(String orderId) {
+		return orderRepository.findByOrderId(orderId);
+	}
 }
