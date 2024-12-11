@@ -14,74 +14,96 @@
 
 <body>
 	<section>
-		<div class="container-fluid mt-5 p-5">
-			<div style="text-align: right;  margin-bottom: 20px;">
-				<a href="/admin/loadAddBook" class="btn btn-sm btn-primary" style="font-size: 20px">+ Thêm sách</a>
-			</div>
-			<div class="card card-sh">
-				<div class="card-header text-center">
-					<p class="fs-4">Sách</p>
-					<th:block th:if="${session.succMsg}">
-						<p class="text-success fw-bold">[[${session.succMsg}]]</p>
-						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
-					</th:block>
+		<div class="container-fluid mt-4 p-3">
+			<div class="row">
+				<p class="text-center fs-3 mt-2">Sách</p>
+				<hr>
+				<a href="/admin/" class="text-decoration-none" style="margin-left: 10px;"><i class="fa-solid fa-arrow-left"></i> Trở lại</a>
+				<th:block th:if="${session.succMsg}">
+					<p class="text-success fw-bold">[[${session.succMsg}]]</p>
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
 
-					<th:block th:if="${session.errorMsg}">
-						<p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
-						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
-					</th:block>
+				<th:block th:if="${session.errorMsg}">
+					<p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+
+				<th:block th:if="${session.errorMsg}">
+					<p class="text-danger fw-bold text-center">[[${session.errorMsg}]]</p>
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+				<div class="col-md-4 p-4">
+
+					<form action="/admin/view_admin_book" method="get">
+						<div class="row">
+							<div class="col">
+								<input type="text" class="form-control " name="ch">
+							</div>
+							<div class="col">
+								<button class="btn btn-primary col">Tìm kiếm</button>
+							</div>
+						</div>
+
+					</form>
+
 				</div>
-				<div class="card-body">
-					<table class="table">
-						<thead>
-							<tr>
-								<th scope="col">Số Thứ tự</th>
+				<div class="col" style="text-align: right;  ">
+					<a href="/admin/loadAddBook" class="btn btn-sm btn-primary" style="font-size: 20px; margin-right: 15px;margin-top: 25px;">+
+						Thêm sách</a>
+				</div>
+			</div>
+			<div class="p-3">
+				<table class="table table-bordered">
+					<thead class="table-light ">
+						<tr>
+							<th scope="col">Số Thứ tự</th>
 							<!--	<th scope="col">Ảnh</th>-->
-								<th scope="col">Tên Sách</th>
-								<th scope="col">Tên Tác giả</th>
-								<th scope="col">Danh mục</th>
-								<th scope="col">Nhà xuất bản</th>
-								<th scope="col">Giá niêm yết</th>
-								<th scope="col">Giảm giá</th>
-								<th scope="col">Giá chiết khấu</th>
-								<th scope="col">Số lượng</th>
-								<th scope="col">Trạng thái</th>
-								<th scope="col">Mã Isbn</th>
-								<th scope="col">Hành động</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="p,c:${books}">
-								<th scope="row">[[${c.count}]]</th>
-								<!--<td>
+							<th scope="col">Tên Sách</th>
+							<th scope="col">Tên Tác giả</th>
+							<th scope="col">Danh mục</th>
+							<th scope="col">Nhà xuất bản</th>
+							<th scope="col">Giá niêm yết</th>
+							<th scope="col">Giảm giá</th>
+							<th scope="col">Giá chiết khấu</th>
+							<th scope="col">Số lượng</th>
+							<th scope="col">Trạng thái</th>
+							<th scope="col">Mã Isbn</th>
+							<th scope="col">Hành động</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="p,c:${books}">
+							<th scope="row">[[${c.count}]]</th>
+							<!--<td>
 									<img th:if="${#strings.startsWith(p.image, 'http')}" th:src="${p.image}"
 										width="70px" height="70px" alt="Image from URL" />
 									<img th:if="${#strings.startsWith(p.image, '/images')}"
 										th:src="@{'/images/book_img/' + ${p.image}}" width="70px" height="70px"
 										alt="Local image" />-->
-								</td>
-								<td>[[${p.bookName}]]</td>
-								<td>[[${p.author}]]</td>
-								<td>[[${p.category}]]</td>
-								<td>[[${p.publisher}]]</td>
-								<td>[[${p.price}]]</td>
-								<td>[[${p.discount}]]%</td>
-								<td>[[${p.discountPrice}]]</td>
-								<td>[[${p.stock}]]</td>
+							</td>
+							<td>[[${p.bookName}]]</td>
+							<td>[[${p.author}]]</td>
+							<td>[[${p.category}]]</td>
+							<td>[[${p.publisher}]]</td>
+							<td>[[${p.price}]]</td>
+							<td>[[${p.discount}]]%</td>
+							<td>[[${p.discountPrice}]]</td>
+							<td>[[${p.stock}]]</td>
 
-								<td>[[${p.isActive}]]</td>
-								<td>[[${p.isbn}]]</td>
-								<td><a th:href="@{'/admin/editBook/'+${p.id}}" class="btn btn-sm btn-primary"><i
-											class="fa-solid fa-pen-to-square"></i>Sửa</a> <a
-										th:href="@{'/admin/deleteBook/'+${p.id}}" class="btn btn-sm btn-danger"><i
-											class="fa-solid fa-trash"></i>
-										Xóa</a></td>
-							</tr>
+							<td>[[${p.isActive}]]</td>
+							<td>[[${p.isbn}]]</td>
+							<td><a th:href="@{'/admin/editBook/'+${p.id}}" class="btn btn-sm btn-primary"><i
+										class="fa-solid fa-pen-to-square"></i>Sửa</a> <a
+									th:href="@{'/admin/deleteBook/'+${p.id}}" class="btn btn-sm btn-danger"><i
+										class="fa-solid fa-trash"></i>
+									Xóa</a></td>
+						</tr>
 
-						</tbody>
-					</table>
-				</div>
+					</tbody>
+				</table>
 			</div>
+		</div>
 		</div>
 
 	</section>

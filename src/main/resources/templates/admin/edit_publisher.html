@@ -18,9 +18,9 @@
 	<section>
 		<div class="container-fluid p-5 mt-5">
 			<div class="row">
-				<div class="col-md-3 offset-md-5">
-					<div class="card card-sh">
-						<div class="card-header text-center ">
+				<div class="col-md-3 offset-md-5" >
+					<div class="card card-sh" >
+						<div class="card-header text-center " style="color: black;">
 							<p class="fs-4">Chỉnh sửa Nhà Xuất Bản</p>
 							<th:block th:if="${session.succMsg}">
 								<p class="text-success fw-bold">[[${session.succMsg}]]</p>
@@ -35,7 +35,7 @@
 						</div>
 						<div class="card-body">
 							<form action="/admin/updatePublisher" method="post"
-								enctype="multipart/form-data">
+								enctype="multipart/form-data" style="color: black;">
 								<input type="hidden" name="id" th:value="${publisher.id}">
 								<div class="mb-3">
 									<label>Nhập danh mục</label> <input type="text" name="name"

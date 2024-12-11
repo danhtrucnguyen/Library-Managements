@@ -17,12 +17,12 @@
 
 <body>
 	<section>
-		<div class="container p-5 mt-3">
+		<div class="container p-5 mt-3" >
 			<div class="row">
 				<div class="col-md-6 offset-md-3">
 					<div class="card card-sh">
 						<div class="card-header text-center ">
-							<p class="fs-4">Thêm sách</p>
+							<p class="fs-4" style="color: black;">Thêm sách</p>
 
 							<th:block th:if="${session.succMsg}">
 								<p class="text-success fw-bold">[[${session.succMsg}]]</p>
@@ -36,7 +36,7 @@
 
 						</div>
 						<div class="card-body">
-							<h5 class="text-center mt-3">Thêm sách từ file Excel</h5>
+							<h5 class="text-center mt-3" style="color: black;">Thêm sách từ file Excel</h5>
 							<form action="/admin/uploadBooks" method="post" enctype="multipart/form-data" class="mt-3">
 								<div class="mb-3">
 									<label>Chọn File Excel</label>
@@ -46,9 +46,9 @@
 							</form>
 
 							<hr style="margin-bottom: 8px">
-							<h5 class="text-center mt-3">Thêm sách thủ công</h5>
-							<form action="/admin/saveBook" method="post" enctype="multipart/form-data">
-								<div class="mb-3">
+							<h5 class="text-center mt-3"style="color: black;">Thêm sách thủ công</h5>
+							<form action="/admin/saveBook" method="post" enctype="multipart/form-data" style="color: black;">
+								<div class="mb-3" >
 									<label>Tên sách</label> <input type="text" name="bookName" class="form-control">
 								</div>
 

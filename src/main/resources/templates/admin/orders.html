@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{/admin/bases::layout(~{::section})}">
-	
+
 
 <head>
 	<meta charset="UTF-8">
 	<title>Order Management</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-			integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-			crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+		integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -31,13 +31,13 @@
 				</th:block>
 				<div class="col-md-4 p-4">
 
-					<form>
+					<form action="/admin/search-order" method="get">
 						<div class="row">
 							<div class="col">
-								<input type="text" class="form-control " name="" placeholder="Enter order id">
+								<input type="text" class="form-control " name="orderId" placeholder="Mã vận đơn">
 							</div>
 							<div class="col">
-								<button class="btn btn-primary col">Search</button>
+								<button class="btn btn-primary col">Tìm kiếm</button>
 							</div>
 						</div>
 					</form>
@@ -59,65 +59,140 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="o:${orders}">
-								<th scope="row">[[${o.orderId}]]</th>
+							<th:block th:if="${srch}">
+								<th:block th:if="${orderDtls!=null}">
+									<tr>
+										<th scope="row">[[${orderDtls.orderId}]]</th>
 
-								<td>[[${o.orderAddress.lastName+'
-									'+o.orderAddress.firstName}]]<br> Email :
-									[[${o.orderAddress.email}]] <br> SĐT:
-									[[${o.orderAddress.mobileNo}]]
-
-
-
-								</td>
-								<td>
-									[[${o.orderAddress.address}]], [[${o.orderAddress.district}]],
-									[[${o.orderAddress.city}]]
+										<td>[[${orderDtls.orderAddress.lastName+'
+											'+orderDtls.orderAddress.firstName}]]<br> Email :
+											[[${orderDtls.orderAddress.email}]] <br> SĐT:
+											[[${orderDtls.orderAddress.mobileNo}]]
 
 
 
+										</td>
+										<td>
+											[[${orderDtls.orderAddress.address}]],
+											[[${orderDtls.orderAddress.district}]],
+											[[${orderDtls.orderAddress.city}]]
 
-								</td>
-								<td>[[${o.formattedOrderDate}]] </td>
-								<td>
-									<ul style="list-style-type: none; padding-left: 0;">
-										<li th:each="item : ${o.items}">
-											[[${item.book.bookName}]] <br> x[[${item.quantity}]]
-										</li>
-									</ul>
-								</td>
-								<td>[[${o.formattedTotalAmount}]]đ
-								</td>
-								<td>[[${o.status}]]</td>
-								<td>
-									<form action="/admin/update-order-status" method="post">
-										<div class="row">
-											<div class="col">
-												<select class="form-control" name="st">
-													<option>--Trạng thái--</option>
-													<option value="1">Đang chờ xử lí</option>
-													<option value="2">Đã nhận đơn</option>
-													<option value="3">Sản phẩm được đóng gói</option>
-													<option value="4">Đang vận chuyển</option>
-													<option value="5">Giao hàng thành công</option>
-													<option value="6">Hủy đơn</option>
-												</select>
+
+
+
+										</td>
+										<td>[[${orderDtls.formattedOrderDate}]] </td>
+										<td>
+											<ul style="list-style-type: none; padding-left: 0;">
+												<li th:each="item : ${orderDtls.items}">
+													[[${item.book.bookName}]] <br> x[[${item.quantity}]]
+												</li>
+											</ul>
+										</td>
+										<td>[[${orderDtls.formattedTotalAmount}]]đ
+										</td>
+										<td>[[${orderDtls.status}]]</td>
+										<td>
+											<form action="/admin/update-order-status" method="post">
+												<div class="row">
+													<div class="col">
+														<select class="form-control" name="st">
+															<option>--Trạng thái--</option>
+															<option value="1">Đang chờ xử lí</option>
+															<option value="2">Đã nhận đơn</option>
+															<option value="3">Sản phẩm được đóng gói</option>
+															<option value="4">Đang vận chuyển</option>
+															<option value="5">Giao hàng thành công</option>
+															<option value="6">Hủy đơn</option>
+														</select>
+													</div>
+													<input th:value="${orderDtls.id}" name="id" type="hidden">
+													<div class="col">
+														<th:block
+															th:if="${orderDtls.status=='Đã hủy' || orderDtls.status=='Giao hàng thành công'}">
+															<button class="btn btn-primary btn-sm col disabled">Cập
+																nhật</button>
+														</th:block>
+														<th:block
+															th:unless="${orderDtls.status=='Đã hủy' || orderDtls.status=='Giao hàng thành công'}">
+															<button class="btn btn-sm btn-primary ">Cập nhật</button>
+														</th:block>
+
+
+													</div>
+												</div>
+											</form>
+										</td>
+									</tr>
+								</th:block>
+								<th:block th:unless="${orderDtls!=null}">
+									<p class="fs-3 text-center text-danger">[[${errorMsg}]]</p>
+								</th:block>
+							</th:block>
+							<th:block th:unless="${srch}">
+								<tr th:each="o:${orders}">
+									<th scope="row">[[${o.orderId}]]</th>
+
+									<td>[[${o.orderAddress.lastName+'
+										'+o.orderAddress.firstName}]]<br> Email :
+										[[${o.orderAddress.email}]] <br> SĐT:
+										[[${o.orderAddress.mobileNo}]]
+
+
+
+									</td>
+									<td>
+										[[${o.orderAddress.address}]], [[${o.orderAddress.district}]],
+										[[${o.orderAddress.city}]]
+
+
+
+
+									</td>
+									<td>[[${o.formattedOrderDate}]] </td>
+									<td>
+										<ul style="list-style-type: none; padding-left: 0;">
+											<li th:each="item : ${o.items}">
+												[[${item.book.bookName}]] <br> x[[${item.quantity}]]
+											</li>
+										</ul>
+									</td>
+									<td>[[${o.formattedTotalAmount}]]đ
+									</td>
+									<td>[[${o.status}]]</td>
+									<td>
+										<form action="/admin/update-order-status" method="post">
+											<div class="row">
+												<div class="col">
+													<select class="form-control" name="st">
+														<option>--Trạng thái--</option>
+														<option value="1">Đang chờ xử lí</option>
+														<option value="2">Đã nhận đơn</option>
+														<option value="3">Sản phẩm được đóng gói</option>
+														<option value="4">Đang vận chuyển</option>
+														<option value="5">Giao hàng thành công</option>
+														<option value="6">Hủy đơn</option>
+													</select>
+												</div>
+												<input th:value="${o.id}" name="id" type="hidden">
+												<div class="col">
+													<th:block
+														th:if="${o.status=='Đã hủy' || o.status=='Giao hàng thành công'}">
+														<button class="btn btn-primary btn-sm col disabled">Cập
+															nhật</button>
+													</th:block>
+													<th:block
+														th:unless="${o.status=='Đã hủy' || o.status=='Giao hàng thành công'}">
+														<button class="btn btn-sm btn-primary ">Cập nhật</button>
+													</th:block>
+
+
+												</div>
 											</div>
-											<input th:value="${o.id}" name="id" type="hidden">
-											<div class="col">
-												<th:block th:if="${o.status=='Đã hủy' || o.status=='Giao hàng thành công'}">
-													<button class="btn btn-primary btn-sm col disabled">Cập nhật</button>
-												</th:block>
-												<th:block th:unless="${o.status=='Đã hủy' || o.status=='Giao hàng thành công'}">
-													<button class="btn btn-sm btn-primary ">Cập nhật</button>
-												</th:block>
-
-
-											</div>
-										</div>
-									</form>
-								</td>
-							</tr>
+										</form>
+									</td>
+								</tr>
+							</th:block>
 						</tbody>
 					</table>
 				</div>

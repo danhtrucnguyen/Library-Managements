@@ -84,8 +84,14 @@ public class BookController {
 	}
 	
 	@GetMapping("/view_admin_book")
-	public String loadViewBook(Model m) {
-		m.addAttribute("books", bookService.getAllBooks());
+	public String loadViewBook(Model m, @RequestParam(defaultValue = "") String ch) {
+		List<Book> books = null;
+		if (ch != null && ch.length() > 0) {
+			books = bookService.searchBook(ch);
+		} else {
+			books = bookService.getAllBooks();
+		}
+		m.addAttribute("books", books);
 		return "admin/view_admin_book";
 	}
 	
