@@ -14,6 +14,7 @@ import org.springframework.util.ObjectUtils;
 //import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RequestParam;
@@ -26,10 +27,13 @@ import com.library.model.Cart;
 import com.library.model.Category;
 import com.library.model.OrderRequest;
 import com.library.model.User;
+import com.library.model.WishList;
 import com.library.service.OrderService;
+import com.library.service.BookService;
 import com.library.service.CartService;
 import com.library.service.CategoryService;
 import com.library.service.UserService;
+import com.library.service.WishListService;
 import com.library.util.CommonUtil;
 import com.library.util.OrderStatus;
 
@@ -58,6 +62,12 @@ public class UserController {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private WishListService wishListService;
+	
+	@Autowired
+	private BookService bookService;
 
 	@GetMapping("/")
 	public String home() {
@@ -113,7 +123,42 @@ public class UserController {
 		cartService.updateQuantity(sy, cid);
 		return "redirect:/user/cart";
 	}
+	
+	@GetMapping("/addWishList")
+	public String addToWishList(@RequestParam Integer pid, @RequestParam Integer uid,
+			@RequestParam(required = false, defaultValue = "1") Integer quantity, HttpSession session) {
+		WishList saveWishList = wishListService.saveWishList(pid, uid, quantity); // Truyền quantity vào service
 
+		if (ObjectUtils.isEmpty(saveWishList)) {
+			session.setAttribute("errorMsg", "Thêm sách không thành công");
+		} else {
+			session.setAttribute("succMsg", "Đã thêm vào danh sách yêu thích");
+		}
+		return "redirect:/book/" + pid;
+	}
+	
+	@GetMapping("/wishlist")
+	public String loadWishListPage(Principal p, Model m) {
+
+		User user = getLoggedInUserDetails(p);
+		List<WishList> wishlists = wishListService.getWishListsByUser(user.getId());
+		m.addAttribute("wishlists", wishlists);
+		if (wishlists.isEmpty()) {
+			m.addAttribute("emptyWishListMsg", "Giỏ hàng của bạn hiện tại trống.");
+		} else {
+			m.addAttribute("wishlists", wishlists);
+			
+		}
+		return "/user/wishlist";
+	}
+
+	@GetMapping("/deleteWishList/{id}")
+	public String deleteBook(@PathVariable int id, HttpSession session) {
+		Boolean deleteBook = wishListService.deleteWishList(id);
+		
+		return "redirect:/user/wishlist";
+	}
+	
 	private User getLoggedInUserDetails(Principal p) {
 		String email = p.getName();
 		User userDtls = userService.getUserByEmail(email);

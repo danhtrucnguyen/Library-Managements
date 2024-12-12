@@ -61,13 +61,15 @@
 								<div class="col-lg-3 col-md-4 mb-4" th:each="p:${books}">
 									<div class="card position-relative p-4 border rounded-3">
 										<div class="position-absolute">
-											<p class="bg-primary py-1 px-3 fs-6 text-white rounded-2">-[[${p.discount}]]%
-												
+											<p class="bg-primary py-1 px-3 fs-6 text-white rounded-2">
+												-[[${p.discount}]]%
+
 											</p>
 										</div>
-<!--										<img th:src="@{'/images/book_img/'+${p.image}}" class="img-fluid shadow-sm" alt="product item">-->
-<!--										<img th:src="@{${p.image.startsWith('http') ? ${p.image} : '/images/book_img/' + ${p.image}}}" class="img-fluid shadow-sm" alt="product item">-->
-										<img th:src="@{${#strings.isEmpty(p.image) ? '/images/default-image.jpg' : (p.image.startsWith('http') ? p.image : '/images/book_img/' + p.image)}}" class="img-fluid shadow-sm" alt="product item">
+										<!--										<img th:src="@{'/images/book_img/'+${p.image}}" class="img-fluid shadow-sm" alt="product item">-->
+										<!--										<img th:src="@{${p.image.startsWith('http') ? ${p.image} : '/images/book_img/' + ${p.image}}}" class="img-fluid shadow-sm" alt="product item">-->
+										<img th:src="@{${#strings.isEmpty(p.image) ? '/images/default-image.jpg' : (p.image.startsWith('http') ? p.image : '/images/book_img/' + p.image)}}"
+											class="img-fluid shadow-sm" alt="product item">
 
 										<h6 class="mt-4 mb-0 fw-bold"><a
 												th:href="@{'/book/'+${p.id}}">[[${p.bookName}]]</a>
@@ -75,10 +77,10 @@
 										<div class="review-content d-flex">
 											<p class="my-2 me-2 fs-6 text-black-50">[[${p.author}]]</p>
 
-											
+
 										</div>
 										<div class="review-content d-flex">
-											
+
 
 											<div class="rating text-warning d-flex align-items-center">
 												<svg class="star star-fill">
@@ -104,13 +106,40 @@
 											<del style="padding-left: 5px;">[[${p.price}]]đ</del>
 										</div>
 										<div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
-											<button type="button" href="#" class="btn btn-dark" data-bs-toggle="tooltip"
-												data-bs-placement="top" data-bs-title="Tooltip on top">
-												<svg class="cart">
-													<use xlink:href="#cart"></use>
-												</svg>
-											</button>
-											<a href="#" class="btn btn-dark">
+											<th:block th:if="${p.stock>0}">
+												<th:block th:if="${user==null}">
+													<a type="button" href="/signin" class="btn btn-dark"
+														data-bs-toggle="tooltip" data-bs-placement="top"
+														data-bs-title="Tooltip on top">
+														<svg class="cart">
+															<use xlink:href="#cart"></use>
+														</svg>
+													</a>
+
+												</th:block>
+												<th:block th:unless="${user==null}">
+													<a type="button"
+														th:href="@{'/user/addCart?pid='+${p.id}+'&uid='+${user.id}}"
+														class="btn btn-dark" data-bs-toggle="tooltip"
+														data-bs-placement="top" data-bs-title="Tooltip on top">
+														<svg class="cart">
+															<use xlink:href="#cart"></use>
+														</svg>
+													</a>
+
+												</th:block>
+											</th:block>
+											<th:block th:unless="${p.stock>0}">
+												<a type="button" class="btn btn-dark disabled-cart" style="												opacity: 0.5; /* Làm mờ nút */
+												   pointer-events: none; cursor: not-allowed !important;"
+												   data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top">
+												   <svg class="cart">
+												       <use xlink:href="#cart"></use>
+												   </svg>
+												</a>
+											</th:block>
+
+											<a th:href="@{'/user/addWishList?pid='+${p.id}+'&uid='+${user.id}}" class="btn btn-dark">
 												<span>
 													<svg class="wishlist">
 														<use xlink:href="#heart"></use>

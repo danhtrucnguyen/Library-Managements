@@ -80,6 +80,7 @@
 					.highlightedhh {
 					    color: gold;  /* Màu sao khi được chọn */
 					}
+					
 
 	</style>
 
@@ -351,14 +352,15 @@
 
 
 								</li>
+								<th:block th:if="${user!=null}">
 								<li class="wishlist-dropdown dropdown pe-3">
-									<a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button"
+									<a href="/user/wishlist" class="dropdown-toggle"  role="button"
 										aria-expanded="false">
 										<svg class="wishlist">
 											<use xlink:href="#heart"></use>
 										</svg>
 									</a>
-									<div
+									<!--<div
 										class="dropdown-menu animate slide dropdown-menu-start dropdown-menu-lg-end p-3">
 										<h4 class="d-flex justify-content-between align-items-center mb-3">
 											<span class="text-primary">Your wishlist</span>
@@ -401,8 +403,8 @@
 												cart</a>
 										</div>
 									</div>
-								</li>
-								<th:block th:if="${user!=null}">
+								</li>-->
+								
 									<li class="cart-dropdown dropdown" >
 										<a href="/user/cart"  role="button" aria-expanded="false">
 										    <svg class="cart">

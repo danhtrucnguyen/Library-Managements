@@ -155,7 +155,7 @@
 								<th:block th:unless="${book.stock>0}">
 									<a href="#" class="btn btn-dark">Sách tạm hết</a>
 								</th:block>
-								<a href="#" class="btn btn-dark">
+								<a th:href="@{'/user/addWishList?pid='+${book.id}+'&uid='+${user.id}}" class="btn btn-dark">
 									<svg class="heart" width="21" height="21">
 										<use xlink:href="#heart"></use>
 									</svg>
