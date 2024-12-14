@@ -155,11 +155,28 @@
 								<th:block th:unless="${book.stock>0}">
 									<a href="#" class="btn btn-dark">Sách tạm hết</a>
 								</th:block>
-								<a th:href="@{'/user/addWishList?pid='+${book.id}+'&uid='+${user.id}}" class="btn btn-dark">
+								<th:block th:if="${user==null}">
+									<a href="/signin"
+																		class="btn btn-dark">
+																		<svg class="heart" width="21" height="21">
+																			<use xlink:href="#heart"></use>
+																		</svg>
+																	</a>
+								</th:block>
+								<th:block th:unless="${user==null}">
+									<a th:href="@{'/user/addWishList?pid='+${book.id}+'&uid='+${user.id}}"
+																		class="btn btn-dark">
+																		<svg class="heart" width="21" height="21">
+																			<use xlink:href="#heart"></use>
+																		</svg>
+																	</a>
+								</th:block>
+							<!--	<a th:href="@{'/user/addWishList?pid='+${book.id}+'&uid='+${user.id}}"
+									class="btn btn-dark">
 									<svg class="heart" width="21" height="21">
 										<use xlink:href="#heart"></use>
 									</svg>
-								</a>
+								</a>-->
 								<form th:action="@{/book/{id}/review(id=${book.id})}" method="post">
 									<button class="btn btn-dark" type="submit">Đánh giá sách</button>
 								</form>

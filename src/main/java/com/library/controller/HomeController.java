@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -208,23 +209,38 @@ public class HomeController {
 	@GetMapping("/books")
 	public String books(Model m, 
 	                    @RequestParam(value = "category", defaultValue = "") String category, 
-	                    @RequestParam(value = "publisher", defaultValue = "") String publisher) {
+	                    @RequestParam(value = "publisher", defaultValue = "") String publisher, 
+	                    @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+	                    @RequestParam(name = "pageSize", defaultValue = "8") Integer pageSize){
+		
 	    // Lấy danh sách các danh mục
 	    List<Category> categories = categoryService.getAllActiveCategory();
-	    
+	    m.addAttribute("paramCategory", category);
+	    m.addAttribute("categories", categories);
+	  
 	    // Lấy danh sách các nhà xuất bản (giả sử bạn có dịch vụ nhà xuất bản)
 	    List<Publisher> publishers = publisherService.getAllActivePublisher(); // Bạn cần tạo dịch vụ này
+	    m.addAttribute("paramPublisher", publisher);
+	    m.addAttribute("publishers", publishers);
 	    
 	    // Lấy sách theo danh mục hoặc nhà xuất bản
-	    List<Book> books = bookService.getAllActiveBooks(category, publisher); // Cập nhật phương thức này để hỗ trợ publisher
+//	    List<Book> books = bookService.getAllActiveBooks(category, publisher); // Cập nhật phương thức này để hỗ trợ publisher
 	    
 	    
 	    // Truyền dữ liệu vào mô hình
-	    m.addAttribute("categories", categories);
-	    m.addAttribute("publishers", publishers);  // Truyền các nhà xuất bản vào
+	    Page<Book> page = bookService.getAllActiveBookPagination(pageNo, pageSize, category, publisher);
+		List<Book> books = page.getContent();
+	      // Truyền các nhà xuất bản vào
 	    m.addAttribute("books", books);
-	    m.addAttribute("paramCategory", category);  // Truyền giá trị category
-	    m.addAttribute("paramPublisher", publisher); // Truyền giá trị publisher
+	    m.addAttribute("booksSize", books.size());
+
+		m.addAttribute("pageNo", page.getNumber());
+		m.addAttribute("pageSize", pageSize);
+		m.addAttribute("totalElements", page.getTotalElements());
+		m.addAttribute("totalPages", page.getTotalPages());
+		m.addAttribute("isFirst", page.isFirst());
+		m.addAttribute("isLast", page.isLast());
+	   
 	    
 	    return "book";  // Trả về view sách
 	}

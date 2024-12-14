@@ -6,9 +6,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.library.model.Category;
 import com.library.model.Publisher;
 import com.library.service.PublisherService;
 
@@ -33,9 +36,21 @@ public class PublisherController {
 	private PublisherService publisherService;
 	
 	@GetMapping("/publisher")
-	public String category(Model m) {
-		m.addAttribute("publishers", publisherService.getAllPublisher());
+	public String category(Model m, @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
+		Page<Publisher> page = publisherService.getAllPublisherPagination(pageNo, pageSize);
+		List<Publisher> publishers = page.getContent();
+		m.addAttribute("publishers", publishers);
+
+		m.addAttribute("pageNo", page.getNumber());
+		m.addAttribute("pageSize", pageSize);
+		m.addAttribute("totalElements", page.getTotalElements());
+		m.addAttribute("totalPages", page.getTotalPages());
+		m.addAttribute("isFirst", page.isFirst());
+		m.addAttribute("isLast", page.isLast());
+//		m.addAttribute("publishers", publisherService.getAllPublisher());
 		return "admin/publisher";
+		
 	}
 
 	@PostMapping("/savePublisher")

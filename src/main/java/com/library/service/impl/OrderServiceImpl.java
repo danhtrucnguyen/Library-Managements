@@ -17,6 +17,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.library.model.Cart;
@@ -180,5 +184,12 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public BookOrder getOrdersByOrderId(String orderId) {
 		return orderRepository.findByOrderId(orderId);
+	}
+	
+	@Override
+	public Page<BookOrder> getAllOrdersPagination(Integer pageNo, Integer pageSize) {
+		Pageable pageable = PageRequest.of(pageNo, pageSize,Sort.by(Sort.Order.desc("orderDate")));
+		return orderRepository.findAll(pageable);
+
 	}
 }
