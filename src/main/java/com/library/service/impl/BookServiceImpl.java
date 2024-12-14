@@ -13,6 +13,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -187,5 +191,40 @@ public class BookServiceImpl implements BookService {
 			}
 		}
 		bookRepository.saveAll(books);
+	}
+	
+	@Override
+	public Page<Book> getAllBooksPagination(Integer pageNo, Integer pageSize) {
+		Pageable pageable = PageRequest.of(pageNo, pageSize,Sort.by(Sort.Order.desc("createdDate")));
+		return bookRepository.findAll(pageable);
+	}
+	
+
+	@Override
+	public Page<Book> searchBookPagination(Integer pageNo, Integer pageSize, String ch) {
+		Pageable pageable = PageRequest.of(pageNo, pageSize,Sort.by(Sort.Order.desc("createdDate")));
+		return bookRepository.findByBookNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(ch, ch, pageable);
+	}
+
+	@Override
+	public Page<Book> getAllActiveBookPagination(Integer pageNo, Integer pageSize, String category, String publisher) {
+
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		Page<Book> pageBook = null;
+
+		 if (ObjectUtils.isEmpty(category) && ObjectUtils.isEmpty(publisher)) {
+		        // Nếu không có category và publisher, trả về tất cả sách đang hoạt động
+			 pageBook = bookRepository.findByIsActiveTrue(pageable);
+		    } else if (!ObjectUtils.isEmpty(category) && !ObjectUtils.isEmpty(publisher)) {
+		        // Nếu có cả category và publisher, lọc theo cả hai
+		    	pageBook = bookRepository.findByCategoryAndPublisherAndIsActiveTrue(pageable,category, publisher);
+		    } else if (!ObjectUtils.isEmpty(category)) {
+		        // Nếu chỉ có category, lọc theo category
+		    	pageBook = bookRepository.findByCategoryAndIsActiveTrue(pageable,category);
+		    } else if (!ObjectUtils.isEmpty(publisher)) {
+		        // Nếu chỉ có publisher, lọc theo publisher
+		    	pageBook = bookRepository.findByPublisherAndIsActiveTrue(pageable,publisher);
+		    }
+		return pageBook;
 	}
 }

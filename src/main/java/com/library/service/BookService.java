@@ -4,6 +4,7 @@ package com.library.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.library.model.Book;
@@ -27,5 +28,12 @@ public interface BookService {
 	public List<Book> searchBook(String ch);
 
 	void saveBooksFromExcel(MultipartFile file) throws Exception;
+	
+	public Page<Book> getAllActiveBookPagination(Integer pageNo, Integer pageSize, String category, String publisher);
+
+	public Page<Book> searchBookPagination(Integer pageNo, Integer pageSize, String ch);
+
+	public Page<Book> getAllBooksPagination(Integer pageNo, Integer pageSize);
+
 
 }

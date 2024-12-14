@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+
 import com.library.model.OrderRequest;
 import com.library.model.BookOrder;
 
@@ -26,4 +28,5 @@ public interface OrderService {
 	
 	public BookOrder getOrdersByOrderId(String orderId);
 	
+	public Page<BookOrder> getAllOrdersPagination(Integer pageNo,Integer pageSize);
 }
