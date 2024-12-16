@@ -33,5 +33,6 @@ public interface UserService {
 	
 	public User updateUserProfile(User user,MultipartFile img);
 
+	public User saveAdmin(User user);
 
 }
