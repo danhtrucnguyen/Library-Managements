@@ -13,8 +13,8 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 		integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
-		
-	
+
+
 
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -144,17 +144,21 @@
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<div class="collapse navbar-collapse" id="navbarNav">
-				<ul class="navbar-nav ms-auto">
-					<li class="nav-item nav-link">
-						<i class="fa-solid fa-user"></i>
-					</li>
-				</ul>
-				<a href="/logout" class="logout-link" data-bs-target="#logoutModal">
-					<i class="fas fa-sign-out-alt" style="font-size: 24px;"></i>
-					<!-- Biểu tượng logout -->
-				</a>
-			</div>
+			<th:block th:if="${user!=null}">
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item nav-link">
+							<a class="nav-link " href="/admin/profile" role="button" 
+								aria-expanded="false"> <i class="fa-solid fa-user"></i> [[${user.name}]]
+							</a>
+						</li>
+					</ul>
+					<a href="/logout" class="logout-link" data-bs-target="#logoutModal">
+						<i class="fas fa-sign-out-alt" style="font-size: 24px;"></i>
+						<!-- Biểu tượng logout -->
+					</a>
+				</div>
+			</th:block>
 		</div>
 	</nav>
 
