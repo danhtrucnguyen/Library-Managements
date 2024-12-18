@@ -31,7 +31,7 @@ public class BlogPostServiceImpl implements BlogPostService {
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
         existingPost.setTitle(updatedBlogPost.getTitle());
-        existingPost.setContent(updatedBlogPost.getContent());
+        existingPost.setPcontent(updatedBlogPost.getPcontent());
         existingPost.setImageUrl(updatedBlogPost.getImageUrl());
         existingPost.setUpdatedAt(LocalDateTime.now());
 

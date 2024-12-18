@@ -24,7 +24,6 @@ public class BlogPostController {
 
     private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
 
-
     @Autowired
     private BlogPostService blogPostService;
 
@@ -51,18 +50,24 @@ public class BlogPostController {
         return "/blog_list";
     }
 
+    @GetMapping("/admin/admin_blog_list")
+    public String adminBlogList(Model model) {
+        model.addAttribute("posts", blogPostRepository.findAll());
+        return "/admin/admin_blog_list";
+    }
+
     @GetMapping("/blog_list/{id}")
     public String viewPost(@PathVariable Long id, Model model) {
         BlogPost post = blogPostService.getPostById(id);
         model.addAttribute("post", post);
-        return "blog/view";
+        return "single_blog_post";
     }
 
-    @GetMapping("/create")
-    public String createPostForm(Model model) {
-        model.addAttribute("blogPost", new BlogPost());
-        return "blog/create";
-    }
+//    @GetMapping("/create")
+//    public String createPostForm(Model model) {
+//        model.addAttribute("blogPost", new BlogPost());
+//        return "blog/create";
+//    }
 
 //    @PostMapping("/create")
 //    public String createPost(@ModelAttribute BlogPost blogPost) {
@@ -90,17 +95,24 @@ public class BlogPostController {
     }
 
     // Hiển thị form tạo mới bài viết
-    @GetMapping("/new")
+    @GetMapping("/admin/add_blog_post")
     public String showCreateForm(Model model) {
         model.addAttribute("post", new BlogPost());
-        return "blog-form"; // Tên file HTML form tạo bài viết
+        return "admin/add_blog_post";
     }
 
     // Lưu bài viết mới
-    @PostMapping
+    @PostMapping("/admin/add_blog_post")
     public String saveBlogPost(@ModelAttribute("post") BlogPost post,
-                               @RequestParam("imageFile") MultipartFile imageFile) {
+                               @RequestParam("imageFile") MultipartFile imageFile,
+                               @SessionAttribute(name = "user", required = false) User user) {
         try {
+            // Kiểm tra người dùng đã đăng nhập
+            if (user != null) {
+                // Gán người dùng hiện tại làm tác giả
+                post.setAuthor(user);
+            }
+
             // Xử lý ảnh tải lên nếu có
             if (!imageFile.isEmpty()) {
                 String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
@@ -116,7 +128,7 @@ public class BlogPostController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "redirect:/blogs";
+        return "admin/admin_blog_list";
     }
 
     // API upload ảnh cho CKEditor

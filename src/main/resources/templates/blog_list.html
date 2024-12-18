@@ -40,13 +40,13 @@
                     <main class="col-md-9">
                         <div class="filter-shop d-flex flex-wrap justify-content-between mb-5">
                             <div class="showing-product">
-                                <p>Showing 1–9 of 55 results</p>
+                                <p>Hiển thị 1–9 của [[${totalElements}]] kết quả</p>
                             </div>
                             <div class="sort-by">
                                 <select id="sorting" class="form-select" data-filter-sort="" data-filter-order="">
-                                    <option value="">Default sorting</option>
-                                    <option value="">Name (A - Z)</option>
-                                    <option value="">Name (Z - A)</option>
+                                    <option value="">Sắp xếp mặc đinh</option>
+                                    <option value="">Theo tên (A - Z)</option>
+                                    <option value="">Theo tên (Z - A)</option>
                                 </select>
                             </div>
                         </div>
@@ -116,11 +116,11 @@
                                     <li class="cat-item">
                                         <a href="#" th:classappend="${paramValue==''} ? 'active':''">Tất cả</a>
                                     </li>
-    <!--                                <li class="cat-item">-->
-    <!--                                    <a th:each="c:${categories}" th:href="@{'/books?category='+${c.name}}"-->
-    <!--                                       th:classappend="${paramValue == c.name} ? 'active':''" style="									display: block;  /* Đảm bảo mỗi <a> chiếm toàn bộ dòng */-->
-    <!--									    ">[[${c.name}]]</a>-->
-    <!--                                </li>-->
+                                    <li class="cat-item">
+                                        <a th:each="c:${categories}" th:href="@{'/books?category='+${c.name}}"
+                                           th:classappend="${paramValue == c.name} ? 'active':''" style="									display: block;  /* Đảm bảo mỗi <a> chiếm toàn bộ dòng */
+    									    ">[[${c.name}]]</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>

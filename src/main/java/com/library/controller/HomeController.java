@@ -14,6 +14,8 @@ import java.util.List;
 //import java.util.Random;
 import java.util.UUID;
 
+import com.library.model.*;
+import com.library.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
@@ -31,17 +33,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import com.library.model.User;
-import com.library.model.Book;
-import com.library.model.Category;
-import com.library.model.Publisher;
-import com.library.model.Rating;
-import com.library.service.BookService;
-import com.library.service.CartService;
-import com.library.service.CategoryService;
-import com.library.service.PublisherService;
-import com.library.service.RatingService;
-import com.library.service.UserService;
 import com.library.util.CommonUtil;
 
 import jakarta.mail.MessagingException;
@@ -58,6 +49,8 @@ public class HomeController {
 	@Autowired
 	private CommonUtil commonUtil;
 
+	@Autowired
+	private CommentService commentService;
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -263,7 +256,7 @@ public class HomeController {
 	    List<Publisher> publishers = publisherService.getAllActivePublisher(); // Bạn cần tạo dịch vụ này
 	    m.addAttribute("paramPublisher", publisher);
 	    m.addAttribute("publishers", publishers);
-	    
+
 	    Double minPrice = null;
 	    Double maxPrice = null;
 	    switch (priceRange) {
@@ -331,8 +324,11 @@ public class HomeController {
 
 	@GetMapping("/book/{id}")
 	public String book(@PathVariable int id, Model m) {
+		// Hiển thị danh sách comment
+		List<Comment> comments = commentService.getCommentsByBook(id);
 		Book bookById = bookService.getBookById(id);
 		m.addAttribute("book", bookById);
+		m.addAttribute("comments", comments);
 		return "view_book";
 	}
 	

@@ -19,9 +19,9 @@ public class BlogPost {
     private String title;
 
     @Column(columnDefinition = "TEXT")
-    private String content;
+    private String pcontent;
 
-    private String imageUrl; // Lưu URL hình ảnh
+    private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
