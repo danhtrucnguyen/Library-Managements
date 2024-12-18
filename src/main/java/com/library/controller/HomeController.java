@@ -205,15 +205,56 @@ public class HomeController {
 		}
 
 	}
+//	
+//	@GetMapping("/books")
+//	public String books(Model m, 
+//	                    @RequestParam(value = "category", defaultValue = "") String category, 
+//	                    @RequestParam(value = "publisher", defaultValue = "") String publisher, 
+//	                    @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+//	                    @RequestParam(name = "pageSize", defaultValue = "8") Integer pageSize){
+//		
+//	    // Lấy danh sách các danh mục
+//	    List<Category> categories = categoryService.getAllActiveCategory();
+//	    m.addAttribute("paramCategory", category);
+//	    m.addAttribute("categories", categories);
+//	  
+//	    // Lấy danh sách các nhà xuất bản (giả sử bạn có dịch vụ nhà xuất bản)
+//	    List<Publisher> publishers = publisherService.getAllActivePublisher(); // Bạn cần tạo dịch vụ này
+//	    m.addAttribute("paramPublisher", publisher);
+//	    m.addAttribute("publishers", publishers);
+//	    
+//	    // Lấy sách theo danh mục hoặc nhà xuất bản
+////	    List<Book> books = bookService.getAllActiveBooks(category, publisher); // Cập nhật phương thức này để hỗ trợ publisher
+//	    
+//	    
+//	    // Truyền dữ liệu vào mô hình
+//	    Page<Book> page = bookService.getAllActiveBookPagination(pageNo, pageSize, category, publisher);
+//		List<Book> books = page.getContent();
+//	      // Truyền các nhà xuất bản vào
+//	    m.addAttribute("books", books);
+//	    m.addAttribute("booksSize", books.size());
+//
+//		m.addAttribute("pageNo", page.getNumber());
+//		m.addAttribute("pageSize", pageSize);
+//		m.addAttribute("totalElements", page.getTotalElements());
+//		m.addAttribute("totalPages", page.getTotalPages());
+//		m.addAttribute("isFirst", page.isFirst());
+//		m.addAttribute("isLast", page.isLast());
+//	   
+//	    
+//	    return "book";  // Trả về view sách
+//	}
 	
 	@GetMapping("/books")
 	public String books(Model m, 
 	                    @RequestParam(value = "category", defaultValue = "") String category, 
 	                    @RequestParam(value = "publisher", defaultValue = "") String publisher, 
+	                    @RequestParam(value = "priceRange", defaultValue = "") String priceRange,
 	                    @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
-	                    @RequestParam(name = "pageSize", defaultValue = "8") Integer pageSize){
+	                    @RequestParam(name = "pageSize", defaultValue = "8") Integer pageSize,
+	                    @RequestParam(name = "sortField", defaultValue = "createdDate:desc") String sortParam) {
 		
-	    // Lấy danh sách các danh mục
+		  // Lấy danh sách các danh mục
 	    List<Category> categories = categoryService.getAllActiveCategory();
 	    m.addAttribute("paramCategory", category);
 	    m.addAttribute("categories", categories);
@@ -223,27 +264,58 @@ public class HomeController {
 	    m.addAttribute("paramPublisher", publisher);
 	    m.addAttribute("publishers", publishers);
 	    
-	    // Lấy sách theo danh mục hoặc nhà xuất bản
-//	    List<Book> books = bookService.getAllActiveBooks(category, publisher); // Cập nhật phương thức này để hỗ trợ publisher
-	    
-	    
-	    // Truyền dữ liệu vào mô hình
-	    Page<Book> page = bookService.getAllActiveBookPagination(pageNo, pageSize, category, publisher);
-		List<Book> books = page.getContent();
-	      // Truyền các nhà xuất bản vào
+	    Double minPrice = null;
+	    Double maxPrice = null;
+	    switch (priceRange) {
+	        case "under100":
+	            maxPrice = 100000.0;
+	            break;
+	        case "100to200":
+	            minPrice = 100000.0;
+	            maxPrice = 200000.0;
+	            break;
+	        case "200to300":
+	            minPrice = 200000.0;
+	            maxPrice = 300000.0;
+	            break;
+	        case "300to400":
+	            minPrice = 300000.0;
+	            maxPrice = 400000.0;
+	            break;
+	        case "400to500":
+	            minPrice = 400000.0;
+	            maxPrice = 500000.0;
+	            break;
+	        case "above500":
+	            minPrice = 500000.0;
+	            break;
+	    }
+
+	    // Tách sortField và sortOrder
+	    String[] sortParams = sortParam.split(":");
+	    String sortField = sortParams[0];
+	    String sortOrder = sortParams.length > 1 ? sortParams[1] : "asc";
+
+	    // Gọi service với sortField và sortOrder
+	    Page<Book> page = bookService.getAllActiveBookPagination(pageNo, pageSize, category, publisher, sortField, sortOrder, minPrice, maxPrice);
+
+	    List<Book> books = page.getContent();
 	    m.addAttribute("books", books);
 	    m.addAttribute("booksSize", books.size());
-
-		m.addAttribute("pageNo", page.getNumber());
-		m.addAttribute("pageSize", pageSize);
-		m.addAttribute("totalElements", page.getTotalElements());
-		m.addAttribute("totalPages", page.getTotalPages());
-		m.addAttribute("isFirst", page.isFirst());
-		m.addAttribute("isLast", page.isLast());
+	    m.addAttribute("pageNo", page.getNumber());
+	    m.addAttribute("pageSize", pageSize);
+	    m.addAttribute("totalElements", page.getTotalElements());
+	    m.addAttribute("totalPages", page.getTotalPages());
+	    m.addAttribute("isFirst", page.isFirst());
+	    m.addAttribute("isLast", page.isLast());
+	    m.addAttribute("sortField", sortField);
+	    m.addAttribute("sortOrder", sortOrder);
+	    m.addAttribute("priceRange", priceRange);
 	   
-	    
 	    return "book";  // Trả về view sách
 	}
+
+
 
 	
 //	@GetMapping("/books")
@@ -315,18 +387,52 @@ public class HomeController {
 		return userDtls;
 	}
 	
-	@GetMapping("/search")
-	public String searchBook(@RequestParam String ch, Model m) {
-		List<Book> searchBooks = bookService.searchBook(ch);
-		if (searchBooks.isEmpty()) {
-	        m.addAttribute("message", "Không tìm thấy sách");
-	    } else {
-	        m.addAttribute("books", searchBooks);
-	    }
-		List<Category> categories = categoryService.getAllActiveCategory();
-		m.addAttribute("categories", categories);
-		return "book";
+//	@GetMapping("/search")
+//	public String searchBook(@RequestParam String ch, Model m) {
+//		List<Book> searchBooks = bookService.searchBook(ch);
+//		if (searchBooks.isEmpty()) {
+//	        m.addAttribute("message", "Không tìm thấy sách");
+//	    } else {
+//	        m.addAttribute("books", searchBooks);
+//	    }
+//		List<Category> categories = categoryService.getAllActiveCategory();
+//		m.addAttribute("categories", categories);
+//		List<Publisher> publishers = publisherService.getAllActivePublisher();
+//		m.addAttribute("publishers", publishers);
+//		return "book";
+//
+//	} 
+    @GetMapping("/search")
+    public String searchBook(@RequestParam String ch, 
+                             @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+                             @RequestParam(name = "pageSize", defaultValue = "8") Integer pageSize, 
+                             Model m) {
 
-	}
+        // Gọi phương thức service với phân trang
+        Page<Book> searchBooks = bookService.searchBookPagination(pageNo, pageSize, ch);
+        
+        if (searchBooks.isEmpty()) {
+            m.addAttribute("message", "Không tìm thấy sách");
+        } else {
+            m.addAttribute("books", searchBooks.getContent());
+        }
+        
+        // Thêm thông tin phân trang vào model
+        m.addAttribute("pageNo", searchBooks.getNumber());
+        m.addAttribute("pageSize", pageSize);
+        m.addAttribute("totalElements", searchBooks.getTotalElements());
+        m.addAttribute("totalPages", searchBooks.getTotalPages());
+        m.addAttribute("isFirst", searchBooks.isFirst());
+        m.addAttribute("isLast", searchBooks.isLast());
+
+        // Lấy danh mục và nhà xuất bản để hiển thị
+        List<Category> categories = categoryService.getAllActiveCategory();
+        m.addAttribute("categories", categories);
+
+        List<Publisher> publishers = publisherService.getAllActivePublisher();
+        m.addAttribute("publishers", publishers);
+
+        return "book"; // Trả về trang sách
+    }
 
 }

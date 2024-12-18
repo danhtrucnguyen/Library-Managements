@@ -35,4 +35,37 @@ public interface BookRepository extends JpaRepository<Book,Integer> {
 	Page<Book> findByCategory(Pageable pageable,String category);
 
 	Page<Book> findByBookNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(String ch, String ch2, Pageable pageable);
+	
+	Page<Book> findByCategoryAndPublisherAndIsActiveTrue(String category, String publisher, Pageable pageable);
+
+	Page<Book> findByDiscountPriceGreaterThanEqualAndCategoryAndPublisherAndIsActiveTrue(Double minPrice, String category, String publisher, Pageable pageable);
+
+	Page<Book> findByDiscountPriceLessThanEqualAndCategoryAndPublisherAndIsActiveTrue(Double maxPrice, String category, String publisher, Pageable pageable);
+
+	Page<Book> findByCategoryAndIsActiveTrue(String category, Pageable pageable);
+
+	Page<Book> findByDiscountPriceGreaterThanEqualAndCategoryAndIsActiveTrue(Double minPrice, String category, Pageable pageable);
+
+	Page<Book> findByDiscountPriceLessThanEqualAndCategoryAndIsActiveTrue(Double maxPrice, String category, Pageable pageable);
+
+	Page<Book> findByPublisherAndIsActiveTrue(String publisher, Pageable pageable);
+
+	Page<Book> findByDiscountPriceGreaterThanEqualAndPublisherAndIsActiveTrue(Double minPrice, String publisher, Pageable pageable);
+
+	Page<Book> findByDiscountPriceLessThanEqualAndPublisherAndIsActiveTrue(Double maxPrice, String publisher, Pageable pageable);
+
+	Page<Book> findByDiscountPriceBetweenAndIsActiveTrue(Double minPrice, Double maxPrice, Pageable pageable);
+
+	Page<Book> findByDiscountPriceBetweenAndCategoryAndIsActiveTrue(Double minPrice, Double maxPrice, String category, Pageable pageable);
+
+	Page<Book> findByDiscountPriceBetweenAndPublisherAndIsActiveTrue(Double minPrice, Double maxPrice, String publisher, Pageable pageable);
+
+	Page<Book> findByDiscountPriceGreaterThanEqualAndIsActiveTrue(Double minPrice, Pageable pageable);
+	
+	Page<Book> findByDiscountPriceLessThanEqualAndIsActiveTrue(Double maxPrice, Pageable pageable);
+	
+	Page<Book> findByDiscountPriceBetweenAndCategoryAndPublisherAndIsActiveTrue(Double minPrice, Double maxPrice, String category, String publisher, Pageable pageable);
+
+	
+	
 }

@@ -29,11 +29,13 @@ public interface BookService {
 
 	void saveBooksFromExcel(MultipartFile file) throws Exception;
 	
-	public Page<Book> getAllActiveBookPagination(Integer pageNo, Integer pageSize, String category, String publisher);
+//	public Page<Book> getAllActiveBookPagination(Integer pageNo, Integer pageSize, String category, String publisher);
 
 	public Page<Book> searchBookPagination(Integer pageNo, Integer pageSize, String ch);
 
 	public Page<Book> getAllBooksPagination(Integer pageNo, Integer pageSize);
-
+	
+	public Page<Book> getAllActiveBookPagination(Integer pageNo, Integer pageSize, String category, String publisher, 
+            String sortField, String sortOrder, Double minPrice, Double maxPrice);
 
 }
