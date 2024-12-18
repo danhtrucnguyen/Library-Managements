@@ -1,17 +1,23 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{/admin/bases::layout(~{::section})}">
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
 </head>
+
 <body>
 	<section>
 		<div class="container-fluid mt-5 p-5">
-
+			<div class="col" style="text-align: right;  " th:if="${userType==2}">
+				<a href="/admin/add-admin" class="btn btn-sm btn-primary"
+					style="font-size: 20px; margin-right: 15px;margin-bottom: 25px;">+
+					Thêm quản trị viên</a>
+			</div>
 			<div class="card card-sh">
 				<div class="card-header text-center" style="color: black;">
-					<p class="fs-4">Users</p>
+					<p class="fs-4" th:if="${userType==1}">Quản lý người dùng</p>
+					<p class="fs-4" th:if="${userType==2}">Quản lý thành viên</p>
 					<th:block th:if="${session.succMsg}">
 						<p class="text-success fw-bold">[[${session.succMsg}]]</p>
 						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
@@ -39,20 +45,20 @@
 						<tbody>
 							<tr th:each="u,c:${users}">
 								<th scope="row">[[${c.count}]]</th>
-								<td><img th:src="@{'/img/profile_img/'+${u.profileImage}}"
-									width="70px" height="70px"></td>
+								<td><img th:src="@{'/images/profile_img/'+${u.profileImage}}" width="70px" height="70px">
+								</td>
 								<td>[[${u.name}]]</td>
 								<td>[[${u.email}]]</td>
 								<td>[[${u.mobileNumber}]]</td>
-								<td>[[${u.address+','+u.city+','+u.state}]]</td>
+								<td>[[${u.address+', '+u.state+', '+u.city}]]</td>
 								<td>[[${u.isEnable}]]</td>
 								<td><a th:href="@{'/admin/updateSts?status=true&id='+${u.id}}"
-									class="btn btn-sm btn-primary">Active</a> 
-										
-									<a
-									th:href="@{'/admin/updateSts?status=false&id='+${u.id}}"
-									class="btn btn-sm btn-danger">
-										Inactive</a></td>
+										class="btn btn-sm btn-primary">Active</a>
+
+									<a th:href="@{'/admin/updateSts?status=false&id='+${u.id}}"
+										class="btn btn-sm btn-danger">
+										Inactive</a>
+								</td>
 							</tr>
 
 						</tbody>
@@ -63,4 +69,5 @@
 
 	</section>
 </body>
+
 </html>

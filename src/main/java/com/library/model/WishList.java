@@ -5,7 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,8 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Cart {
-
+public class WishList {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -27,17 +26,5 @@ public class Cart {
 
 	@ManyToOne
 	private Book book;
-
-	private Integer quantity;
-	
-	@Transient
-	private Integer totalPrice;
-
-	@Transient
-	private Integer totalOrderPrice;
-	@Transient
-	private String totalPriceFormatted; // Định dạng totalPrice
-	@Transient
-	private String totalOrderPriceFormatted;
 
 }

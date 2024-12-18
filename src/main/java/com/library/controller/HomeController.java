@@ -14,19 +14,34 @@ import java.util.List;
 //import java.util.Random;
 import java.util.UUID;
 
-import com.library.model.*;
-import com.library.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 //import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import com.library.model.User;
+import com.library.model.Book;
+import com.library.model.Category;
+import com.library.model.Publisher;
+import com.library.model.Rating;
+import com.library.service.BookService;
+import com.library.service.CartService;
+import com.library.service.CategoryService;
+import com.library.service.PublisherService;
+import com.library.service.RatingService;
+import com.library.service.UserService;
 import com.library.util.CommonUtil;
 
 import jakarta.mail.MessagingException;
@@ -42,6 +57,7 @@ public class HomeController {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -60,9 +76,6 @@ public class HomeController {
 	
 	@Autowired
 	private RatingService ratingService;
-
-	@Autowired
-	private CommentService commentService;
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m) {
@@ -192,30 +205,117 @@ public class HomeController {
 		}
 
 	}
+//	
+//	@GetMapping("/books")
+//	public String books(Model m, 
+//	                    @RequestParam(value = "category", defaultValue = "") String category, 
+//	                    @RequestParam(value = "publisher", defaultValue = "") String publisher, 
+//	                    @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+//	                    @RequestParam(name = "pageSize", defaultValue = "8") Integer pageSize){
+//		
+//	    // Lấy danh sách các danh mục
+//	    List<Category> categories = categoryService.getAllActiveCategory();
+//	    m.addAttribute("paramCategory", category);
+//	    m.addAttribute("categories", categories);
+//	  
+//	    // Lấy danh sách các nhà xuất bản (giả sử bạn có dịch vụ nhà xuất bản)
+//	    List<Publisher> publishers = publisherService.getAllActivePublisher(); // Bạn cần tạo dịch vụ này
+//	    m.addAttribute("paramPublisher", publisher);
+//	    m.addAttribute("publishers", publishers);
+//	    
+//	    // Lấy sách theo danh mục hoặc nhà xuất bản
+////	    List<Book> books = bookService.getAllActiveBooks(category, publisher); // Cập nhật phương thức này để hỗ trợ publisher
+//	    
+//	    
+//	    // Truyền dữ liệu vào mô hình
+//	    Page<Book> page = bookService.getAllActiveBookPagination(pageNo, pageSize, category, publisher);
+//		List<Book> books = page.getContent();
+//	      // Truyền các nhà xuất bản vào
+//	    m.addAttribute("books", books);
+//	    m.addAttribute("booksSize", books.size());
+//
+//		m.addAttribute("pageNo", page.getNumber());
+//		m.addAttribute("pageSize", pageSize);
+//		m.addAttribute("totalElements", page.getTotalElements());
+//		m.addAttribute("totalPages", page.getTotalPages());
+//		m.addAttribute("isFirst", page.isFirst());
+//		m.addAttribute("isLast", page.isLast());
+//	   
+//	    
+//	    return "book";  // Trả về view sách
+//	}
 	
 	@GetMapping("/books")
 	public String books(Model m, 
 	                    @RequestParam(value = "category", defaultValue = "") String category, 
-	                    @RequestParam(value = "publisher", defaultValue = "") String publisher) {
-	    // Lấy danh sách các danh mục
+	                    @RequestParam(value = "publisher", defaultValue = "") String publisher, 
+	                    @RequestParam(value = "priceRange", defaultValue = "") String priceRange,
+	                    @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+	                    @RequestParam(name = "pageSize", defaultValue = "8") Integer pageSize,
+	                    @RequestParam(name = "sortField", defaultValue = "createdDate:desc") String sortParam) {
+		
+		  // Lấy danh sách các danh mục
 	    List<Category> categories = categoryService.getAllActiveCategory();
-	    
+	    m.addAttribute("paramCategory", category);
+	    m.addAttribute("categories", categories);
+	  
 	    // Lấy danh sách các nhà xuất bản (giả sử bạn có dịch vụ nhà xuất bản)
 	    List<Publisher> publishers = publisherService.getAllActivePublisher(); // Bạn cần tạo dịch vụ này
+	    m.addAttribute("paramPublisher", publisher);
+	    m.addAttribute("publishers", publishers);
 	    
-	    // Lấy sách theo danh mục hoặc nhà xuất bản
-	    List<Book> books = bookService.getAllActiveBooks(category, publisher); // Cập nhật phương thức này để hỗ trợ publisher
+	    Double minPrice = null;
+	    Double maxPrice = null;
+	    switch (priceRange) {
+	        case "under100":
+	            maxPrice = 100000.0;
+	            break;
+	        case "100to200":
+	            minPrice = 100000.0;
+	            maxPrice = 200000.0;
+	            break;
+	        case "200to300":
+	            minPrice = 200000.0;
+	            maxPrice = 300000.0;
+	            break;
+	        case "300to400":
+	            minPrice = 300000.0;
+	            maxPrice = 400000.0;
+	            break;
+	        case "400to500":
+	            minPrice = 400000.0;
+	            maxPrice = 500000.0;
+	            break;
+	        case "above500":
+	            minPrice = 500000.0;
+	            break;
+	    }
 
-	    
-	    // Truyền dữ liệu vào mô hình
-	    m.addAttribute("categories", categories);
-	    m.addAttribute("publishers", publishers);  // Truyền các nhà xuất bản vào
+	    // Tách sortField và sortOrder
+	    String[] sortParams = sortParam.split(":");
+	    String sortField = sortParams[0];
+	    String sortOrder = sortParams.length > 1 ? sortParams[1] : "asc";
+
+	    // Gọi service với sortField và sortOrder
+	    Page<Book> page = bookService.getAllActiveBookPagination(pageNo, pageSize, category, publisher, sortField, sortOrder, minPrice, maxPrice);
+
+	    List<Book> books = page.getContent();
 	    m.addAttribute("books", books);
-	    m.addAttribute("paramCategory", category);  // Truyền giá trị category
-	    m.addAttribute("paramPublisher", publisher); // Truyền giá trị publisher
-	    
+	    m.addAttribute("booksSize", books.size());
+	    m.addAttribute("pageNo", page.getNumber());
+	    m.addAttribute("pageSize", pageSize);
+	    m.addAttribute("totalElements", page.getTotalElements());
+	    m.addAttribute("totalPages", page.getTotalPages());
+	    m.addAttribute("isFirst", page.isFirst());
+	    m.addAttribute("isLast", page.isLast());
+	    m.addAttribute("sortField", sortField);
+	    m.addAttribute("sortOrder", sortOrder);
+	    m.addAttribute("priceRange", priceRange);
+	   
 	    return "book";  // Trả về view sách
 	}
+
+
 
 	
 //	@GetMapping("/books")
@@ -230,31 +330,13 @@ public class HomeController {
 //	}
 
 	@GetMapping("/book/{id}")
-	public String book(@PathVariable int id, Model m, @SessionAttribute(name = "user", required = false) User user) {
+	public String book(@PathVariable int id, Model m) {
 		Book bookById = bookService.getBookById(id);
-		List<Comment> comments = commentService.getCommentsByBook(id);
 		m.addAttribute("book", bookById);
-		m.addAttribute("comments", comments);
-
-		if (user != null) {
-			m.addAttribute("user", user);
-		}
 		return "view_book";
 	}
-
-	@PostMapping("/book/{id}")
-	public String addComment(@PathVariable("id") int bookId,
-							 @RequestParam String content,
-							 @SessionAttribute(name = "user", required = false) User user,
-							 HttpSession session) {
-		if (user == null) {
-			session.setAttribute("errorMsg", "Bạn phải đăng nhập để bình luận");
-			return "redirect:/book/" + bookId;
-		}
-		commentService.addComment(bookId, user.getId(), content, null);
-		return "redirect:/book/" + bookId;
-	}
-
+	
+	
 	@PostMapping("/book/{id}/review")
     public String redirectToBookReview(@PathVariable("id") Integer id) {
         return "redirect:/review/" + id;
@@ -305,18 +387,52 @@ public class HomeController {
 		return userDtls;
 	}
 	
-	@GetMapping("/search")
-	public String searchBook(@RequestParam String ch, Model m) {
-		List<Book> searchBooks = bookService.searchBook(ch);
-		if (searchBooks.isEmpty()) {
-	        m.addAttribute("message", "Không tìm thấy sách");
-	    } else {
-	        m.addAttribute("books", searchBooks);
-	    }
-		List<Category> categories = categoryService.getAllActiveCategory();
-		m.addAttribute("categories", categories);
-		return "book";
+//	@GetMapping("/search")
+//	public String searchBook(@RequestParam String ch, Model m) {
+//		List<Book> searchBooks = bookService.searchBook(ch);
+//		if (searchBooks.isEmpty()) {
+//	        m.addAttribute("message", "Không tìm thấy sách");
+//	    } else {
+//	        m.addAttribute("books", searchBooks);
+//	    }
+//		List<Category> categories = categoryService.getAllActiveCategory();
+//		m.addAttribute("categories", categories);
+//		List<Publisher> publishers = publisherService.getAllActivePublisher();
+//		m.addAttribute("publishers", publishers);
+//		return "book";
+//
+//	} 
+    @GetMapping("/search")
+    public String searchBook(@RequestParam String ch, 
+                             @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+                             @RequestParam(name = "pageSize", defaultValue = "8") Integer pageSize, 
+                             Model m) {
 
-	}
+        // Gọi phương thức service với phân trang
+        Page<Book> searchBooks = bookService.searchBookPagination(pageNo, pageSize, ch);
+        
+        if (searchBooks.isEmpty()) {
+            m.addAttribute("message", "Không tìm thấy sách");
+        } else {
+            m.addAttribute("books", searchBooks.getContent());
+        }
+        
+        // Thêm thông tin phân trang vào model
+        m.addAttribute("pageNo", searchBooks.getNumber());
+        m.addAttribute("pageSize", pageSize);
+        m.addAttribute("totalElements", searchBooks.getTotalElements());
+        m.addAttribute("totalPages", searchBooks.getTotalPages());
+        m.addAttribute("isFirst", searchBooks.isFirst());
+        m.addAttribute("isLast", searchBooks.isLast());
+
+        // Lấy danh mục và nhà xuất bản để hiển thị
+        List<Category> categories = categoryService.getAllActiveCategory();
+        m.addAttribute("categories", categories);
+
+        List<Publisher> publishers = publisherService.getAllActivePublisher();
+        m.addAttribute("publishers", publishers);
+
+        return "book"; // Trả về trang sách
+    }
 
 }

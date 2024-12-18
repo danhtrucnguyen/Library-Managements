@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +47,8 @@ public class Book {
 	private String isbn;
 
 	private Boolean isActive;
+	
+	private LocalDateTime createdDate;
 
 	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comment> comments = new ArrayList<>();
@@ -59,5 +62,9 @@ public class Book {
 	}
 	
 	private double averageRating;
+	
+	private String formattedPrice;
+	
+	private String formattedDiscountPrice;
 
 }

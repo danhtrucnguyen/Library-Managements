@@ -43,44 +43,48 @@
 		#feedbackButton:hover {
 			background-color: #0056b3;
 		}
-		
+
 		.custom-rating {
-					    display: flex;
-					    justify-content: space-around;
-					    font-size: 4rem;
-					    cursor: pointer;
-						margin-right: 700px;
-					}
+			display: flex;
+			justify-content: space-around;
+			font-size: 4rem;
+			cursor: pointer;
+			margin-right: 700px;
+		}
 
-					.custom-star {
-					    color: #ccc;  /* Màu sao khi chưa chọn */
-						margin: 0 5px;
-					}
+		.custom-star {
+			color: #ccc;
+			/* Màu sao khi chưa chọn */
+			margin: 0 5px;
+		}
 
-					.custom-star.selected {
-					    color: gold;  /* Màu sao khi được chọn */
-					}
+		.custom-star.selected {
+			color: gold;
+			/* Màu sao khi được chọn */
+		}
 
-					.custom-star:hover,
-					.custom-star.hover {
-					    color: gold;  /* Màu sao khi hover */
-					}
-					
-					.custom-rating-stars {
-					    display: flex;
-					    justify-content: start;
-					    font-size: 1.5rem;
-					}
+		.custom-star:hover,
+		.custom-star.hover {
+			color: gold;
+			/* Màu sao khi hover */
+		}
 
-					.custom-stars {
-					    color: #ccc;  /* Màu sao khi chưa chọn */
-					    cursor: pointer;
-					}
+		.custom-rating-stars {
+			display: flex;
+			justify-content: start;
+			font-size: 1.5rem;
+		}
 
-					.highlightedhh {
-					    color: gold;  /* Màu sao khi được chọn */
-					}
+		.custom-stars {
+			color: #ccc;
+			/* Màu sao khi chưa chọn */
+			cursor: pointer;
+		}
 
+		.highlightedhh {
+			color: gold;
+			/* Màu sao khi được chọn */
+		}
 	</style>
 
 </head>
@@ -194,6 +198,7 @@
 			<form role="search" method="get" class="search-form" action="search">
 				<input type="search" id="search-form" class="search-field" placeholder="Type and press enter" value=""
 					name="ch" />
+				
 				<button type="submit" class="search-submit"><svg class="search">
 						<use xlink:href="#search"></use>
 					</svg></button>
@@ -228,7 +233,7 @@
 		</div>
 	</div>
 
-	<header id="header" class="site-header">
+	<header id="header" class="site-header" style=" background-color: lightblue;">
 
 		<!--	<div class="top-info border-bottom d-none d-md-block ">
 			<div class="container-fluid">
@@ -273,7 +278,7 @@
 						<ul id="navbar"
 							class="navbar-nav text-uppercase justify-content-start justify-content-lg-center align-items-start align-items-lg-center flex-grow-1">
 							<li class="nav-item">
-								<a class="nav-link me-4 active" href="index.html">Trang Chủ</a>
+								<a class="nav-link me-4 active" href="/">Trang Chủ</a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link me-4" href="/books">Sách</a>
@@ -354,14 +359,15 @@
 
 
 								</li>
-								<li class="wishlist-dropdown dropdown pe-3">
-									<a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button"
-										aria-expanded="false">
-										<svg class="wishlist">
-											<use xlink:href="#heart"></use>
-										</svg>
-									</a>
-									<div
+								<th:block th:if="${user!=null}">
+									<li class="wishlist-dropdown dropdown pe-3">
+										<a href="/user/wishlist" class="dropdown-toggle" role="button"
+											aria-expanded="false">
+											<svg class="wishlist">
+												<use xlink:href="#heart"></use>
+											</svg>
+										</a>
+										<!--<div
 										class="dropdown-menu animate slide dropdown-menu-start dropdown-menu-lg-end p-3">
 										<h4 class="d-flex justify-content-between align-items-center mb-3">
 											<span class="text-primary">Your wishlist</span>
@@ -404,19 +410,21 @@
 												cart</a>
 										</div>
 									</div>
-								</li>
-								<th:block th:if="${user!=null}">
-									<li class="cart-dropdown dropdown" >
-										<a href="/user/cart"  role="button" aria-expanded="false">
-										    <svg class="cart">
-										        <use xlink:href="#cart"></use>
-										    </svg>
-										    <!--<span class="fs-6 fw-light">[[${countCart}]]</span>-->
-										    <span class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.8rem; padding: 0.25rem 0.5rem;">
-										        [[${countCart}]]
-										    </span>
+								</li>-->
+
+									<li class="cart-dropdown dropdown">
+										<a href="/user/cart" role="button" aria-expanded="false">
+											<svg class="cart">
+												<use xlink:href="#cart"></use>
+											</svg>
+											<!--<span class="fs-6 fw-light">[[${countCart}]]</span>-->
+											<span
+												class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger"
+												style="font-size: 0.8rem; padding: 0.25rem 0.5rem;">
+												[[${countCart}]]
+											</span>
 										</a>
-										
+
 									</li>
 
 									<li class="nav-item dropdown"><a class="nav-link dropdown-toggle active" href="#"
@@ -426,7 +434,8 @@
 										</a>
 										<ul class="dropdown-menu">
 											<li><a class="dropdown-item" href="/user/profile">Hồ sơ</a></li>
-											<li><a class="dropdown-item" href="/user/user-orders">Đơn hàng của tôi</a></li>
+											<li><a class="dropdown-item" href="/user/user-orders">Đơn hàng của tôi</a>
+											</li>
 
 
 										</ul>
@@ -451,6 +460,118 @@
 
 	<div th:replace="${content}"></div>
 
+	<footer id="footer" class="padding-large" style=" background-color: lightgray;">
+		<div class="container">
+			<div class="row">
+				<div class="footer-top-area">
+					<div class="row d-flex flex-wrap justify-content-between">
+						<div class="col-lg-3 col-sm-6 pb-3">
+							<div class="footer-menu">
+								<img src="/images/main-logo.png" alt="logo" class="img-fluid mb-2">
+								<p>Nisi, purus vitae, ultrices nunc. Sit ac sit suscipit hendrerit. Gravida massa
+									volutpat aenean odio
+									erat nullam fringilla.</p>
+								<div class="social-links">
+									<ul class="d-flex list-unstyled">
+										<li>
+											<a href="#">
+												<svg class="facebook" style="color: black;">
+													<use xlink:href="#facebook" />
+												</svg>
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												<svg class="instagram" style="color: black;">
+													<use xlink:href="#instagram" />
+												</svg>
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												<svg class="twitter" style="color: black;">
+													<use xlink:href="#twitter" />
+												</svg>
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												<svg class="linkedin" style="color: black;">
+													<use xlink:href="#linkedin" />
+												</svg>
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												<svg class="youtube" style="color: black;">
+													<use xlink:href="#youtube" />
+												</svg>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-sm-6 pb-3">
+							<div class="footer-menu text-capitalize">
+								<h5 class="widget-title pb-2">Quick Links</h5>
+								<ul class="menu-list list-unstyled text-capitalize">
+									<li class="menu-item mb-1">
+										<a href="#">Home</a>
+									</li>
+									<li class="menu-item mb-1">
+										<a href="#">About</a>
+									</li>
+									<li class="menu-item mb-1">
+										<a href="#">Shop</a>
+									</li>
+									<li class="menu-item mb-1">
+										<a href="#">Blogs</a>
+									</li>
+									<li class="menu-item mb-1">
+										<a href="#">Contact</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-lg-3 col-sm-6 pb-3">
+							<div class="footer-menu text-capitalize">
+								<h5 class="widget-title pb-2">Help & Info Help</h5>
+								<ul class="menu-list list-unstyled">
+									<li class="menu-item mb-1">
+										<a href="#">Track Your Order</a>
+									</li>
+									<li class="menu-item mb-1">
+										<a href="#">Returns Policies</a>
+									</li>
+									<li class="menu-item mb-1">
+										<a href="#">Shipping + Delivery</a>
+									</li>
+									<li class="menu-item mb-1">
+										<a href="#">Contact Us</a>
+									</li>
+									<li class="menu-item mb-1">
+										<a href="#">Faqs</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-lg-3 col-sm-6 pb-3">
+							<div class="footer-menu contact-item">
+								<h5 class="widget-title text-capitalize pb-2">Contact Us</h5>
+								<p>Do you have any queries or suggestions? <a href="mailto:"
+										class="text-decoration-underline">yourinfo@gmail.com</a></p>
+								<p>If you need support? Just give us a call. <a href="#"
+										class="text-decoration-underline">+55 111 222
+										333 44</a></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+
 	<!-- Feedback Button -->
 	<button id="feedbackButton">
 		<span>+</span>
@@ -472,16 +593,19 @@
 						</div>
 						<div class="mb-3">
 							<label for="userEmail" class="form-label">Email</label>
-							<input type="email" id="userEmail" class="form-control" placeholder="Địa chỉ email" required>
+							<input type="email" id="userEmail" class="form-control" placeholder="Địa chỉ email"
+								required>
 						</div>
 						<div class="mb-3">
 							<label for="fcontent" class="form-label">Nội dung</label>
-							<textarea id="fcontent" class="form-control" rows="4" placeholder="Nội dung phản hồi" required></textarea>
+							<textarea id="fcontent" class="form-control" rows="4" placeholder="Nội dung phản hồi"
+								required></textarea>
 						</div>
 						<button type="submit" class="btn btn-primary w-100" id="submitBtn">
 							Gửi phản hồi
 						</button>
-						<div id="loadingSpinner" style="display:none;" class="spinner-border text-primary" role="status">
+						<div id="loadingSpinner" style="display:none;" class="spinner-border text-primary"
+							role="status">
 							<span class="visually-hidden">Loading...</span>
 						</div>
 					</form>
@@ -534,32 +658,33 @@
 			// Send feedback to backend
 			fetch('/feedback', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				headers: {'Content-Type': 'application/json'},
 				body: JSON.stringify({
 					name: fname,
 					userEmail: userEmail,
-					content: fcontent })
+					content: fcontent
+				})
 			})
-					.then(response => {
-						if (response.ok) {
-							alert('Phản hồi đã được gửi thành công!');
-							resetForm();
-							feedbackModal.hide();  // Close modal after successful submission
-						} else if (response.status === 400) {
-							alert('Dữ liệu không hợp lệ. Vui lòng kiểm tra lại thông tin.');
-						} else {
-							alert('Có lỗi xảy ra khi gửi phản hồi. Vui lòng thử lại.');
-						}
-					})
-					.catch(error => {
-						console.error('Error:', error);
+				.then(response => {
+					if (response.ok) {
+						alert('Phản hồi đã được gửi thành công!');
+						resetForm();
+						feedbackModal.hide();  // Close modal after successful submission
+					} else if (response.status === 400) {
+						alert('Dữ liệu không hợp lệ. Vui lòng kiểm tra lại thông tin.');
+					} else {
 						alert('Có lỗi xảy ra khi gửi phản hồi. Vui lòng thử lại.');
-					})
-					.finally(() => {
-						// Hide loading spinner and show submit button again
-						document.getElementById('loadingSpinner').style.display = 'none';
-						document.getElementById('submitBtn').style.display = 'inline-block';
-					});
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					alert('Có lỗi xảy ra khi gửi phản hồi. Vui lòng thử lại.');
+				})
+				.finally(() => {
+					// Hide loading spinner and show submit button again
+					document.getElementById('loadingSpinner').style.display = 'none';
+					document.getElementById('submitBtn').style.display = 'inline-block';
+				});
 		});
 
 		// Reset form and hide loading spinner
@@ -568,36 +693,71 @@
 			document.getElementById('loadingSpinner').style.display = 'none';
 			document.getElementById('submitBtn').style.display = 'inline-block';
 		}
-		
+
 		const stars = document.querySelectorAll('.custom-star');
-				const scoreInput = document.getElementById('score'); // Input hidden để lưu giá trị điểm đánh giá
+		const scoreInput = document.getElementById('score'); // Input hidden để lưu giá trị điểm đánh giá
 
-				stars.forEach(star => {
-				    // Sự kiện khi click vào sao
-				    star.addEventListener('click', function () {
-				        const score = this.getAttribute('data-score');  // Lấy giá trị điểm số từ data-score
-				        scoreInput.value = score;  // Cập nhật điểm vào input hidden
+		stars.forEach(star => {
+			// Sự kiện khi click vào sao
+			star.addEventListener('click', function () {
+				const score = this.getAttribute('data-score');  // Lấy giá trị điểm số từ data-score
+				scoreInput.value = score;  // Cập nhật điểm vào input hidden
 
-				        // Cập nhật giao diện: Đánh dấu các sao đã chọn
-				        stars.forEach(s => s.classList.remove('selected'));
-				        for (let i = 0; i < score; i++) {
-				            stars[i].classList.add('selected');  // Đánh dấu sao đã chọn
-				        }
-				    });
+				// Cập nhật giao diện: Đánh dấu các sao đã chọn
+				stars.forEach(s => s.classList.remove('selected'));
+				for (let i = 0; i < score; i++) {
+					stars[i].classList.add('selected');  // Đánh dấu sao đã chọn
+				}
+			});
 
-				    // Sự kiện hover khi di chuột qua sao
-				    star.addEventListener('mouseenter', function () {
-				        stars.forEach(s => s.classList.remove('hover'));  // Loại bỏ hiệu ứng hover cũ
-				        for (let i = 0; i < this.getAttribute('data-score'); i++) {
-				            stars[i].classList.add('hover');  // Thêm hiệu ứng hover
-				        }
-				    });
+			// Sự kiện hover khi di chuột qua sao
+			star.addEventListener('mouseenter', function () {
+				stars.forEach(s => s.classList.remove('hover'));  // Loại bỏ hiệu ứng hover cũ
+				for (let i = 0; i < this.getAttribute('data-score'); i++) {
+					stars[i].classList.add('hover');  // Thêm hiệu ứng hover
+				}
+			});
 
-				    // Sự kiện khi chuột rời khỏi sao
-				    star.addEventListener('mouseleave', function () {
-				        stars.forEach(s => s.classList.remove('hover'));  // Loại bỏ hiệu ứng hover khi chuột rời khỏi sao
-				    });
-				});
+			// Sự kiện khi chuột rời khỏi sao
+			star.addEventListener('mouseleave', function () {
+				stars.forEach(s => s.classList.remove('hover'));  // Loại bỏ hiệu ứng hover khi chuột rời khỏi sao
+			});
+		});
+	</script>
+
+	<script>
+		// Hàm định dạng số với dấu phân cách hàng nghìn
+		function formatNumber(number) {
+			return number.toLocaleString('vi-VN');  // Định dạng theo kiểu Việt Nam
+		}
+
+		// Lấy tất cả các phần tử có class "total-price" chứa tổng giá trị giỏ hàng
+		document.querySelectorAll('.cart-item .total-price .money').forEach(function (element) {
+			// Lấy giá trị trong thẻ span và chuyển thành số
+			let totalPrice = parseFloat(element.innerText.replace(/[^0-9.-]+/g, ""));
+
+			// Kiểm tra xem giá trị có hợp lệ không (số thực)
+			if (!isNaN(totalPrice)) {
+				// Cập nhật lại giá trị với định dạng #,###,### và thêm 'đ' vào cuối
+				element.innerText = formatNumber(totalPrice) + 'đ';
+			}
+		});
+		const totalOrderPriceElement = document.querySelector('.order-total .price-amount');
+		if (totalOrderPriceElement) {
+			// Lấy giá trị totalOrderPrice và định dạng
+			let totalOrderPrice = parseFloat(totalOrderPriceElement.innerText.replace(/[^0-9.-]+/g, ""));
+			if (!isNaN(totalOrderPrice)) {
+				totalOrderPriceElement.innerText = formatNumber(totalOrderPrice) + 'đ';
+			}
+		}
+		const orderPriceElement = document.querySelector('.subtotal .price-amount');
+		if (orderPriceElement) {
+			// Lấy giá trị orderPrice và định dạng
+			let orderPrice = parseFloat(orderPriceElement.innerText.replace(/[^0-9.-]+/g, ""));
+			if (!isNaN(orderPrice)) {
+				orderPriceElement.innerText = formatNumber(orderPrice) + 'đ';
+			}
+		}
 	</script>
 
 	<script src="/js/jquery-1.11.0.min.js"></script>

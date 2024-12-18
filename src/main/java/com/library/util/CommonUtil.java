@@ -1,6 +1,7 @@
 package com.library.util;
 
 import java.io.UnsupportedEncodingException;
+import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import com.library.model.BookOrder;
 import com.library.model.BookOrderItem;
+import com.library.model.User;
+import com.library.service.UserService;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -19,6 +22,9 @@ public class CommonUtil {
 
 	@Autowired
 	private JavaMailSender mailSender;
+	
+	@Autowired
+	private UserService userService;
 
 	public Boolean sendMail(String url, String reciepentEmail) throws UnsupportedEncodingException, MessagingException {
 
@@ -89,4 +95,9 @@ public class CommonUtil {
 		return true;
 	}
 
+	public User getLoggedInUserDetails(Principal p) {
+		String email = p.getName();
+		User user = userService.getUserByEmail(email);
+		return user;
+	}
 }

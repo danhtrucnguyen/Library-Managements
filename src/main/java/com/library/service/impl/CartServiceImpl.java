@@ -1,5 +1,6 @@
 package com.library.service.impl;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +84,14 @@ public class CartServiceImpl implements CartService {
 //	    return saveCart;
 //	}
 	
+	 private String formatNumber(Integer number) {
+	    if (number == null) {
+	            return null;
+	    }
+	    DecimalFormat formatter = new DecimalFormat("#,###,###");
+	    return formatter.format(number);
+	 }
+	
 	@Override
 	public Cart saveCart(Integer bookId, Integer userId, Integer quantity) { // Thêm tham số quantity
 	    User userDtls = userRepository.findById(userId).get();
@@ -91,6 +100,8 @@ public class CartServiceImpl implements CartService {
 	    Cart cartStatus = cartRepository.findByBookIdAndUserId(bookId, userId);
 
 	    Cart cart = null;
+	    
+	    
 
 	    if (ObjectUtils.isEmpty(cartStatus)) {
 	        cart = new Cart();
@@ -99,6 +110,7 @@ public class CartServiceImpl implements CartService {
 	        cart.setQuantity(quantity);  // Sử dụng quantity truyền vào
 	        Integer discountPrice = book.getDiscountPrice() != null ? book.getDiscountPrice() : 0;
 	        cart.setTotalPrice(discountPrice * quantity);  // Tính toán tổng giá
+	        cart.setTotalPriceFormatted(formatNumber(cart.getTotalPrice()));  // Định dạng totalPrice
 	    } else {
 	        cart = cartStatus;
 	        cart.setQuantity(cart.getQuantity() + quantity);  // Cộng thêm số lượng mới vào giỏ

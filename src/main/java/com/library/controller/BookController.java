@@ -6,10 +6,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -63,6 +65,7 @@ public class BookController {
 		book.setImage(imageName);
 		book.setDiscount(0);
 		book.setDiscountPrice(book.getPrice());
+		book.setCreatedDate(LocalDateTime.now());
 		Book saveBook = bookService.saveBook(book);
 
 		if (!ObjectUtils.isEmpty(saveBook)) {
@@ -84,14 +87,30 @@ public class BookController {
 	}
 	
 	@GetMapping("/view_admin_book")
-	public String loadViewBook(Model m, @RequestParam(defaultValue = "") String ch) {
-		List<Book> books = null;
+	public String loadViewBook(Model m, @RequestParam(defaultValue = "") String ch,
+			@RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
+//		List<Book> books = null;
+//		if (ch != null && ch.length() > 0) {
+//			books = bookService.searchBook(ch);
+//		} else {
+//			books = bookService.getAllBooks();
+//		}
+//		m.addAttribute("books", books);
+		Page<Book> page = null;
 		if (ch != null && ch.length() > 0) {
-			books = bookService.searchBook(ch);
+			page = bookService.searchBookPagination(pageNo, pageSize, ch);
 		} else {
-			books = bookService.getAllBooks();
+			page = bookService.getAllBooksPagination(pageNo, pageSize);
 		}
-		m.addAttribute("books", books);
+		m.addAttribute("books", page.getContent());
+
+		m.addAttribute("pageNo", page.getNumber());
+		m.addAttribute("pageSize", pageSize);
+		m.addAttribute("totalElements", page.getTotalElements());
+		m.addAttribute("totalPages", page.getTotalPages());
+		m.addAttribute("isFirst", page.isFirst());
+		m.addAttribute("isLast", page.isLast());
 		return "admin/view_admin_book";
 	}
 	

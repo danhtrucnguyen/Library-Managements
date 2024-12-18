@@ -8,11 +8,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +29,7 @@ import com.library.service.BookService;
 
 @Service
 public class BookServiceImpl implements BookService {
-	
+
 	@Autowired
 	private BookRepository bookRepository;
 
@@ -31,39 +37,39 @@ public class BookServiceImpl implements BookService {
 	public Book saveBook(Book book) {
 		return bookRepository.save(book);
 	}
-	
+
 	@Override
 	public List<Book> getAllBooks() {
 		return bookRepository.findAll();
 	}
-	
+
 	@Override
 	public Book getBookById(Integer id) {
 		Book book = bookRepository.findById(id).orElse(null);
 		return book;
 	}
-	
+
 	@Override
 	public List<Book> getAllActiveBooks(String category, String publisher) {
-	    List<Book> books = null;
+		List<Book> books = null;
 
-	    if (ObjectUtils.isEmpty(category) && ObjectUtils.isEmpty(publisher)) {
-	        // Nếu không có category và publisher, trả về tất cả sách đang hoạt động
-	        books = bookRepository.findByIsActiveTrue();
-	    } else if (!ObjectUtils.isEmpty(category) && !ObjectUtils.isEmpty(publisher)) {
-	        // Nếu có cả category và publisher, lọc theo cả hai
-	        books = bookRepository.findByCategoryAndPublisherAndIsActiveTrue(category, publisher);
-	    } else if (!ObjectUtils.isEmpty(category)) {
-	        // Nếu chỉ có category, lọc theo category
-	        books = bookRepository.findByCategoryAndIsActiveTrue(category);
-	    } else if (!ObjectUtils.isEmpty(publisher)) {
-	        // Nếu chỉ có publisher, lọc theo publisher
-	        books = bookRepository.findByPublisherAndIsActiveTrue(publisher);
-	    }
+		if (ObjectUtils.isEmpty(category) && ObjectUtils.isEmpty(publisher)) {
+			// Nếu không có category và publisher, trả về tất cả sách đang hoạt động
+			books = bookRepository.findByIsActiveTrue();
+		} else if (!ObjectUtils.isEmpty(category) && !ObjectUtils.isEmpty(publisher)) {
+			// Nếu có cả category và publisher, lọc theo cả hai
+			books = bookRepository.findByCategoryAndPublisherAndIsActiveTrue(category, publisher);
+		} else if (!ObjectUtils.isEmpty(category)) {
+			// Nếu chỉ có category, lọc theo category
+			books = bookRepository.findByCategoryAndIsActiveTrue(category);
+		} else if (!ObjectUtils.isEmpty(publisher)) {
+			// Nếu chỉ có publisher, lọc theo publisher
+			books = bookRepository.findByPublisherAndIsActiveTrue(publisher);
+		}
 
-	    return books;
+		return books;
 	}
-	
+
 	@Override
 	public Boolean deleteBook(Integer id) {
 		Book book = bookRepository.findById(id).orElse(null);
@@ -74,7 +80,7 @@ public class BookServiceImpl implements BookService {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public Book updateBook(Book book, MultipartFile image) {
 
@@ -93,9 +99,19 @@ public class BookServiceImpl implements BookService {
 		dbBook.setIsActive(book.getIsActive());
 		dbBook.setIsbn(book.getIsbn());
 		dbBook.setDiscount(book.getDiscount());
-		Integer discount = (int)(book.getPrice() * (book.getDiscount() / 100.0));
+		Integer discount = (int) (book.getPrice() * (book.getDiscount() / 100.0));
 		Integer discountPrice = book.getPrice() - discount;
 		dbBook.setDiscountPrice(discountPrice);
+
+		DecimalFormat decimalFormat = new DecimalFormat("#,###");
+
+		// Định dạng giá trị price và discountPrice
+		String formattedPrice = decimalFormat.format(book.getPrice());
+		String formattedDiscountPrice = decimalFormat.format(discountPrice);
+
+		// Cập nhật các giá trị đã định dạng vào đối tượng Book
+		dbBook.setFormattedPrice(formattedPrice);
+		dbBook.setFormattedDiscountPrice(formattedDiscountPrice);
 
 		Book updateProduct = bookRepository.save(dbBook);
 
@@ -115,7 +131,7 @@ public class BookServiceImpl implements BookService {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public List<Book> searchBook(String ch) {
 		return bookRepository.findByBookNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(ch, ch);
@@ -124,8 +140,7 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public void saveBooksFromExcel(MultipartFile file) throws Exception {
 		List<Book> books = new ArrayList<>();
-		try (InputStream inputStream = file.getInputStream();
-			 Workbook workbook = new XSSFWorkbook(inputStream)) {
+		try (InputStream inputStream = file.getInputStream(); Workbook workbook = new XSSFWorkbook(inputStream)) {
 			Sheet sheet = workbook.getSheetAt(0);
 			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 				Row row = sheet.getRow(i);
@@ -188,4 +203,105 @@ public class BookServiceImpl implements BookService {
 		}
 		bookRepository.saveAll(books);
 	}
+
+	@Override
+	public Page<Book> getAllBooksPagination(Integer pageNo, Integer pageSize) {
+		Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Order.desc("createdDate")));
+		return bookRepository.findAll(pageable);
+	}
+
+	@Override
+	public Page<Book> searchBookPagination(Integer pageNo, Integer pageSize, String ch) {
+		Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Order.desc("createdDate")));
+		return bookRepository.findByBookNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(ch, ch, pageable);
+	}
+
+//	@Override
+//	public Page<Book> getAllActiveBookPagination(Integer pageNo, Integer pageSize, String category, String publisher) {
+//
+//		Pageable pageable = PageRequest.of(pageNo, pageSize);
+//		Page<Book> pageBook = null;
+//
+//		if (ObjectUtils.isEmpty(category) && ObjectUtils.isEmpty(publisher)) {
+//			// Nếu không có category và publisher, trả về tất cả sách đang hoạt động
+//			pageBook = bookRepository.findByIsActiveTrue(pageable);
+//		} else if (!ObjectUtils.isEmpty(category) && !ObjectUtils.isEmpty(publisher)) {
+//			// Nếu có cả category và publisher, lọc theo cả hai
+//			pageBook = bookRepository.findByCategoryAndPublisherAndIsActiveTrue(pageable, category, publisher);
+//		} else if (!ObjectUtils.isEmpty(category)) {
+//			// Nếu chỉ có category, lọc theo category
+//			pageBook = bookRepository.findByCategoryAndIsActiveTrue(pageable, category);
+//		} else if (!ObjectUtils.isEmpty(publisher)) {
+//			// Nếu chỉ có publisher, lọc theo publisher
+//			pageBook = bookRepository.findByPublisherAndIsActiveTrue(pageable, publisher);
+//		}
+//		return pageBook;
+//	}
+	
+	@Override
+	public Page<Book> getAllActiveBookPagination(Integer pageNo, Integer pageSize, String category, String publisher, 
+	                                             String sortField, String sortOrder, Double minPrice, Double maxPrice) {
+
+	    // Xử lý Sort dựa trên field và order
+	    Sort sort = "desc".equalsIgnoreCase(sortOrder) ? Sort.by(sortField).descending() : Sort.by(sortField).ascending();
+	    Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+	    Page<Book> pageBook = null;
+
+	    // Trường hợp không có lọc danh mục và nhà xuất bản
+	    if (ObjectUtils.isEmpty(category) && ObjectUtils.isEmpty(publisher)) {
+	        if (minPrice == null && maxPrice == null) {
+	            pageBook = bookRepository.findByIsActiveTrue(pageable);
+	        } else if (minPrice != null && maxPrice != null) {
+	            pageBook = bookRepository.findByDiscountPriceBetweenAndIsActiveTrue(minPrice, maxPrice, pageable);
+	        } else if (minPrice != null) {
+	            pageBook = bookRepository.findByDiscountPriceGreaterThanEqualAndIsActiveTrue(minPrice, pageable);
+	        } else {
+	            pageBook = bookRepository.findByDiscountPriceLessThanEqualAndIsActiveTrue(maxPrice, pageable);
+	        }
+	    }
+
+	    // Trường hợp có cả danh mục và nhà xuất bản
+	    else if (!ObjectUtils.isEmpty(category) && !ObjectUtils.isEmpty(publisher)) {
+	        if (minPrice == null && maxPrice == null) {
+	            pageBook = bookRepository.findByCategoryAndPublisherAndIsActiveTrue(category, publisher, pageable);
+	        } else if (minPrice != null && maxPrice != null) {
+	            pageBook = bookRepository.findByDiscountPriceBetweenAndCategoryAndPublisherAndIsActiveTrue(minPrice, maxPrice, category, publisher, pageable);
+	        } else if (minPrice != null) {
+	            pageBook = bookRepository.findByDiscountPriceGreaterThanEqualAndCategoryAndPublisherAndIsActiveTrue(minPrice, category, publisher, pageable);
+	        } else {
+	            pageBook = bookRepository.findByDiscountPriceLessThanEqualAndCategoryAndPublisherAndIsActiveTrue(maxPrice, category, publisher, pageable);
+	        }
+	    }
+
+	    // Trường hợp chỉ có danh mục
+	    else if (!ObjectUtils.isEmpty(category)) {
+	        if (minPrice == null && maxPrice == null) {
+	            pageBook = bookRepository.findByCategoryAndIsActiveTrue(category, pageable);
+	        } else if (minPrice != null && maxPrice != null) {
+	            pageBook = bookRepository.findByDiscountPriceBetweenAndCategoryAndIsActiveTrue(minPrice, maxPrice, category, pageable);
+	        } else if (minPrice != null) {
+	            pageBook = bookRepository.findByDiscountPriceGreaterThanEqualAndCategoryAndIsActiveTrue(minPrice, category, pageable);
+	        } else {
+	            pageBook = bookRepository.findByDiscountPriceLessThanEqualAndCategoryAndIsActiveTrue(maxPrice, category, pageable);
+	        }
+	    }
+
+	    // Trường hợp chỉ có nhà xuất bản
+	    else if (!ObjectUtils.isEmpty(publisher)) {
+	        if (minPrice == null && maxPrice == null) {
+	            pageBook = bookRepository.findByPublisherAndIsActiveTrue(publisher, pageable);
+	        } else if (minPrice != null && maxPrice != null) {
+	            pageBook = bookRepository.findByDiscountPriceBetweenAndPublisherAndIsActiveTrue(minPrice, maxPrice, publisher, pageable);
+	        } else if (minPrice != null) {
+	            pageBook = bookRepository.findByDiscountPriceGreaterThanEqualAndPublisherAndIsActiveTrue(minPrice, publisher, pageable);
+	        } else {
+	            pageBook = bookRepository.findByDiscountPriceLessThanEqualAndPublisherAndIsActiveTrue(maxPrice, publisher, pageable);
+	        }
+	    }
+
+	    return pageBook;
+	}
+
+
 }
