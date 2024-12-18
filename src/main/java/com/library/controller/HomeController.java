@@ -14,33 +14,19 @@ import java.util.List;
 //import java.util.Random;
 import java.util.UUID;
 
+import com.library.model.*;
+import com.library.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import com.library.model.User;
-import com.library.model.Book;
-import com.library.model.Category;
-import com.library.model.Publisher;
-import com.library.model.Rating;
-import com.library.service.BookService;
-import com.library.service.CartService;
-import com.library.service.CategoryService;
-import com.library.service.PublisherService;
-import com.library.service.RatingService;
-import com.library.service.UserService;
 import com.library.util.CommonUtil;
 
 import jakarta.mail.MessagingException;
@@ -56,7 +42,6 @@ public class HomeController {
 	
 	@Autowired
 	private CommonUtil commonUtil;
-
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -75,6 +60,9 @@ public class HomeController {
 	
 	@Autowired
 	private RatingService ratingService;
+
+	@Autowired
+	private CommentService commentService;
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m) {
@@ -217,7 +205,7 @@ public class HomeController {
 	    
 	    // Lấy sách theo danh mục hoặc nhà xuất bản
 	    List<Book> books = bookService.getAllActiveBooks(category, publisher); // Cập nhật phương thức này để hỗ trợ publisher
-	    
+
 	    
 	    // Truyền dữ liệu vào mô hình
 	    m.addAttribute("categories", categories);
@@ -242,13 +230,31 @@ public class HomeController {
 //	}
 
 	@GetMapping("/book/{id}")
-	public String book(@PathVariable int id, Model m) {
+	public String book(@PathVariable int id, Model m, @SessionAttribute(name = "user", required = false) User user) {
 		Book bookById = bookService.getBookById(id);
+		List<Comment> comments = commentService.getCommentsByBook(id);
 		m.addAttribute("book", bookById);
+		m.addAttribute("comments", comments);
+
+		if (user != null) {
+			m.addAttribute("user", user);
+		}
 		return "view_book";
 	}
-	
-	
+
+	@PostMapping("/book/{id}")
+	public String addComment(@PathVariable("id") int bookId,
+							 @RequestParam String content,
+							 @SessionAttribute(name = "user", required = false) User user,
+							 HttpSession session) {
+		if (user == null) {
+			session.setAttribute("errorMsg", "Bạn phải đăng nhập để bình luận");
+			return "redirect:/book/" + bookId;
+		}
+		commentService.addComment(bookId, user.getId(), content, null);
+		return "redirect:/book/" + bookId;
+	}
+
 	@PostMapping("/book/{id}/review")
     public String redirectToBookReview(@PathVariable("id") Integer id) {
         return "redirect:/review/" + id;

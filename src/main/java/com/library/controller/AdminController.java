@@ -263,14 +263,9 @@ public class AdminController {
 
 	@GetMapping("/daily-revenue")
 	public ResponseEntity<Map<Integer, Integer>> getDailyRevenue(@RequestParam int year, @RequestParam int month) {
-
-
 		Map<Integer, Integer> dailyRevenue = orderService.getDailyRevenue(year, month);
-
-
 		return ResponseEntity.ok(dailyRevenue);
 	}
-
 	
 	@GetMapping("/statistics")
     public ResponseEntity<Map<String, Long>> getOrderStatistics(
@@ -281,11 +276,8 @@ public class AdminController {
 
 	@GetMapping("/search-order")
 	public String searchProduct(@RequestParam String orderId, Model m, HttpSession session) {
-
 		if (orderId != null && orderId.length() > 0) {
-
 			BookOrder order = orderService.getOrdersByOrderId(orderId.trim());
-
 			if (ObjectUtils.isEmpty(order)) {
 				session.setAttribute("errorMsg", "Không thấy mã vận đơn");
 				m.addAttribute("orderDtls", null);
@@ -300,6 +292,5 @@ public class AdminController {
 			m.addAttribute("srch", false);
 		}
 		return "/admin/orders";
-
 	}
 }

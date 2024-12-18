@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,5 +30,8 @@ public class Comment {
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 
-    private LocalDateTime commentDate= LocalDateTime.now();
+    @OneToMany(mappedBy = "parentComment")
+    private List<Comment> replies;
+
+    private LocalDateTime commentDate;
 }
