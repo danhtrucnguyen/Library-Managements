@@ -62,5 +62,9 @@ public class Book {
 	}
 	
 	private double averageRating;
+	
+	private String formattedPrice;
+	
+	private String formattedDiscountPrice;
 
 }

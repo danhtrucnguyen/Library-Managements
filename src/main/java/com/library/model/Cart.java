@@ -35,5 +35,9 @@ public class Cart {
 
 	@Transient
 	private Integer totalOrderPrice;
+	@Transient
+	private String totalPriceFormatted; // Định dạng totalPrice
+	@Transient
+	private String totalOrderPriceFormatted;
 
 }

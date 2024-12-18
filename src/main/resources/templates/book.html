@@ -42,17 +42,29 @@
 								<p>Hiển thị 1–9 trên [[${totalElements}]] kết quả</p>
 							</div>
 							<div class="sort-by">
-								<select id="sorting" class="form-select" data-filter-sort="" data-filter-order="">
-									<option value="">Default sorting</option>
-									<option value="">Name (A - Z)</option>
-									<option value="">Name (Z - A)</option>
-									<option value="">Price (Low-High)</option>
-									<option value="">Price (High-Low)</option>
-									<option value="">Rating (Highest)</option>
-									<option value="">Rating (Lowest)</option>
-									<option value="">Model (A - Z)</option>
-									<option value="">Model (Z - A)</option>
-								</select>
+								<form id="sortingForm" th:action="@{/books}" method="get">
+									<input type="hidden" name="pageNo" th:value="${pageNo}" />
+									<input type="hidden" name="pageSize" th:value="${pageSize}" />
+									<input type="hidden" name="category" th:value="${paramCategory}" />
+									<input type="hidden" name="publisher" th:value="${paramPublisher}" />
+
+									<!-- Select Box for Sorting -->
+									<select id="sorting" name="sortField" class="form-select"
+										onchange="document.getElementById('sortingForm').submit();"
+										style="width: 200px;">
+										<option value="" th:selected="${sortField == null}">Sắp xếp mặc định
+										</option>Tên sách (A - Z)</option>
+										<option value="bookName:desc"
+											th:selected="${sortField == 'bookName' && sortOrder == 'desc'}">Tên sách (Z
+											- A)</option>
+										<option value="discountPrice:asc"
+											th:selected="${sortField == 'discountPrice' && sortOrder == 'asc'}">Giá
+											(Thấp-Cao)</option>
+										<option value="discountPrice:desc"
+											th:selected="${sortField == 'discountPrice' && sortOrder == 'desc'}">Giá
+											(Cao-Thấp)</option>
+									</select>
+								</form>
 							</div>
 						</div>
 						<div class="row product-content product-store">
@@ -60,55 +72,55 @@
 
 								<div class="col-lg-3 col-md-4 mb-4" th:each="p:${books}">
 									<a th:href="@{'/book/'+${p.id}}">
-									<div class="card position-relative p-4 border rounded-3">
-										
-										<div class="position-absolute">
-											<p class="bg-primary py-1 px-3 fs-6 text-white rounded-2">
-												-[[${p.discount}]]%
+										<div class="card position-relative p-4 border rounded-3">
 
-											</p>
-										</div>
-										<!--										<img th:src="@{'/images/book_img/'+${p.image}}" class="img-fluid shadow-sm" alt="product item">-->
-										<!--										<img th:src="@{${p.image.startsWith('http') ? ${p.image} : '/images/book_img/' + ${p.image}}}" class="img-fluid shadow-sm" alt="product item">-->
-										<img th:src="@{${#strings.isEmpty(p.image) ? '/images/default-image.jpg' : (p.image.startsWith('http') ? p.image : '/images/book_img/' + p.image)}}"
-											class="img-fluid shadow-sm" alt="product item">
+											<div class="position-absolute">
+												<p class="bg-primary py-1 px-3 fs-6 text-white rounded-2">
+													-[[${p.discount}]]%
 
-										<h6 class="mt-4 mb-0 fw-bold"><a
-												th:href="@{'/book/'+${p.id}}">[[${p.bookName}]]</a>
-										</h6>
-										<div class="review-content d-flex">
-											<p class="my-2 me-2 fs-6 text-black-50">[[${p.author}]]</p>
-
-
-										</div>
-										<div class="review-content d-flex">
-
-
-											<div class="rating text-warning d-flex align-items-center">
-												<svg class="star star-fill">
-													<use xlink:href="#star-fill"></use>
-												</svg>
-												<svg class="star star-fill">
-													<use xlink:href="#star-fill"></use>
-												</svg>
-												<svg class="star star-fill">
-													<use xlink:href="#star-fill"></use>
-												</svg>
-												<svg class="star star-fill">
-													<use xlink:href="#star-fill"></use>
-												</svg>
-												<svg class="star star-fill">
-													<use xlink:href="#star-fill"></use>
-												</svg>
+												</p>
 											</div>
-										</div>
-										<div style="padding-top: 10px ;">
-											<span
-												class="price text-primary fw-bold mb-2 fs-5">[[${p.discountPrice}]]đ</span>
-											<del style="padding-left: 5px;">[[${p.price}]]đ</del>
-										</div>
-										<div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
-											<!--<th:block th:if="${p.stock>0}">
+											<!--										<img th:src="@{'/images/book_img/'+${p.image}}" class="img-fluid shadow-sm" alt="product item">-->
+											<!--										<img th:src="@{${p.image.startsWith('http') ? ${p.image} : '/images/book_img/' + ${p.image}}}" class="img-fluid shadow-sm" alt="product item">-->
+											<img th:src="@{${#strings.isEmpty(p.image) ? '/images/default-image.jpg' : (p.image.startsWith('http') ? p.image : '/images/book_img/' + p.image)}}"
+												class="img-fluid shadow-sm" alt="product item">
+
+											<h6 class="mt-4 mb-0 fw-bold"><a
+													th:href="@{'/book/'+${p.id}}">[[${p.bookName}]]</a>
+											</h6>
+											<div class="review-content d-flex">
+												<p class="my-2 me-2 fs-6 text-black-50">[[${p.author}]]</p>
+
+
+											</div>
+											<div class="review-content d-flex">
+
+
+												<div class="rating text-warning d-flex align-items-center">
+													<svg class="star star-fill">
+														<use xlink:href="#star-fill"></use>
+													</svg>
+													<svg class="star star-fill">
+														<use xlink:href="#star-fill"></use>
+													</svg>
+													<svg class="star star-fill">
+														<use xlink:href="#star-fill"></use>
+													</svg>
+													<svg class="star star-fill">
+														<use xlink:href="#star-fill"></use>
+													</svg>
+													<svg class="star star-fill">
+														<use xlink:href="#star-fill"></use>
+													</svg>
+												</div>
+											</div>
+											<div style="padding-top: 10px ;">
+												<span
+													class="price text-primary fw-bold mb-2 fs-5">[[${p.formattedDiscountPrice}]]đ</span>
+												<del style="padding-left: 5px;">[[${p.formattedPrice}]]đ</del>
+											</div>
+											<div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
+												<!--<th:block th:if="${p.stock>0}">
 												<th:block th:if="${user==null}">
 													<a type="button" href="/signin" class="btn btn-dark"
 														data-bs-toggle="tooltip" data-bs-placement="top"
@@ -148,8 +160,8 @@
 													</svg>
 												</span>
 											</a>-->
+											</div>
 										</div>
-									</div>
 									</a>
 								</div>
 							</th:block>
@@ -158,21 +170,21 @@
 							</th:block>
 						</div>
 						<th:block th:if="${booksSize>0}">
-						<nav class="py-5" aria-label="Page navigation">
-							<ul class="pagination justify-content-center gap-4">
-								<li class="page-item" th:classappend="${isFirst} ? 'disabled':''">
-									<a class="page-link"  th:href="@{'/books?pageNo='+${pageNo-1}}">&laquo;</a>
-								</li>
-								<li th:each="i:${#numbers.sequence(1,totalPages)}" class="page-item active" th:classappend="${pageNo+1==i}?'active':''"
-																			]] aria-current="page">
-									<a class="page-link" th:href="@{'/books?pageNo='+${i-1}}">[[${i}]]</a>
-								</li>
-								
-								<li  class="page-item" th:classappend="${isLast} ? 'disabled':''">
-									<a class="page-link" th:href="@{'/books?pageNo='+${pageNo+1}}">&raquo;</a>
-								</li>
-							</ul>
-						</nav>
+							<nav class="py-5" aria-label="Page navigation">
+								<ul class="pagination justify-content-center gap-4">
+									<li class="page-item" th:classappend="${isFirst} ? 'disabled':''">
+										<a class="page-link" th:href="@{'/books?pageNo='+${pageNo-1}}">&laquo;</a>
+									</li>
+									<li th:each="i:${#numbers.sequence(1,totalPages)}" class="page-item active"
+										th:classappend="${pageNo+1==i}?'active':''" ]] aria-current="page">
+										<a class="page-link" th:href="@{'/books?pageNo='+${i-1}}">[[${i}]]</a>
+									</li>
+
+									<li class="page-item" th:classappend="${isLast} ? 'disabled':''">
+										<a class="page-link" th:href="@{'/books?pageNo='+${pageNo+1}}">&raquo;</a>
+									</li>
+								</ul>
+							</nav>
 						</th:block>
 					</main>
 					<aside class="col-md-3">
@@ -240,24 +252,27 @@
 							</div>
 							<div class="widget-price-filter pt-5">
 								<div class="section-title overflow-hidden mb-2">
-									<h3 class="d-flex flex-column mb-0">Filter by price</h3>
+									<h3 class="d-flex flex-column mb-0">Lọc theo giá</h3>
 								</div>
 								<ul class="product-tags mb-0 sidebar-list list-unstyled">
-									<li class="tags-item">
-										<a href="#">Less than $10</a>
-									</li>
-									<li class="tags-item">
-										<a href="#">$10- $20</a>
-									</li>
-									<li class="tags-item">
-										<a href="#">$20- $30</a>
-									</li>
-									<li class="tags-item">
-										<a href="#">$30- $40</a>
-									</li>
-									<li class="tags-item">
-										<a href="#">$40- $50</a>
-									</li>
+								    <li class="tags-item">
+								        <a th:href="@{'/books?priceRange=under100&pageNo=0'}">Dưới 100.000đ</a>
+								    </li>
+								    <li class="tags-item">
+								        <a th:href="@{'/books?priceRange=100to200&pageNo=0'}">100.000đ - 200.000đ</a>
+								    </li>
+								    <li class="tags-item">
+								        <a th:href="@{'/books?priceRange=200to300&pageNo=0'}">200.000đ - 300.000đ</a>
+								    </li>
+								    <li class="tags-item">
+								        <a th:href="@{'/books?priceRange=300to400&pageNo=0'}">300.000đ - 400.000đ</a>
+								    </li>
+								    <li class="tags-item">
+								        <a th:href="@{'/books?priceRange=400to500&pageNo=0'}">400.000đ - 500.000đ</a>
+								    </li>
+								    <li class="tags-item">
+								        <a th:href="@{'/books?priceRange=above500&pageNo=0'}">Trên 500.000đ</a>
+								    </li>
 								</ul>
 							</div>
 						</div>
