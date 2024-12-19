@@ -85,6 +85,42 @@
 			color: gold;
 			/* Màu sao khi được chọn */
 		}
+		
+		.carousel-container {
+		       position: relative;
+		       overflow: hidden;
+		   }
+
+		   .carousel-wrapper {
+		       display: flex;
+		       transition: transform 0.5s ease;
+		   }
+
+		   .carousel-wrapper .col-md-4 {
+		       flex: 0 0 33.33%; /* Hiển thị 3 mục cùng lúc */
+		       box-sizing: border-box;
+		   }
+
+		   .btn-control {
+		       position: absolute;
+		       top: 50%;
+		       transform: translateY(-50%);
+		       background-color: rgba(0, 0, 0, 0.5);
+		       color: white;
+		       border: none;
+		       padding: 10px;
+		       cursor: pointer;
+		       z-index: 100;
+		       border-radius: 50%;
+		   }
+
+		   .btn-control.left {
+		       left: 10px;
+		   }
+
+		   .btn-control.right {
+		       right: 10px;
+		   }
 	</style>
 
 </head>
@@ -281,13 +317,13 @@
 								<a class="nav-link me-4 active" href="/">Trang Chủ</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link me-4" href="/books">Sách</a>
+								<a class="nav-link me-4" href="/books">Gian hàng sách</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link me-4" href="index.html">Danh mục</a>
+								<a class="nav-link me-4" href="/category">Danh mục</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link me-4" href="index.html">Nhà xuất bản</a>
+								<a class="nav-link me-4" href="/publisher">Nhà xuất bản</a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link me-4" href="/blog_list">Blogs</a>
@@ -758,6 +794,27 @@
 				orderPriceElement.innerText = formatNumber(orderPrice) + 'đ';
 			}
 		}
+	</script>
+	<script>
+	    let currentIndex = 0;
+
+	    function moveSlide(direction) {
+	        const carouselWrapper = document.querySelector('.carousel-wrapper');
+	        const totalItems = document.querySelectorAll('.carousel-wrapper .col-md-4').length;
+	        const visibleItems = 3; // Số lượng danh mục hiển thị cùng lúc
+
+	        currentIndex += direction;
+
+	        // Đảm bảo currentIndex không vượt quá giới hạn
+	        if (currentIndex < 0) {
+	            currentIndex = totalItems - visibleItems;
+	        } else if (currentIndex > totalItems - visibleItems) {
+	            currentIndex = 0;
+	        }
+
+	        const newTransform = -currentIndex * (100 / visibleItems) + '%';
+	        carouselWrapper.style.transform = 'translateX(' + newTransform + ')';
+	    }
 	</script>
 
 	<script src="/js/jquery-1.11.0.min.js"></script>

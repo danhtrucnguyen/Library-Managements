@@ -82,6 +82,9 @@ public class HomeController {
 		
 		List<Category> allActiveCategory = categoryService.getAllActiveCategory();
 		m.addAttribute("categorys", allActiveCategory);
+		
+		List<Publisher> allActivePublisher = publisherService.getAllActivePublisher();
+		m.addAttribute("publishers", allActivePublisher);
 
 	}
 
@@ -321,6 +324,16 @@ public class HomeController {
 //		m.addAttribute("paramValue", category);
 //		return "book";
 //	}
+	
+	@GetMapping("/category")
+	public String category() {
+		return "category";
+	}
+	
+	@GetMapping("/publisher")
+	public String publisher() {
+		return "publisher";
+	}
 
 	@GetMapping("/book/{id}")
 	public String book(@PathVariable int id, Model m) {

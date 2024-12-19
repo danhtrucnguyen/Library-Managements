@@ -20,12 +20,12 @@
 			<div class="container">
 				<div class="row">
 					<div class="text-center">
-						<h1>Thư viện sách</h1>
+						<h1>Gian hàng sách</h1>
 						<div class="breadcrumbs">
 							<span class="item">
 								<a href="/">Trang chủ > </a>
 							</span>
-							<span class="item text-decoration-underline">Thư viện sách</span>
+							<span class="item text-decoration-underline">Gian hàng sách</span>
 						</div>
 					</div>
 				</div>
@@ -52,8 +52,8 @@
 									<select id="sorting" name="sortField" class="form-select"
 										onchange="document.getElementById('sortingForm').submit();"
 										style="width: 200px;">
-										<option value="" th:selected="${sortField == null}">Sắp xếp mặc định
-										</option>Tên sách (A - Z)</option>
+										<option value="" th:selected="${sortField == null}">Sắp xếp mặc định</option>
+										<option value="bookName:asc" th:selected="${sortField == 'bookName' && sortOrder == 'asc'}">Tên sách (A - Z)</option>
 										<option value="bookName:desc"
 											th:selected="${sortField == 'bookName' && sortOrder == 'desc'}">Tên sách (Z
 											- A)</option>
@@ -83,7 +83,7 @@
 											<!--										<img th:src="@{'/images/book_img/'+${p.image}}" class="img-fluid shadow-sm" alt="product item">-->
 											<!--										<img th:src="@{${p.image.startsWith('http') ? ${p.image} : '/images/book_img/' + ${p.image}}}" class="img-fluid shadow-sm" alt="product item">-->
 											<img th:src="@{${#strings.isEmpty(p.image) ? '/images/default-image.jpg' : (p.image.startsWith('http') ? p.image : '/images/book_img/' + p.image)}}"
-												class="img-fluid shadow-sm" alt="product item">
+												class="img-fluid shadow-sm" alt="product item" style="height: 250px;">
 
 											<h6 class="mt-4 mb-0 fw-bold"><a
 													th:href="@{'/book/'+${p.id}}">[[${p.bookName}]]</a>

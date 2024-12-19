@@ -1,6 +1,7 @@
 package com.library.service.impl;
 
 import com.library.model.BlogPost;
+import com.library.model.Book;
 import com.library.repository.BlogPostRepository;
 import com.library.service.BlogPostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +55,15 @@ public class BlogPostServiceImpl implements BlogPostService {
                 .orElseThrow(() -> new RuntimeException("Post not found"));
     }
 
+//    @Override
+//    public Page<BlogPost> findPaginated(int page, int size) {
+//        Pageable pageable = PageRequest.of(page - 1, size);
+//        return blogPostRepository.findAll(pageable);
+//    }
+    
     @Override
-    public Page<BlogPost> findPaginated(int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        return blogPostRepository.findAll(pageable);
+    public Page<BlogPost> findPaginated(Integer pageNo, Integer pageSize) {
+    	  Pageable pageable = PageRequest.of(pageNo, pageSize);
+    	  return blogPostRepository.findAll(pageable);
     }
 }

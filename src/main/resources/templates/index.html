@@ -878,42 +878,61 @@
 		</div>
 	</section>
 
+
+	
 	<section id="categories" class="padding-large pt-0">
-		<div class="container">
-			<div class="section-title overflow-hidden mb-4">
-				<h3 class="d-flex align-items-center">Categories</h3>
-			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<div class="card mb-4 border-0 rounded-3 position-relative">
-						<a href="index.html">
-							<img src="images/category1.jpg" class="img-fluid rounded-3" alt="cart item">
-							<h6 class=" position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3"><a
-									href="index.html" class="text-white">Romance</a></h6>
-						</a>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="card text-center mb-4 border-0 rounded-3">
-						<a href="index.html">
-							<img src="images/category2.jpg" class="img-fluid rounded-3" alt="cart item">
-							<h6 class=" position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3"><a
-									href="index.html" class="text-white">Lifestyle</a></h6>
-						</a>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="card text-center mb-4 border-0 rounded-3">
-						<a href="index.html">
-							<img src="images/category3.jpg" class="img-fluid rounded-3" alt="cart item">
-							<h6 class=" position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3"><a
-									href="index.html" class="text-white">Recipe</a></h6>
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
+	    <div class="container">
+	        <div class="section-title overflow-hidden mb-4">
+	            <h3 class="d-flex align-items-center">Danh Mục Sách</h3>
+	        </div>
+
+	        <div class="carousel-container position-relative">
+	            <div class="row flex-nowrap carousel-wrapper">
+	                <div class="col-md-4" th:each="c : ${categorys}">
+	                    <div class="card mb-4 border-0 rounded-3 position-relative">
+	                        <a href="index.html">
+	                            <img th:src="@{'images/category_img/' + ${c.imageName}}" class="img-fluid rounded-3" alt="cart item">
+	                            <h6 class="position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3">
+	                                <a th:href="@{'/books?category=' + ${c.name}}" class="text-white">[[${c.name}]]</a>
+	                            </h6>
+	                        </a>
+	                    </div>
+	                </div>
+	            </div>
+
+	            <!-- Nút điều khiển -->
+	            <button class="btn-control left" onclick="moveSlide(-1)">&#10094;</button>
+	            <button class="btn-control right" onclick="moveSlide(1)">&#10095;</button>
+	        </div>
+	    </div>
 	</section>
+	
+	<section id="categories" class="padding-large pt-0">
+		    <div class="container">
+		        <div class="section-title overflow-hidden mb-4">
+		            <h3 class="d-flex align-items-center">Nhà Xuất Bản</h3>
+		        </div>
+
+		        <div class="carousel-container position-relative">
+		            <div class="row flex-nowrap carousel-wrapper">
+		                <div class="col-md-2" th:each="p : ${publishers}">
+		                    <div class="card mb-4 border-0 rounded-3 position-relative">
+		                        <a th:href="@{'/books?publisher=' + ${p.name}}">
+		                            <img th:src="@{'images/publisher_img/' + ${p.imageName}}" class="img-fluid rounded-3" alt="cart item" style="width: 200px; height: 200px;">
+		                        </a>
+		                    </div>
+		                </div>
+		            </div>
+
+		            <!-- Nút điều khiển -->
+		            <button class="btn-control left" onclick="moveSlide(-1)">&#10094;</button>
+		            <button class="btn-control right" onclick="moveSlide(1)">&#10095;</button>
+		        </div>
+		    </div>
+		</section>
+	
+
+	
 
 	<section id="customers-reviews" class="position-relative padding-large"
 		style="background-image: url(images/banner-image-bg.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 600px;">
