@@ -45,12 +45,12 @@
 					<div class="d-flex gap-3 product-preview">
 						<div class="swiper thumb-swiper w-50">
 							<div class="swiper-wrapper d-flex flex-wrap gap-3 align-content-start">
-								<div class="swiper-slide bg-white">
+								<!--<div class="swiper-slide bg-white">
 									<!--									<img th:src="@{'/images/book_img/'+${book.image}}" alt="product-thumb" class="img-fluid border rounded-3">-->
 									<!--									<img th:src="@{${book.image != null && book.image.startsWith('http') ? book.image : '/images/book_img/' + book.image}}" alt="product-thumb" class="img-fluid border rounded-3">-->
 									<!--									<img th:src="${book.image != null && book.image.startsWith('http') ? book.image : '/images/book_img/' + ${book.image}}"-->
 									<!--										 alt="product-thumb" class="img-fluid border rounded-3">-->
-									<img th:src="${book.image != null and book.image.startsWith('http') ? book.image : '/images/book_img/' + book.image}"
+									<!--<img th:src="${book.image != null and book.image.startsWith('http') ? book.image : '/images/book_img/' + book.image}"
 										alt="product-thumb" class="img-fluid border rounded-3">
 								</div>
 
@@ -62,7 +62,7 @@
 								<div class="swiper-slide bg-white">
 									<img src="/images/product-thumbnail-3.png" alt="product-thumb"
 										class="img-fluid border rounded-3">
-								</div>
+								</div>-->
 							</div>
 						</div>
 						<div class="swiper large-swiper border rounded-3 overflow-hidden">
@@ -70,7 +70,7 @@
 								<div class="swiper-slide bg-white">
 									<!--									<img th:src="@{'/images/book_img/'+${book.image}}" alt="single-product" class="img-fluid">-->
 									<img th:src="@{${book.image != null && book.image.startsWith('http') ? book.image : '/images/book_img/' + book.image}}"
-										alt="single-product" class="img-fluid">
+										alt="single-product" class="img-fluid" style="height: 100%;">
 								</div>
 								<div class="swiper-slide bg-white">
 									<img src="/images/product-large-2.png" alt="single-product" class="img-fluid">

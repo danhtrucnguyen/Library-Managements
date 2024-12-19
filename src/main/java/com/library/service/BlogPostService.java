@@ -16,5 +16,5 @@ public interface BlogPostService {
 
     BlogPost getPostById(Long id);
 
-    Page<BlogPost> findPaginated(int page, int size);
+    Page<BlogPost> findPaginated(Integer pageNo, Integer pageSize);
 }

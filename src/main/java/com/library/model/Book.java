@@ -40,7 +40,7 @@ public class Book {
 
 	private String image;
 
-	private int discount;
+	private Integer discount;
 
 	private Integer discountPrice;
 

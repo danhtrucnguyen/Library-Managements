@@ -33,22 +33,51 @@ public class BlogPostController {
     @Autowired
     private BlogPostRepository blogPostRepository;
 
+//    @GetMapping("/blog_list")
+//    public String listPosts(@RequestParam(defaultValue = "1") int page,
+//                            Model model,
+//                            @SessionAttribute(name = "user", required = false) User user) {
+//        int pageSize = 10;
+//        Page<BlogPost> blogPage = blogPostService.findPaginated(page, pageSize);
+//
+//        model.addAttribute("posts", blogPage.getContent());
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("totalPages", blogPage.getTotalPages());
+//
+//        if (user != null) {
+//            model.addAttribute("user", user);
+//        }
+//        return "/blog_list";
+//    }
+    
     @GetMapping("/blog_list")
-    public String listPosts(@RequestParam(defaultValue = "1") int page,
+    public String listPosts(@RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+                            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                             Model model,
                             @SessionAttribute(name = "user", required = false) User user) {
-        int pageSize = 10;
-        Page<BlogPost> blogPage = blogPostService.findPaginated(page, pageSize);
+        // Lấy dữ liệu phân trang từ service
+        Page<BlogPost> blogPage = blogPostService.findPaginated(pageNo, pageSize);
 
+        // Thêm dữ liệu bài viết vào model
         model.addAttribute("posts", blogPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", blogPage.getTotalPages());
 
+        // Thêm thông tin phân trang vào model
+        model.addAttribute("pageNo", blogPage.getNumber());
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("totalElements", blogPage.getTotalElements());
+        model.addAttribute("totalPages", blogPage.getTotalPages());
+        model.addAttribute("isFirst", blogPage.isFirst());
+        model.addAttribute("isLast", blogPage.isLast());
+  
+
+        // Kiểm tra nếu có người dùng đăng nhập, thêm thông tin vào model
         if (user != null) {
             model.addAttribute("user", user);
         }
+
         return "/blog_list";
     }
+
 
     @GetMapping("/admin/admin_blog_list")
     public String adminBlogList(Model model) {
