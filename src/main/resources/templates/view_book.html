@@ -214,6 +214,59 @@
 		</div>
 	</section>
 
+	<section class="comments-section padding-large">
+		<div class="container">
+			<h3 class="mb-4">Bình luận</h3>
+
+			<!-- Hiển thị danh sách bình luận -->
+			<ul class="list-unstyled">
+				<li th:each="comment : ${comments}">
+					<div class="card mb-3 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title mb-1" th:text="${comment.user.name}">User</h5>
+							<p class="card-text text-muted mb-2">
+								<small th:text="${#temporals.format(comment.commentDate, 'dd/MM/yyyy HH:mm')}">Date</small>
+							</p>
+							<p class="card-text" th:text="${comment.content}">Comment content</p>
+
+							<!-- Hiển thị các câu trả lời cho bình luận -->
+							<div class="ms-4 mt-3">
+								<h6 class="text-secondary">Phản hồi</h6>
+								<ul class="list-unstyled">
+									<li th:each="reply : ${comment.replies}">
+										<div class="border-start ps-3 mb-3">
+											<h6 class="mb-1" th:text="${reply.user.name}">User</h6>
+											<p class="text-muted mb-1">
+												<small th:text="${#temporals.format(reply.commentDate, 'dd/MM/yyyy HH:mm')}">Date</small>
+											</p>
+											<p class="mb-0" th:text="${reply.content}">Reply content</p>
+										</div>
+									</li>
+								</ul>
+							</div>
+
+							<!-- Nút trả lời bình luận -->
+							<button class="btn btn-sm btn-outline-primary mt-2" th:data-comment-id="${comment.id}">
+								Trả lời
+							</button>
+						</div>
+					</div>
+				</li>
+			</ul>
+
+			<!-- Form thêm bình luận -->
+			<div class="mt-4">
+				<h4 class="mb-3">Thêm bình luận</h4>
+				<form th:action="@{/book/{bookId}(bookId=${book.id})}" method="post">
+					<div class="form-group mb-3">
+						<textarea class="form-control" name="content" rows="3" placeholder="Nhập bình luận của bạn" required></textarea>
+					</div>
+					<input type="hidden" name="userId" th:value="${user != null ? user.id : ''}" />
+					<button class="btn btn-primary" type="submit">Gửi</button>
+				</form>
+			</div>
+		</div>
+	</section>
 
 
 
