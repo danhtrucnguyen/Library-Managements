@@ -30,6 +30,8 @@ public interface BookService {
 	void saveBooksFromExcel(MultipartFile file) throws Exception;
 	
 //	public Page<Book> getAllActiveBookPagination(Integer pageNo, Integer pageSize, String category, String publisher);
+	
+	public Page<Book> searchActiveBookPagination(Integer pageNo, Integer pageSize, String category, String ch);
 
 	public Page<Book> searchBookPagination(Integer pageNo, Integer pageSize, String ch);
 

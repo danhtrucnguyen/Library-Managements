@@ -49,6 +49,8 @@ public class Book {
 	private Boolean isActive;
 	
 	private LocalDateTime createdDate;
+	
+	private int sold = 0;
 
 	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comment> comments = new ArrayList<>();

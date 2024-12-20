@@ -47,10 +47,10 @@
 							<div class="swiper-wrapper d-flex flex-wrap gap-3 align-content-start">
 								<!--<div class="swiper-slide bg-white">
 									<!--									<img th:src="@{'/images/book_img/'+${book.image}}" alt="product-thumb" class="img-fluid border rounded-3">-->
-									<!--									<img th:src="@{${book.image != null && book.image.startsWith('http') ? book.image : '/images/book_img/' + book.image}}" alt="product-thumb" class="img-fluid border rounded-3">-->
-									<!--									<img th:src="${book.image != null && book.image.startsWith('http') ? book.image : '/images/book_img/' + ${book.image}}"-->
-									<!--										 alt="product-thumb" class="img-fluid border rounded-3">-->
-									<!--<img th:src="${book.image != null and book.image.startsWith('http') ? book.image : '/images/book_img/' + book.image}"
+								<!--									<img th:src="@{${book.image != null && book.image.startsWith('http') ? book.image : '/images/book_img/' + book.image}}" alt="product-thumb" class="img-fluid border rounded-3">-->
+								<!--									<img th:src="${book.image != null && book.image.startsWith('http') ? book.image : '/images/book_img/' + ${book.image}}"-->
+								<!--										 alt="product-thumb" class="img-fluid border rounded-3">-->
+								<!--<img th:src="${book.image != null and book.image.startsWith('http') ? book.image : '/images/book_img/' + book.image}"
 										alt="product-thumb" class="img-fluid border rounded-3">
 								</div>
 
@@ -90,25 +90,26 @@
 								<span class="fs-2 fw-light text-primary me-2">[[${book.formattedDiscountPrice}]]đ</span>
 								<del>[[${book.formattedPrice}]]đ</del>
 							</div>
-							<div class="rating text-warning d-flex align-items-center mb-2">
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
+							<div class="rating-container" th:attr="data-rating=${book.averageRating}">
+								<div class="rating">
+									<span class="rating-unit "><i class="fa-solid fa-star"
+											style="font-size: 15px;"></i></span>
+									<span class="rating-unit "><i class="fa-solid fa-star"
+											style="font-size: 15px;"></i></span>
+									<span class="rating-unit "><i class="fa-solid fa-star"
+											style="font-size: 15px;"></i></span>
+									<span class="rating-unit "><i class="fa-solid fa-star"
+											style="font-size: 15px;"></i></span>
+									<span class="rating-unit "><i class="fa-solid fa-star"
+											style="font-size: 15px;"></i></span>
+								</div>
 							</div>
 						</div>
-						<p>Tác giả: [[${book.author}]].</p>
+						<!--<p>Tác giả: [[${book.author}]].</p>-->
+						<p style="display: flex; justify-content: space-between; align-items: center;">
+							<span>Tác giả: [[${book.author}]].</span>
+							<span style="margin-left: auto;">Đã bán: [[${book.sold}]]</span>
+						</p>
 						<hr>
 						<div class="cart-wrap">
 
@@ -156,22 +157,21 @@
 									<a href="#" class="btn btn-dark">Sách tạm hết</a>
 								</th:block>
 								<th:block th:if="${user==null}">
-									<a href="/signin"
-																		class="btn btn-dark">
-																		<svg class="heart" width="21" height="21">
-																			<use xlink:href="#heart"></use>
-																		</svg>
-																	</a>
+									<a href="/signin" class="btn btn-dark">
+										<svg class="heart" width="21" height="21">
+											<use xlink:href="#heart"></use>
+										</svg>
+									</a>
 								</th:block>
 								<th:block th:unless="${user==null}">
 									<a th:href="@{'/user/addWishList?pid='+${book.id}+'&uid='+${user.id}}"
-																		class="btn btn-dark">
-																		<svg class="heart" width="21" height="21">
-																			<use xlink:href="#heart"></use>
-																		</svg>
-																	</a>
+										class="btn btn-dark">
+										<svg class="heart" width="21" height="21">
+											<use xlink:href="#heart"></use>
+										</svg>
+									</a>
 								</th:block>
-							<!--	<a th:href="@{'/user/addWishList?pid='+${book.id}+'&uid='+${user.id}}"
+								<!--	<a th:href="@{'/user/addWishList?pid='+${book.id}+'&uid='+${user.id}}"
 									class="btn btn-dark">
 									<svg class="heart" width="21" height="21">
 										<use xlink:href="#heart"></use>
@@ -225,7 +225,8 @@
 						<div class="card-body">
 							<h5 class="card-title mb-1" th:text="${comment.user.name}">User</h5>
 							<p class="card-text text-muted mb-2">
-								<small th:text="${#temporals.format(comment.commentDate, 'dd/MM/yyyy HH:mm')}">Date</small>
+								<small
+									th:text="${#temporals.format(comment.commentDate, 'dd/MM/yyyy HH:mm')}">Date</small>
 							</p>
 							<p class="card-text" th:text="${comment.content}">Comment content</p>
 
@@ -237,7 +238,8 @@
 										<div class="border-start ps-3 mb-3">
 											<h6 class="mb-1" th:text="${reply.user.name}">User</h6>
 											<p class="text-muted mb-1">
-												<small th:text="${#temporals.format(reply.commentDate, 'dd/MM/yyyy HH:mm')}">Date</small>
+												<small
+													th:text="${#temporals.format(reply.commentDate, 'dd/MM/yyyy HH:mm')}">Date</small>
 											</p>
 											<p class="mb-0" th:text="${reply.content}">Reply content</p>
 										</div>
@@ -259,7 +261,8 @@
 				<h4 class="mb-3">Thêm bình luận</h4>
 				<form th:action="@{/book/{bookId}(bookId=${book.id})}" method="post">
 					<div class="form-group mb-3">
-						<textarea class="form-control" name="content" rows="3" placeholder="Nhập bình luận của bạn" required></textarea>
+						<textarea class="form-control" name="content" rows="3" placeholder="Nhập bình luận của bạn"
+							required></textarea>
 					</div>
 					<input type="hidden" name="userId" th:value="${user != null ? user.id : ''}" />
 					<button class="btn btn-primary" type="submit">Gửi</button>

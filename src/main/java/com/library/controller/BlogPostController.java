@@ -1,9 +1,12 @@
 package com.library.controller;
 
 import com.library.model.BlogPost;
+import com.library.model.Category;
 import com.library.model.User;
 import com.library.repository.BlogPostRepository;
 import com.library.service.BlogPostService;
+import com.library.service.CartService;
+import com.library.service.CategoryService;
 import com.library.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +36,12 @@ public class BlogPostController {
 
     @Autowired
     private BlogPostRepository blogPostRepository;
+    
+    @Autowired
+	private CartService cartService;
+    
+    @Autowired
+	private CategoryService categoryService;
 
 //    @GetMapping("/blog_list")
 //    public String listPosts(@RequestParam(defaultValue = "1") int page,
@@ -49,6 +59,21 @@ public class BlogPostController {
 //        }
 //        return "/blog_list";
 //    }
+    
+    @ModelAttribute
+	public void getUserDetails(Principal p, Model m) {
+		if (p != null) {
+			String email = p.getName();
+			User userDtls = userService.getUserByEmail(email);
+			m.addAttribute("user", userDtls);
+			Integer countCart = cartService.getCountCart(userDtls.getId());
+			m.addAttribute("countCart", countCart);
+		}
+
+		List<Category> allActiveCategory = categoryService.getAllActiveCategory();
+		m.addAttribute("categorys", allActiveCategory);
+
+	}
     
     @GetMapping("/blog_list")
     public String listPosts(@RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,

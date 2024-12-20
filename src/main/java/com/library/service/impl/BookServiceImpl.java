@@ -302,6 +302,22 @@ public class BookServiceImpl implements BookService {
 
 	    return pageBook;
 	}
+	
+	@Override
+	public Page<Book> searchActiveBookPagination(Integer pageNo, Integer pageSize, String category, String ch) {
+
+		Page<Book> pageBook = null;
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+		pageBook =	bookRepository.findByisActiveTrueAndBookNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(ch,
+				ch, pageable);
+
+		
+
+	
+		return pageBook;
+	}
+
 
 
 }
