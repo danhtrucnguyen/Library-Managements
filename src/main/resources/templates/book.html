@@ -39,7 +39,7 @@
 					<main class="col-md-9">
 						<div class="filter-shop d-flex flex-wrap justify-content-between mb-5">
 							<div class="showing-product">
-								<p>Hiển thị 1–9 trên [[${totalElements}]] kết quả</p>
+								<p>Hiển thị [[${totalElements}]] kết quả</p>
 							</div>
 							<div class="sort-by">
 								<form id="sortingForm" th:action="@{/books}" method="get">
@@ -52,8 +52,11 @@
 									<select id="sorting" name="sortField" class="form-select"
 										onchange="document.getElementById('sortingForm').submit();"
 										style="width: 200px;">
-										<option value="" th:selected="${sortField == null}">Sắp xếp mặc định</option>
-										<option value="bookName:asc" th:selected="${sortField == 'bookName' && sortOrder == 'asc'}">Tên sách (A - Z)</option>
+										<option value="" th:selected="${sortField == null}">Sắp xếp mặc định
+										</option>
+										<option value="bookName:asc"
+											th:selected="${sortField == 'bookName' && sortOrder == 'asc'}">Tên sách (A
+											- Z)</option>
 										<option value="bookName:desc"
 											th:selected="${sortField == 'bookName' && sortOrder == 'desc'}">Tên sách (Z
 											- A)</option>
@@ -94,25 +97,21 @@
 
 											</div>
 											<div class="review-content d-flex">
-
-
-												<div class="rating text-warning d-flex align-items-center">
-													<svg class="star star-fill">
-														<use xlink:href="#star-fill"></use>
-													</svg>
-													<svg class="star star-fill">
-														<use xlink:href="#star-fill"></use>
-													</svg>
-													<svg class="star star-fill">
-														<use xlink:href="#star-fill"></use>
-													</svg>
-													<svg class="star star-fill">
-														<use xlink:href="#star-fill"></use>
-													</svg>
-													<svg class="star star-fill">
-														<use xlink:href="#star-fill"></use>
-													</svg>
+												<div class="rating-container" th:attr="data-rating=${p.averageRating}">
+												    <div class="rating">
+												        <span class="rating-unit "><i class="fa-solid fa-star" style="font-size: 15px;"></i></span>
+												        <span class="rating-unit "><i class="fa-solid fa-star" style="font-size: 15px;"></i></span>
+												        <span class="rating-unit "><i class="fa-solid fa-star" style="font-size: 15px;"></i></span>
+												        <span class="rating-unit "><i class="fa-solid fa-star" style="font-size: 15px;"></i></span>
+												        <span class="rating-unit "><i class="fa-solid fa-star" style="font-size: 15px;"></i></span>
+												    </div>
 												</div>
+
+											</div>
+											<div class="review-content d-flex">
+												<p class="my-2 me-2 fs-6 text-black-50">Đã bán: [[${p.sold}]]</p>
+
+
 											</div>
 											<div style="padding-top: 10px ;">
 												<span
@@ -166,7 +165,7 @@
 								</div>
 							</th:block>
 							<th:block th:unless="${booksSize>0}">
-								<p class="fs-4 text-center mt-4 text-danger">Sách tạm hết</p>
+								<p class="fs-4 text-center mt-4 text-danger">Không tìm thấy sách</p>
 							</th:block>
 						</div>
 						<th:block th:if="${booksSize>0}">
@@ -191,9 +190,9 @@
 						<div class="sidebar ps-lg-5">
 							<div class="widget-menu">
 								<div class="widget-search-bar">
-									<form class="d-flex border rounded-3 p-2" role="search">
+									<form  method="get" action="/books" class="d-flex border rounded-3 p-2" role="search">
 										<input class="form-control border-0 me-2 py-2" type="search"
-											placeholder="Search" aria-label="Search">
+											placeholder="Tìm kiếm" aria-label="Search" name="ch">
 										<button class="btn rounded-3 p-3 d-flex align-items-center" type="submit">
 											<svg class="search text-light" width="18" height="18">
 												<use xlink:href="#search"></use>
@@ -255,24 +254,24 @@
 									<h3 class="d-flex flex-column mb-0">Lọc theo giá</h3>
 								</div>
 								<ul class="product-tags mb-0 sidebar-list list-unstyled">
-								    <li class="tags-item">
-								        <a th:href="@{'/books?priceRange=under100&pageNo=0'}">Dưới 100.000đ</a>
-								    </li>
-								    <li class="tags-item">
-								        <a th:href="@{'/books?priceRange=100to200&pageNo=0'}">100.000đ - 200.000đ</a>
-								    </li>
-								    <li class="tags-item">
-								        <a th:href="@{'/books?priceRange=200to300&pageNo=0'}">200.000đ - 300.000đ</a>
-								    </li>
-								    <li class="tags-item">
-								        <a th:href="@{'/books?priceRange=300to400&pageNo=0'}">300.000đ - 400.000đ</a>
-								    </li>
-								    <li class="tags-item">
-								        <a th:href="@{'/books?priceRange=400to500&pageNo=0'}">400.000đ - 500.000đ</a>
-								    </li>
-								    <li class="tags-item">
-								        <a th:href="@{'/books?priceRange=above500&pageNo=0'}">Trên 500.000đ</a>
-								    </li>
+									<li class="tags-item">
+										<a th:href="@{'/books?priceRange=under100&pageNo=0'}">Dưới 100.000đ</a>
+									</li>
+									<li class="tags-item">
+										<a th:href="@{'/books?priceRange=100to200&pageNo=0'}">100.000đ - 200.000đ</a>
+									</li>
+									<li class="tags-item">
+										<a th:href="@{'/books?priceRange=200to300&pageNo=0'}">200.000đ - 300.000đ</a>
+									</li>
+									<li class="tags-item">
+										<a th:href="@{'/books?priceRange=300to400&pageNo=0'}">300.000đ - 400.000đ</a>
+									</li>
+									<li class="tags-item">
+										<a th:href="@{'/books?priceRange=400to500&pageNo=0'}">400.000đ - 500.000đ</a>
+									</li>
+									<li class="tags-item">
+										<a th:href="@{'/books?priceRange=above500&pageNo=0'}">Trên 500.000đ</a>
+									</li>
 								</ul>
 							</div>
 						</div>

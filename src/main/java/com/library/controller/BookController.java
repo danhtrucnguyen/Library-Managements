@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,9 +25,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.library.model.Book;
 import com.library.model.Category;
 import com.library.model.Publisher;
+import com.library.model.User;
 import com.library.service.BookService;
 import com.library.service.CategoryService;
 import com.library.service.PublisherService;
+import com.library.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -46,6 +49,23 @@ public class BookController {
 	
 	@Autowired
 	private BookService bookService;
+	
+	@Autowired
+	private UserService userService;
+	
+	@ModelAttribute
+	public void getUserDetails(Principal p, Model m) {
+		if (p != null) {
+			String email = p.getName();
+			User userDtls = userService.getUserByEmail(email);
+			if (userDtls != null) {
+	            m.addAttribute("user", userDtls);
+	        } 
+		}
+
+		List<Category> allActiveCategory = categoryService.getAllActiveCategory();
+		m.addAttribute("categorys", allActiveCategory);
+	}
 
 	@GetMapping("/loadAddBook")
 	public String loadAddProduct(Model m) {

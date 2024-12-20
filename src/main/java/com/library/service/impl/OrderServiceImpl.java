@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import com.library.model.Cart;
 import com.library.model.OrderAddress;
 import com.library.model.OrderRequest;
+import com.library.model.Book;
 import com.library.model.BookOrder;
 import com.library.model.BookOrderItem;
 import com.library.repository.CartRepository;
@@ -46,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private CartRepository cartRepository;
-	
+
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -60,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
 				+ (int) (Math.random() * 1000);
 		order.setOrderId(orderId);
 		order.setOrderDate(LocalDateTime.now());
-		order.setUser(carts.get(0).getUser()); 
+		order.setUser(carts.get(0).getUser());
 		order.setStatus(OrderStatus.IN_PROGRESS.getName());
 		order.setPaymentType(orderRequest.getPaymentType());
 
@@ -95,13 +96,16 @@ public class OrderServiceImpl implements OrderService {
 		BookOrder saveOrder = orderRepository.save(order);
 		commonUtil.sendMailForBookOrder(saveOrder, "success");
 
-
 		for (Cart cart : carts) {
 			BookOrderItem orderItem = new BookOrderItem();
-			orderItem.setBookOrder(order); 
+			orderItem.setBookOrder(order);
 			orderItem.setBook(cart.getBook());
 			orderItem.setQuantity(cart.getQuantity());
 			orderItem.setPrice(cart.getBook().getDiscountPrice());
+
+			Book book = cart.getBook();
+			book.setSold(book.getSold() + cart.getQuantity());
+			book.setStock(book.getStock() - cart.getQuantity());
 
 			bookOrderItemRepository.save(orderItem);
 		}
@@ -137,8 +141,8 @@ public class OrderServiceImpl implements OrderService {
 
 		Map<Integer, Integer> monthlyRevenue = new HashMap<>();
 		for (Object[] data : revenueData) {
-			int month = (int) data[0]; 
-			int revenue = ((Number) data[1]).intValue(); 
+			int month = (int) data[0];
+			int revenue = ((Number) data[1]).intValue();
 			monthlyRevenue.put(month, revenue);
 		}
 
@@ -160,7 +164,7 @@ public class OrderServiceImpl implements OrderService {
 
 			if (orderDate.getYear() == year && orderDate.getMonthValue() == month) {
 				int day = orderDate.getDayOfMonth();
-				int totalPrice = order.getTotalPrice(); 
+				int totalPrice = order.getTotalPrice();
 
 				dailyRevenue.put(day, dailyRevenue.getOrDefault(day, 0) + totalPrice);
 			}
@@ -168,27 +172,27 @@ public class OrderServiceImpl implements OrderService {
 
 		return dailyRevenue;
 	}
-	
+
 	@Override
 	public Map<String, Long> getOrderStatistics(LocalDateTime startDate, LocalDateTime endDate) {
-        List<Object[]> results = orderRepository.countOrdersByStatusAndDateRange(startDate, endDate);
-        Map<String, Long> statistics = new HashMap<>();
-        for (Object[] result : results) {
-            String status = (String) result[0];
-            Long count = (Long) result[1];
-            statistics.put(status, count);
-        }
-        return statistics;
-    }
-	
+		List<Object[]> results = orderRepository.countOrdersByStatusAndDateRange(startDate, endDate);
+		Map<String, Long> statistics = new HashMap<>();
+		for (Object[] result : results) {
+			String status = (String) result[0];
+			Long count = (Long) result[1];
+			statistics.put(status, count);
+		}
+		return statistics;
+	}
+
 	@Override
 	public BookOrder getOrdersByOrderId(String orderId) {
 		return orderRepository.findByOrderId(orderId);
 	}
-	
+
 	@Override
 	public Page<BookOrder> getAllOrdersPagination(Integer pageNo, Integer pageSize) {
-		Pageable pageable = PageRequest.of(pageNo, pageSize,Sort.by(Sort.Order.desc("orderDate")));
+		Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Order.desc("orderDate")));
 		return orderRepository.findAll(pageable);
 
 	}
