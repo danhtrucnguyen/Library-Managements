@@ -353,8 +353,22 @@ public class HomeController {
 		m.addAttribute("comments", comments);
 		return "view_book";
 	}
-	
-	
+
+	@PostMapping("/book/{bookId}")
+    public String addComment(@PathVariable int bookId,
+                             @RequestParam int userId,
+                             @RequestParam String content,
+                             @RequestParam(required = false) Integer parentCommentId) {
+
+        // Kiểm tra nội dung bình luận không rỗng
+        if (content == null || content.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nội dung bình luận không được để trống.");
+        }
+
+        commentService.addComment(bookId, userId, content, parentCommentId);
+        return "redirect:/book/" + bookId;
+    }
+
 	@PostMapping("/book/{id}/review")
     public String redirectToBookReview(@PathVariable("id") Integer id) {
         return "redirect:/review/" + id;
