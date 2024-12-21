@@ -1,8 +1,13 @@
 package com.library.service.impl;
 
+import com.library.dto.BlogPostDTO;
+import com.library.model.Author;
 import com.library.model.BlogPost;
 import com.library.model.Book;
+import com.library.model.User;
+import com.library.repository.AuthorRepository;
 import com.library.repository.BlogPostRepository;
+import com.library.repository.UserRepository;
 import com.library.service.BlogPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +23,12 @@ public class BlogPostServiceImpl implements BlogPostService {
 
     @Autowired
     private BlogPostRepository blogPostRepository;
+
+    @Autowired
+    private AuthorRepository authorRepository;
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Override
     public BlogPost createPost(BlogPost blogPost) {
@@ -65,5 +76,21 @@ public class BlogPostServiceImpl implements BlogPostService {
     public Page<BlogPost> findPaginated(Integer pageNo, Integer pageSize) {
     	  Pageable pageable = PageRequest.of(pageNo, pageSize);
     	  return blogPostRepository.findAll(pageable);
+    }
+
+    @Override
+    public BlogPost createBlogPost(BlogPostDTO blogPostDTO) {
+        Integer authorId = blogPostDTO.getAuthorId();
+        User author = userRepository.findById(authorId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        BlogPost newBlogPost = BlogPost.builder()
+                .title(blogPostDTO.getTitle())
+                .pcontent(blogPostDTO.getPcontent())
+                .imageUrl(blogPostDTO.getImageUrl())
+                .author(author)
+                .createdAt(LocalDateTime.now())
+                .build();
+        return blogPostRepository.save(newBlogPost);
     }
 }
