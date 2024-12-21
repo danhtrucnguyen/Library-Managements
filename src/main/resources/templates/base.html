@@ -121,6 +121,23 @@
 		   .btn-control.right {
 		       right: 10px;
 		   }
+		   
+		   .rating-container .rating-unit i {
+		       font-size: 24px; /* Kích thước ngôi sao */
+		       color: #e0e0e0; /* Màu mặc định (ngôi sao rỗng) */
+		   }
+
+		   .rating-container .rating-unit.full i {
+		       color: #ffd700; /* Màu vàng cho ngôi sao đầy */
+		   }
+
+		   .rating-container .rating-unit.partial i {
+		       background: linear-gradient(to right, #ffd700 0%, #ffd700 var(--partial-fill), #e0e0e0 var(--partial-fill), #e0e0e0 100%);
+		       -webkit-background-clip: text;
+		       -webkit-text-fill-color: transparent;
+		   }
+
+
 	</style>
 
 </head>
@@ -231,7 +248,7 @@
 	<div class="search-popup">
 		<div class="search-popup-container">
 
-			<form role="search" method="get" class="search-form" action="search">
+			<form role="search" method="get" class="search-form" action="/books">
 				<input type="search" id="search-form" class="search-field" placeholder="Type and press enter" value=""
 					name="ch" />
 				
@@ -314,7 +331,7 @@
 						<ul id="navbar"
 							class="navbar-nav text-uppercase justify-content-start justify-content-lg-center align-items-start align-items-lg-center flex-grow-1">
 							<li class="nav-item">
-								<a class="nav-link me-4 active" href="/">Trang Chủ</a>
+								<a class="nav-link me-1 active" href="/">Trang Chủ</a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link me-4" href="/books">Gian hàng sách</a>
@@ -794,6 +811,33 @@
 				orderPriceElement.innerText = formatNumber(orderPrice) + 'đ';
 			}
 		}
+		
+		document.addEventListener("DOMContentLoaded", function () {
+		    const ratingContainers = document.querySelectorAll(".rating-container");
+
+		    ratingContainers.forEach((container) => {
+		        const ratingValue = parseFloat(container.getAttribute("data-rating"));
+		        if (!ratingValue) return;
+
+		        const stars = container.querySelectorAll(".rating-unit");
+
+		        stars.forEach((star, index) => {
+		            const starIndex = index + 1;
+
+		            if (ratingValue >= starIndex) {
+		                // Ngôi sao đầy
+		                star.classList.add("full");
+		            } else if (ratingValue > starIndex - 1) {
+		                // Ngôi sao một phần
+		                star.classList.add("partial");
+		                const partialFill = ((ratingValue - (starIndex - 1)) * 100).toFixed(2) + "%";
+		                star.style.setProperty("--partial-fill", partialFill);
+		            }
+		        });
+		    });
+		});
+
+
 	</script>
 	<script>
 	    let currentIndex = 0;

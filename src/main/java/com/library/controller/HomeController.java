@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.library.util.CommonUtil;
 
+import io.micrometer.common.util.StringUtils;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -248,7 +249,8 @@ public class HomeController {
 	                    @RequestParam(value = "priceRange", defaultValue = "") String priceRange,
 	                    @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
 	                    @RequestParam(name = "pageSize", defaultValue = "8") Integer pageSize,
-	                    @RequestParam(name = "sortField", defaultValue = "createdDate:desc") String sortParam) {
+	                    @RequestParam(name = "sortField", defaultValue = "createdDate:desc") String sortParam,
+	                    @RequestParam(defaultValue = "") String ch) {
 		
 		  // Lấy danh sách các danh mục
 	    List<Category> categories = categoryService.getAllActiveCategory();
@@ -293,7 +295,14 @@ public class HomeController {
 	    String sortOrder = sortParams.length > 1 ? sortParams[1] : "asc";
 
 	    // Gọi service với sortField và sortOrder
-	    Page<Book> page = bookService.getAllActiveBookPagination(pageNo, pageSize, category, publisher, sortField, sortOrder, minPrice, maxPrice);
+//	    Page<Book> page = bookService.getAllActiveBookPagination(pageNo, pageSize, category, publisher, sortField, sortOrder, minPrice, maxPrice);
+	    
+	    Page<Book> page = null;
+		if (StringUtils.isEmpty(ch)) {
+			page = bookService.getAllActiveBookPagination(pageNo, pageSize, category, publisher, sortField, sortOrder, minPrice, maxPrice);
+		} else {
+			page = bookService.searchActiveBookPagination(pageNo, pageSize, category, ch);
+		}
 
 	    List<Book> books = page.getContent();
 	    m.addAttribute("books", books);
@@ -425,37 +434,40 @@ public class HomeController {
 //		return "book";
 //
 //	} 
-    @GetMapping("/search")
-    public String searchBook(@RequestParam String ch, 
-                             @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
-                             @RequestParam(name = "pageSize", defaultValue = "8") Integer pageSize, 
-                             Model m) {
+//    @GetMapping("/search")
+//    public String searchBook(@RequestParam String ch, 
+//                             @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+//                             @RequestParam(name = "pageSize", defaultValue = "8") Integer pageSize, 
+//                             Model m) {
+//    	
+//    	
+//        // Gọi phương thức service với phân trang
+//        Page<Book> searchBooks = bookService.searchBookPagination(pageNo, pageSize, ch);
+//        
+//        if (searchBooks.isEmpty()) {
+//            m.addAttribute("message", "Không tìm thấy sách");
+//        } else {
+//            m.addAttribute("books", searchBooks.getContent());
+//        }
+//        
+//        // Thêm thông tin phân trang vào model
+//        m.addAttribute("pageNo", searchBooks.getNumber());
+//        m.addAttribute("pageSize", pageSize);
+//        m.addAttribute("totalElements", searchBooks.getTotalElements());
+//        m.addAttribute("totalPages", searchBooks.getTotalPages());
+//        m.addAttribute("isFirst", searchBooks.isFirst());
+//        m.addAttribute("isLast", searchBooks.isLast());
+//
+//        // Lấy danh mục và nhà xuất bản để hiển thị
+//        List<Category> categories = categoryService.getAllActiveCategory();
+//        m.addAttribute("categories", categories);
+//
+//        List<Publisher> publishers = publisherService.getAllActivePublisher();
+//        m.addAttribute("publishers", publishers);
+//
+//        return "book"; // Trả về trang sách
+//    }
+    
 
-        // Gọi phương thức service với phân trang
-        Page<Book> searchBooks = bookService.searchBookPagination(pageNo, pageSize, ch);
-        
-        if (searchBooks.isEmpty()) {
-            m.addAttribute("message", "Không tìm thấy sách");
-        } else {
-            m.addAttribute("books", searchBooks.getContent());
-        }
-        
-        // Thêm thông tin phân trang vào model
-        m.addAttribute("pageNo", searchBooks.getNumber());
-        m.addAttribute("pageSize", pageSize);
-        m.addAttribute("totalElements", searchBooks.getTotalElements());
-        m.addAttribute("totalPages", searchBooks.getTotalPages());
-        m.addAttribute("isFirst", searchBooks.isFirst());
-        m.addAttribute("isLast", searchBooks.isLast());
-
-        // Lấy danh mục và nhà xuất bản để hiển thị
-        List<Category> categories = categoryService.getAllActiveCategory();
-        m.addAttribute("categories", categories);
-
-        List<Publisher> publishers = publisherService.getAllActivePublisher();
-        m.addAttribute("publishers", publishers);
-
-        return "book"; // Trả về trang sách
-    }
 
 }

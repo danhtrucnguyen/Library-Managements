@@ -81,22 +81,19 @@
 								<div class="review-content d-flex">
 
 
-									<div class="rating text-warning d-flex align-items-center">
-										<svg class="star star-fill">
-											<use xlink:href="#star-fill"></use>
-										</svg>
-										<svg class="star star-fill">
-											<use xlink:href="#star-fill"></use>
-										</svg>
-										<svg class="star star-fill">
-											<use xlink:href="#star-fill"></use>
-										</svg>
-										<svg class="star star-fill">
-											<use xlink:href="#star-fill"></use>
-										</svg>
-										<svg class="star star-fill">
-											<use xlink:href="#star-fill"></use>
-										</svg>
+									<div class="rating-container" th:attr="data-rating=${wishlist.book.averageRating}">
+										<div class="rating">
+											<span class="rating-unit "><i class="fa-solid fa-star"
+													style="font-size: 15px;"></i></span>
+											<span class="rating-unit "><i class="fa-solid fa-star"
+													style="font-size: 15px;"></i></span>
+											<span class="rating-unit "><i class="fa-solid fa-star"
+													style="font-size: 15px;"></i></span>
+											<span class="rating-unit "><i class="fa-solid fa-star"
+													style="font-size: 15px;"></i></span>
+											<span class="rating-unit "><i class="fa-solid fa-star"
+													style="font-size: 15px;"></i></span>
+										</div>
 									</div>
 								</div>
 								<div style="padding-top: 10px ;">

@@ -66,6 +66,12 @@ public interface BookRepository extends JpaRepository<Book,Integer> {
 	
 	Page<Book> findByDiscountPriceBetweenAndCategoryAndPublisherAndIsActiveTrue(Double minPrice, Double maxPrice, String category, String publisher, Pageable pageable);
 
+	Page<Book> findByIsActiveTrueAndBookNameContainingIgnoreCaseAndCategoryContainingIgnoreCaseAndPublisherContainingIgnoreCase(
+			String ch, String ch2, String ch3, Pageable pageable);
+	
+	Page<Book> findByisActiveTrueAndBookNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(String ch, String ch2,
+			Pageable pageable);
+
 	
 	
 }
