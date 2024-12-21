@@ -1,5 +1,6 @@
 package com.library.service;
 
+import com.library.dto.BlogPostDTO;
 import com.library.model.BlogPost;
 import org.springframework.data.domain.Page;
 
@@ -17,4 +18,6 @@ public interface BlogPostService {
     BlogPost getPostById(Long id);
 
     Page<BlogPost> findPaginated(Integer pageNo, Integer pageSize);
+
+    BlogPost createBlogPost(BlogPostDTO blogPostDTO);
 }
