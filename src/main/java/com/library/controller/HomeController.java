@@ -70,9 +70,14 @@ public class HomeController {
 	
 	@Autowired
 	private RatingService ratingService;
+	
+	@Autowired
+    private FeedbackService feedbackService;
 
 	@ModelAttribute
-	public void getUserDetails(Principal p, Model m) {
+	public void getUserDetails(Principal p, Model m,
+			@RequestParam(value = "category", defaultValue = "") String category,
+			@RequestParam(value = "publisher", defaultValue = "") String publisher) {
 		if (p != null) {
 			String email = p.getName();
 			User userDtls = userService.getUserByEmail(email);
@@ -86,6 +91,9 @@ public class HomeController {
 		
 		List<Publisher> allActivePublisher = publisherService.getAllActivePublisher();
 		m.addAttribute("publishers", allActivePublisher);
+		
+		List<Book> allActivebook = bookService.getAllActiveBooks( category, publisher);
+		m.addAttribute("books", allActivebook);
 
 	}
 
@@ -95,7 +103,8 @@ public class HomeController {
 	}
 	
 	@GetMapping("/")
-	public String index() {
+	public String index(Model m) {
+		 m.addAttribute("feedbacks", feedbackService.getAllFeedbacks());
 		return "index";
 	}
 

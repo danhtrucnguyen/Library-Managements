@@ -85,59 +85,61 @@
 			color: gold;
 			/* Màu sao khi được chọn */
 		}
-		
+
 		.carousel-container {
-		       position: relative;
-		       overflow: hidden;
-		   }
+			position: relative;
+			overflow: hidden;
+		}
 
-		   .carousel-wrapper {
-		       display: flex;
-		       transition: transform 0.5s ease;
-		   }
+		.carousel-wrapper {
+			display: flex;
+			transition: transform 0.5s ease;
+		}
 
-		   .carousel-wrapper .col-md-4 {
-		       flex: 0 0 33.33%; /* Hiển thị 3 mục cùng lúc */
-		       box-sizing: border-box;
-		   }
+		.carousel-wrapper .col-md-4 {
+			flex: 0 0 33.33%;
+			/* Hiển thị 3 mục cùng lúc */
+			box-sizing: border-box;
+		}
 
-		   .btn-control {
-		       position: absolute;
-		       top: 50%;
-		       transform: translateY(-50%);
-		       background-color: rgba(0, 0, 0, 0.5);
-		       color: white;
-		       border: none;
-		       padding: 10px;
-		       cursor: pointer;
-		       z-index: 100;
-		       border-radius: 50%;
-		   }
+		.btn-control {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			background-color: rgba(0, 0, 0, 0.5);
+			color: white;
+			border: none;
+			padding: 10px;
+			cursor: pointer;
+			z-index: 100;
+			border-radius: 50%;
+		}
 
-		   .btn-control.left {
-		       left: 10px;
-		   }
+		.btn-control.left {
+			left: 10px;
+		}
 
-		   .btn-control.right {
-		       right: 10px;
-		   }
-		   
-		   .rating-container .rating-unit i {
-		       font-size: 24px; /* Kích thước ngôi sao */
-		       color: #e0e0e0; /* Màu mặc định (ngôi sao rỗng) */
-		   }
+		.btn-control.right {
+			right: 10px;
+		}
 
-		   .rating-container .rating-unit.full i {
-		       color: #ffd700; /* Màu vàng cho ngôi sao đầy */
-		   }
+		.rating-container .rating-unit i {
+			font-size: 24px;
+			/* Kích thước ngôi sao */
+			color: #e0e0e0;
+			/* Màu mặc định (ngôi sao rỗng) */
+		}
 
-		   .rating-container .rating-unit.partial i {
-		       background: linear-gradient(to right, #ffd700 0%, #ffd700 var(--partial-fill), #e0e0e0 var(--partial-fill), #e0e0e0 100%);
-		       -webkit-background-clip: text;
-		       -webkit-text-fill-color: transparent;
-		   }
+		.rating-container .rating-unit.full i {
+			color: #ffd700;
+			/* Màu vàng cho ngôi sao đầy */
+		}
 
-
+		.rating-container .rating-unit.partial i {
+			background: linear-gradient(to right, #ffd700 0%, #ffd700 var(--partial-fill), #e0e0e0 var(--partial-fill), #e0e0e0 100%);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+		}
 	</style>
 
 </head>
@@ -251,7 +253,7 @@
 			<form role="search" method="get" class="search-form" action="/books">
 				<input type="search" id="search-form" class="search-field" placeholder="Type and press enter" value=""
 					name="ch" />
-				
+
 				<button type="submit" class="search-submit"><svg class="search">
 						<use xlink:href="#search"></use>
 					</svg></button>
@@ -521,9 +523,7 @@
 						<div class="col-lg-3 col-sm-6 pb-3">
 							<div class="footer-menu">
 								<img src="/images/main-logo.png" alt="logo" class="img-fluid mb-2">
-								<p>Nisi, purus vitae, ultrices nunc. Sit ac sit suscipit hendrerit. Gravida massa
-									volutpat aenean odio
-									erat nullam fringilla.</p>
+								<p>Sách là chìa khóa mở ra cánh cửa tri thức, dẫn bạn đến những chân trời mới.</p>
 								<div class="social-links">
 									<ul class="d-flex list-unstyled">
 										<li>
@@ -567,54 +567,57 @@
 						</div>
 						<div class="col-lg-2 col-sm-6 pb-3">
 							<div class="footer-menu text-capitalize">
-								<h5 class="widget-title pb-2">Quick Links</h5>
+								<h5 class="widget-title pb-2">Liên kết nhanh</h5>
 								<ul class="menu-list list-unstyled text-capitalize">
 									<li class="menu-item mb-1">
-										<a href="#">Home</a>
+										<a href="#">Trang chủ</a>
 									</li>
 									<li class="menu-item mb-1">
-										<a href="#">About</a>
+										<a href="#">Gian hàng sách</a>
 									</li>
 									<li class="menu-item mb-1">
-										<a href="#">Shop</a>
+										<a href="#">Danh mục</a>
+									</li>
+									<li class="menu-item mb-1">
+										<a href="#">Nhà xuất bản</a>
 									</li>
 									<li class="menu-item mb-1">
 										<a href="#">Blogs</a>
 									</li>
 									<li class="menu-item mb-1">
-										<a href="#">Contact</a>
+										<a href="#">Liên hệ</a>
 									</li>
 								</ul>
 							</div>
 						</div>
 						<div class="col-lg-3 col-sm-6 pb-3">
 							<div class="footer-menu text-capitalize">
-								<h5 class="widget-title pb-2">Help & Info Help</h5>
+								<h5 class="widget-title pb-2">Trợ giúp & Thông tin trợ giúp</h5>
 								<ul class="menu-list list-unstyled">
 									<li class="menu-item mb-1">
-										<a href="#">Track Your Order</a>
+										<a href="#">Theo dõi đơn hàng của bạn</a>
 									</li>
 									<li class="menu-item mb-1">
-										<a href="#">Returns Policies</a>
+										<a href="#">Chính sách hoàn trả</a>
 									</li>
 									<li class="menu-item mb-1">
-										<a href="#">Shipping + Delivery</a>
+										<a href="#">Vận chuyển + Giao hàng</a>
 									</li>
 									<li class="menu-item mb-1">
-										<a href="#">Contact Us</a>
+										<a href="#">Liên hệ với chúng tôi</a>
 									</li>
 									<li class="menu-item mb-1">
-										<a href="#">Faqs</a>
+										<a href="#">Câu hỏi thường gặp</a>
 									</li>
 								</ul>
 							</div>
 						</div>
 						<div class="col-lg-3 col-sm-6 pb-3">
 							<div class="footer-menu contact-item">
-								<h5 class="widget-title text-capitalize pb-2">Contact Us</h5>
-								<p>Do you have any queries or suggestions? <a href="mailto:"
+								<h5 class="widget-title text-capitalize pb-2">Liên hệ với chúng tôi</h5>
+								<p>Mọi thắc mắc cần giải đáp vui lòng liên hệ <a href="mailto:"
 										class="text-decoration-underline">yourinfo@gmail.com</a></p>
-								<p>If you need support? Just give us a call. <a href="#"
+								<p>Nếu bạn cần hỗ trợ? Chỉ cần gọi cho chúng tôi. <a href="#"
 										class="text-decoration-underline">+55 111 222
 										333 44</a></p>
 							</div>
@@ -811,54 +814,54 @@
 				orderPriceElement.innerText = formatNumber(orderPrice) + 'đ';
 			}
 		}
-		
+
 		document.addEventListener("DOMContentLoaded", function () {
-		    const ratingContainers = document.querySelectorAll(".rating-container");
+			const ratingContainers = document.querySelectorAll(".rating-container");
 
-		    ratingContainers.forEach((container) => {
-		        const ratingValue = parseFloat(container.getAttribute("data-rating"));
-		        if (!ratingValue) return;
+			ratingContainers.forEach((container) => {
+				const ratingValue = parseFloat(container.getAttribute("data-rating"));
+				if (!ratingValue) return;
 
-		        const stars = container.querySelectorAll(".rating-unit");
+				const stars = container.querySelectorAll(".rating-unit");
 
-		        stars.forEach((star, index) => {
-		            const starIndex = index + 1;
+				stars.forEach((star, index) => {
+					const starIndex = index + 1;
 
-		            if (ratingValue >= starIndex) {
-		                // Ngôi sao đầy
-		                star.classList.add("full");
-		            } else if (ratingValue > starIndex - 1) {
-		                // Ngôi sao một phần
-		                star.classList.add("partial");
-		                const partialFill = ((ratingValue - (starIndex - 1)) * 100).toFixed(2) + "%";
-		                star.style.setProperty("--partial-fill", partialFill);
-		            }
-		        });
-		    });
+					if (ratingValue >= starIndex) {
+						// Ngôi sao đầy
+						star.classList.add("full");
+					} else if (ratingValue > starIndex - 1) {
+						// Ngôi sao một phần
+						star.classList.add("partial");
+						const partialFill = ((ratingValue - (starIndex - 1)) * 100).toFixed(2) + "%";
+						star.style.setProperty("--partial-fill", partialFill);
+					}
+				});
+			});
 		});
 
 
 	</script>
 	<script>
-	    let currentIndex = 0;
+		let currentIndex = 0;
 
-	    function moveSlide(direction) {
-	        const carouselWrapper = document.querySelector('.carousel-wrapper');
-	        const totalItems = document.querySelectorAll('.carousel-wrapper .col-md-4').length;
-	        const visibleItems = 3; // Số lượng danh mục hiển thị cùng lúc
+		function moveSlide(direction) {
+			const carouselWrapper = document.querySelector('.carousel-wrapper');
+			const totalItems = document.querySelectorAll('.carousel-wrapper .col-md-4').length;
+			const visibleItems = 3; // Số lượng danh mục hiển thị cùng lúc
 
-	        currentIndex += direction;
+			currentIndex += direction;
 
-	        // Đảm bảo currentIndex không vượt quá giới hạn
-	        if (currentIndex < 0) {
-	            currentIndex = totalItems - visibleItems;
-	        } else if (currentIndex > totalItems - visibleItems) {
-	            currentIndex = 0;
-	        }
+			// Đảm bảo currentIndex không vượt quá giới hạn
+			if (currentIndex < 0) {
+				currentIndex = totalItems - visibleItems;
+			} else if (currentIndex > totalItems - visibleItems) {
+				currentIndex = 0;
+			}
 
-	        const newTransform = -currentIndex * (100 / visibleItems) + '%';
-	        carouselWrapper.style.transform = 'translateX(' + newTransform + ')';
-	    }
+			const newTransform = -currentIndex * (100 / visibleItems) + '%';
+			carouselWrapper.style.transform = 'translateX(' + newTransform + ')';
+		}
 	</script>
 
 	<script src="/js/jquery-1.11.0.min.js"></script>

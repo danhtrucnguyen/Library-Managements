@@ -114,7 +114,7 @@
 						</div>
 						<div class="icon-box-content">
 							<h4 class="card-title mb-1 text-capitalize text-dark">Giao hàng nhanh</h4>
-							<p>Consectetur adipi elit lorem ipsum dolor sit amet.</p>
+							<p>Chúng tôi đảm bảo giao hàng nhanh chóng và đúng thời gian.</p>
 						</div>
 					</div>
 				</div>
@@ -127,7 +127,7 @@
 						</div>
 						<div class="icon-box-content">
 							<h4 class="card-title mb-1 text-capitalize text-dark">Đảm bảo chất lượng</h4>
-							<p>Dolor sit amet orem ipsu mcons ectetur adipi elit.</p>
+							<p>Cam kết sản phẩm đạt tiêu chuẩn và chất lượng cao nhất.</p>
 						</div>
 					</div>
 				</div>
@@ -140,7 +140,7 @@
 						</div>
 						<div class="icon-box-content">
 							<h4 class="card-title mb-1 text-capitalize text-dark">Ưu đãi hằng ngày</h4>
-							<p>Amet consectetur adipi elit loreme ipsum dolor sit.</p>
+							<p>Mua sắm với nhiều ưu đãi hấp dẫn mỗi ngày.</p>
 						</div>
 					</div>
 				</div>
@@ -153,7 +153,7 @@
 						</div>
 						<div class="icon-box-content">
 							<h4 class="card-title mb-1 text-capitalize text-dark">Thanh toán online</h4>
-							<p>Rem Lopsum dolor sit amet, consectetur adipi elit.</p>
+							<p>An toàn, nhanh chóng với nhiều hình thức thanh toán tiện lợi.</p>
 						</div>
 					</div>
 				</div>
@@ -468,29 +468,29 @@
 					</div>
 				</div>
 				<div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
-					<h2>Reading Festival is about to take place. Hurry Up !!!</h2>
+					<h2>Ngày hội đọc sách sắp diễn ra. Tới ngay nào !!!</h2>
 					<div id="countdown-clock" class="text-dark d-flex align-items-center my-3">
 						<div class="time d-grid pe-3">
 							<span class="days fs-1 fw-normal"></span>
-							<small>Days</small>
+							<small>Ngày</small>
 						</div>
 						<span class="fs-1 text-primary">:</span>
 						<div class="time d-grid pe-3 ps-3">
 							<span class="hours fs-1 fw-normal"></span>
-							<small>Hrs</small>
+							<small>Giờ</small>
 						</div>
 						<span class="fs-1 text-primary">:</span>
 						<div class="time d-grid pe-3 ps-3">
 							<span class="minutes fs-1 fw-normal"></span>
-							<small>Min</small>
+							<small>Phút</small>
 						</div>
 						<span class="fs-1 text-primary">:</span>
 						<div class="time d-grid ps-3">
 							<span class="seconds fs-1 fw-normal"></span>
-							<small>Sec</small>
+							<small>Giây</small>
 						</div>
 					</div>
-					<a href="index.html" class="btn mt-3">Library Collection</a>
+					<!--<a href="index.html" class="btn mt-3">Library Collection</a>-->
 				</div>
 			</div>
 		</div>
@@ -951,139 +951,18 @@
 				</svg>
 			</div>
 			<div class="section-title mb-4 text-center">
-				<h3 class="mb-4">Readers reviews</h3>
+				<h3 class="mb-4">Nhận xét của độc giả</h3>
 			</div>
 			<div class="swiper testimonial-swiper ">
 				<div class="swiper-wrapper">
-					<div class="swiper-slide">
+					<div class="swiper-slide" th:each="feedback : ${feedbacks}">
 						<div class="card position-relative text-left p-5 border rounded-3">
-							<blockquote>"I stumbled upon this bookstore while visiting the city, and it instantly became
-								my favorite spot. The cozy atmosphere, friendly staff, and wide selection of books make
-								every visit a delight!"</blockquote>
-							<div class="rating text-warning d-flex align-items-center">
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-							</div>
-							<h5 class="mt-1 fw-normal">Trinh Hung Thuan</h5>
+							<blockquote>"[[${feedback.content}]]"</blockquote>
+							
+							<h5 class="mt-1 fw-normal">[[${feedback.name}]]</h5>
 						</div>
 					</div>
-					<div class="swiper-slide">
-						<div class="card position-relative text-left p-5 border rounded-3">
-							<blockquote>"As an avid reader, I'm always on the lookout for new releases, and this
-								bookstore never disappoints. They always have the latest titles, and their
-								recommendations have introduced me to some incredible reads!"</blockquote>
-							<div class="rating text-warning d-flex align-items-center">
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-							</div>
-							<h5 class="mt-1 fw-normal">Thomas John</h5>
-						</div>
-					</div>
-					<div class="swiper-slide">
-						<div class="card position-relative text-left p-5 border rounded-3">
-							<blockquote>"I ordered a few books online from this store, and I was impressed by the quick
-								delivery and careful packaging. It's clear that they prioritize customer satisfaction,
-								and I'll definitely be shopping here again!"</blockquote>
-							<div class="rating text-warning d-flex align-items-center">
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-							</div>
-							<h5 class="mt-1 fw-normal">Kevin Bryan</h5>
-						</div>
-					</div>
-					<div class="swiper-slide">
-						<div class="card position-relative text-left p-5 border rounded-3">
-							<blockquote>“I stumbled upon this tech store while searching for a new laptop, and I
-								couldn't be happier
-								with my experience! The staff was incredibly knowledgeable and guided me through the
-								process of choosing
-								the perfect device for my needs. Highly recommended!”</blockquote>
-							<div class="rating text-warning d-flex align-items-center">
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-							</div>
-							<h5 class="mt-1 fw-normal">Stevin</h5>
-						</div>
-					</div>
-					<div class="swiper-slide">
-						<div class="card position-relative text-left p-5 border rounded-3">
-							<blockquote>“I stumbled upon this tech store while searching for a new laptop, and I
-								couldn't be happier
-								with my experience! The staff was incredibly knowledgeable and guided me through the
-								process of choosing
-								the perfect device for my needs. Highly recommended!”</blockquote>
-							<div class="rating text-warning d-flex align-items-center">
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-							</div>
-							<h5 class="mt-1 fw-normal">Roman</h5>
-						</div>
-					</div>
+					
 				</div>
 			</div>
 		</div>
