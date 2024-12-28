@@ -16,7 +16,7 @@
 <section>
     <div class="container-fluid mt-4 p-3">
         <div class="row">
-            <p class="text-center fs-3 mt-2">Danh sách bài đăng</p>
+            <p class="text-center fs-3 mt-2">Quản lý bài đăng</p>
             <hr>
             <a href="/admin/" class="text-decoration-none" style="margin-left: 10px;"><i
                     class="fa-solid fa-arrow-left"></i> Trở lại</a>
@@ -31,17 +31,18 @@
             <table class="table table-bordered">
                 <thead class="table-light ">
                 <tr>
-                    <th scope="col">Số Thứ tự</th>
+                    <th scope="col" style="width: 150px;">Số Thứ tự</th>
                     <!--	<th scope="col">Ảnh</th>-->
                     <th scope="col">Tiêu đề</th>
+					<th scope="col">Ảnh bìa</th>
                     <th scope="col">Tác giả</th>
                     <th scope="col">Ngày đăng</th>
                     <th scope="col">Hành động</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="post,c:${posts}">
-                    <th scope="row">[[${c.count}]]</th>
+                <tr th:each="post,c:${blogs}">
+                    <th scope="row" >[[${c.count}]]</th>
                     <!--<td>
                             <img th:if="${#strings.startsWith(p.image, 'http')}" th:src="${p.image}"
                                 width="70px" height="70px" alt="Image from URL" />
@@ -50,11 +51,12 @@
                                 alt="Local image" />-->
                     </td>
                     <td>[[${post.title}]]</td>
+					<td>[[${post.image}]]</td>
                     <td>[[${post.author}]]</td>
-                    <td>[[${post.createdAt}]]</td>
-                    <td><a th:href="@{'/admin/edit_post/'+${p.id}}" class="btn btn-sm btn-primary"><i
+                    <td>[[${post.formattedCreatedAt}]]</td>
+                   <td><a th:href="@{'/admin/editPost/'+${post.id}}" class="btn btn-sm btn-primary"><i
                             class="fa-solid fa-pen-to-square"></i>Sửa</a> <a
-                            th:href="@{'/admin/delete_post/'+${p.id}}" class="btn btn-sm btn-danger"><i
+                            th:href="@{'/admin/deletePost/'+${post.id}}" class="btn btn-sm btn-danger"><i
                             class="fa-solid fa-trash"></i>
                         Xóa</a></td>
                 </tr>

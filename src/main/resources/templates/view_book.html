@@ -47,10 +47,10 @@
 							<div class="swiper-wrapper d-flex flex-wrap gap-3 align-content-start">
 								<!--<div class="swiper-slide bg-white">
 									<!--									<img th:src="@{'/images/book_img/'+${book.image}}" alt="product-thumb" class="img-fluid border rounded-3">-->
-									<!--									<img th:src="@{${book.image != null && book.image.startsWith('http') ? book.image : '/images/book_img/' + book.image}}" alt="product-thumb" class="img-fluid border rounded-3">-->
-									<!--									<img th:src="${book.image != null && book.image.startsWith('http') ? book.image : '/images/book_img/' + ${book.image}}"-->
-									<!--										 alt="product-thumb" class="img-fluid border rounded-3">-->
-									<!--<img th:src="${book.image != null and book.image.startsWith('http') ? book.image : '/images/book_img/' + book.image}"
+								<!--									<img th:src="@{${book.image != null && book.image.startsWith('http') ? book.image : '/images/book_img/' + book.image}}" alt="product-thumb" class="img-fluid border rounded-3">-->
+								<!--									<img th:src="${book.image != null && book.image.startsWith('http') ? book.image : '/images/book_img/' + ${book.image}}"-->
+								<!--										 alt="product-thumb" class="img-fluid border rounded-3">-->
+								<!--<img th:src="${book.image != null and book.image.startsWith('http') ? book.image : '/images/book_img/' + book.image}"
 										alt="product-thumb" class="img-fluid border rounded-3">
 								</div>
 
@@ -87,28 +87,28 @@
 						<div class="element-header">
 							<h1 class="product-title">[[${book.bookName}]]</h1>
 							<div class="product-price d-flex align-items-center mt-2">
-								<span class="fs-2 fw-light text-primary me-2">[[${book.formattedDiscountPrice}]]đ</span>
-								<del>[[${book.formattedPrice}]]đ</del>
+								<span class="fs-2 fw-light text-primary me-2">[[${book.discountPrice}]]đ</span>
+								<del>[[${book.price}]]đ</del>
 							</div>
-							<div class="rating text-warning d-flex align-items-center mb-2">
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
-								<svg class="star star-fill">
-									<use xlink:href="#star-fill"></use>
-								</svg>
+							<div class="rating-container" th:attr="data-rating=${book.averageRating}">
+								<div class="rating">
+									<span class="rating-unit "><i class="fa-solid fa-star"
+											style="font-size: 15px;"></i></span>
+									<span class="rating-unit "><i class="fa-solid fa-star"
+											style="font-size: 15px;"></i></span>
+									<span class="rating-unit "><i class="fa-solid fa-star"
+											style="font-size: 15px;"></i></span>
+									<span class="rating-unit "><i class="fa-solid fa-star"
+											style="font-size: 15px;"></i></span>
+									<span class="rating-unit "><i class="fa-solid fa-star"
+											style="font-size: 15px;"></i></span>
+								</div>
 							</div>
 						</div>
-						<p>Tác giả: [[${book.author}]].</p>
+						<p style="display: flex; justify-content: space-between; align-items: center;">
+													<span>Tác giả: [[${book.author}]].</span>
+													<span style="margin-left: auto;">Đã bán: [[${book.sold}]]</span>
+												</p>
 						<hr>
 						<div class="cart-wrap">
 
@@ -156,22 +156,21 @@
 									<a href="#" class="btn btn-dark">Sách tạm hết</a>
 								</th:block>
 								<th:block th:if="${user==null}">
-									<a href="/signin"
-																		class="btn btn-dark">
-																		<svg class="heart" width="21" height="21">
-																			<use xlink:href="#heart"></use>
-																		</svg>
-																	</a>
+									<a href="/signin" class="btn btn-dark">
+										<svg class="heart" width="21" height="21">
+											<use xlink:href="#heart"></use>
+										</svg>
+									</a>
 								</th:block>
 								<th:block th:unless="${user==null}">
 									<a th:href="@{'/user/addWishList?pid='+${book.id}+'&uid='+${user.id}}"
-																		class="btn btn-dark">
-																		<svg class="heart" width="21" height="21">
-																			<use xlink:href="#heart"></use>
-																		</svg>
-																	</a>
+										class="btn btn-dark">
+										<svg class="heart" width="21" height="21">
+											<use xlink:href="#heart"></use>
+										</svg>
+									</a>
 								</th:block>
-							<!--	<a th:href="@{'/user/addWishList?pid='+${book.id}+'&uid='+${user.id}}"
+								<!--	<a th:href="@{'/user/addWishList?pid='+${book.id}+'&uid='+${user.id}}"
 									class="btn btn-dark">
 									<svg class="heart" width="21" height="21">
 										<use xlink:href="#heart"></use>
@@ -213,6 +212,42 @@
 			</div>
 		</div>
 	</section>
+	
+	<section class="product-tabs">
+	     <div class="container">
+	       <div class="row">
+	         <div class="tabs-listing">
+	           <nav>
+	             <div class="nav nav-tabs d-flex justify-content-center py-3" id="nav-tab" role="tablist">
+	               <button class="nav-link text-capitalize active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Description</button>
+	            
+	               <button class="nav-link text-capitalize" id="nav-shipping-tab" data-bs-toggle="tab" data-bs-target="#nav-shipping" type="button" role="tab" aria-controls="nav-shipping" aria-selected="false">Shipping & Return</button>
+	              
+	             </div>
+	           </nav>
+	           <div class="tab-content border-bottom py-4" id="nav-tabContent">
+	             <div class="tab-pane fade active show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+	               <div th:utext="${book.description}"></div>
+	             <!--  <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula vulputate sem tristique cursus.
+	               <ul class="fw-light">
+	                 <li>Donec nec justo eget felis facilisis fermentum.</li>
+	                 <li>Suspendisse urna viverra non, semper suscipit pede.</li>
+	                 <li>Aliquam porttitor mauris sit amet orci.</li>
+	               </ul>
+	               <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula vulputate sem tristique cursus.</p>
+	             </div>
+	             
+	             <div class="tab-pane fade" id="nav-shipping" role="tabpanel" aria-labelledby="nav-shipping-tab">
+	               <p>Returns Policy</p>
+	               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eros justo, accumsan non dui sit amet. Phasellus semper volutpat mi sed imperdiet. Ut odio lectus, vulputate non ex non, mattis sollicitudin purus. Mauris consequat justo a enim interdum, in consequat dolor accumsan. Nulla iaculis diam purus, ut vehicula leo efficitur at.</p>
+	               <p>Interdum et malesuada fames ac ante ipsum primis in faucibus. In blandit nunc enim, sit amet pharetra erat aliquet ac.</p>
+	               <p>Shipping</p>
+	               <p>Pellentesque ultrices ut sem sit amet lacinia. Sed nisi dui, ultrices ut turpis pulvinar. Sed fringilla ex eget lorem consectetur, consectetur blandit lacus varius. Duis vel scelerisque elit, et vestibulum metus. Integer sit amet tincidunt tortor. Ut lacinia ullamcorper massa, a fermentum arcu vehicula ut. Ut efficitur faucibus dui Nullam tristique dolor eget turpis consequat varius. Quisque a interdum augue. Nam ut nibh mauris.</p>
+	             </div>-->
+	           </div>
+	       </div>
+	     </div>
+	   </section>
 
 	<section class="comments-section padding-large">
 		<div class="container">
@@ -225,30 +260,31 @@
 						<div class="card-body">
 							<h5 class="card-title mb-1" th:text="${comment.user.name}">User</h5>
 							<p class="card-text text-muted mb-2">
-								<small th:text="${#temporals.format(comment.commentDate, 'dd/MM/yyyy HH:mm')}">Date</small>
+								<small
+									th:text="${#temporals.format(comment.commentDate, 'dd/MM/yyyy HH:mm')}">Date</small>
 							</p>
 							<p class="card-text" th:text="${comment.content}">Comment content</p>
 
 							<!-- Hiển thị các câu trả lời cho bình luận -->
-<!--							<div class="ms-4 mt-3">-->
-<!--								<h6 class="text-secondary">Phản hồi</h6>-->
-<!--								<ul class="list-unstyled">-->
-<!--									<li th:each="reply : ${comment.replies}">-->
-<!--										<div class="border-start ps-3 mb-3">-->
-<!--											<h6 class="mb-1" th:text="${reply.user.name}">User</h6>-->
-<!--											<p class="text-muted mb-1">-->
-<!--												<small th:text="${#temporals.format(reply.commentDate, 'dd/MM/yyyy HH:mm')}">Date</small>-->
-<!--											</p>-->
-<!--											<p class="mb-0" th:text="${reply.content}">Reply content</p>-->
-<!--										</div>-->
-<!--									</li>-->
-<!--								</ul>-->
-<!--							</div>-->
+							<!--							<div class="ms-4 mt-3">-->
+							<!--								<h6 class="text-secondary">Phản hồi</h6>-->
+							<!--								<ul class="list-unstyled">-->
+							<!--									<li th:each="reply : ${comment.replies}">-->
+							<!--										<div class="border-start ps-3 mb-3">-->
+							<!--											<h6 class="mb-1" th:text="${reply.user.name}">User</h6>-->
+							<!--											<p class="text-muted mb-1">-->
+							<!--												<small th:text="${#temporals.format(reply.commentDate, 'dd/MM/yyyy HH:mm')}">Date</small>-->
+							<!--											</p>-->
+							<!--											<p class="mb-0" th:text="${reply.content}">Reply content</p>-->
+							<!--										</div>-->
+							<!--									</li>-->
+							<!--								</ul>-->
+							<!--							</div>-->
 
 							<!-- Nút trả lời bình luận -->
-<!--							<button class="btn btn-sm btn-outline-primary mt-2" th:data-comment-id="${comment.id}">-->
-<!--								Trả lời-->
-<!--							</button>-->
+							<!--							<button class="btn btn-sm btn-outline-primary mt-2" th:data-comment-id="${comment.id}">-->
+							<!--								Trả lời-->
+							<!--							</button>-->
 						</div>
 					</div>
 				</li>
@@ -259,7 +295,8 @@
 				<h4 class="mb-3">Thêm bình luận</h4>
 				<form th:action="@{/book/{bookId}(bookId=${book.id})}" method="post">
 					<div class="form-group mb-3">
-						<textarea class="form-control" name="content" rows="3" placeholder="Nhập bình luận của bạn" required></textarea>
+						<textarea class="form-control" name="content" rows="3" placeholder="Nhập bình luận của bạn"
+							required></textarea>
 					</div>
 					<input type="hidden" name="userId" th:value="${user != null ? user.id : ''}" />
 					<button class="btn btn-primary" type="submit">Gửi</button>

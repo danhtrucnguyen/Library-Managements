@@ -1,10 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
 
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+
+<body>
+	<!--<section class="hero-section position-relative padding-large"
+		style="background-image: url(/images/banner-image-bg-1.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 400px;">
+		<div class="hero-content">
+			<div class="container">
+				<div class="row">
+					<div class="text-center">
+						<h1>Single-Post</h1>
+						<div class="breadcrumbs">
+							<span class="item">
+								<a href="index.html">Home > </a>
+							</span>
+							<span class="item text-decoration-underline">Single-Post</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>-->
+	<section>
+		<div class="post-wrap padding-large overflow-hidden">
+			<div class="container" style="width: 1000px;">
+				<div class="row">
+					<main class="post-grid">
+						<div class="row">
+							<article class="post-item">
+								<div class="post-content">
+									<div class="post-meta mt-4">
+										<span class="post-category">[[${post.formattedCreatedAt}]] </span> - <span
+											class="meta-date"><a>[[${post.author}]]</a></span>
+									</div>
+									<h1 class="post-title my-4">[[${post.title}]] </h1>
+									<div class="hero-image col-lg-12">
+										<img th:src="@{'/images/blog_img/'+${post.image}}" alt="single-post my-3"
+											class="img-fluid" style="width: 100%; height: 500px;">
+									</div>
+									<div class="post-description review-item mt-4">
+										<div th:utext="${post.contents}" style="text-align: justify;  
+						           text-justify: inter-word;"></div>
+										<div class="post-bottom-link d-flex justify-content-between mt-2">
+											
+											<div class="social-links d-flex">
+												<div class="element-title pe-2">Chia sẻ đến	:</div>
+												<ul class="d-flex list-unstyled">
+													<li>
+														<a href="#">
+															<svg class="facebook">
+																<use xlink:href="#facebook"></use>
+															</svg>
+														</a>
+													</li>
+													<li>
+														<a href="#">
+															<svg class="instagram">
+																<use xlink:href="#instagram"></use>
+															</svg>
+														</a>
+													</li>
+													<li>
+														<a href="#">
+															<svg class="twitter">
+																<use xlink:href="#twitter"></use>
+															</svg>
+														</a>
+													</li>
+													<li>
+														<a href="#">
+															<svg class="linkedin">
+																<use xlink:href="#linkedin"></use>
+															</svg>
+														</a>
+													</li>
+													<li>
+														<a href="#">
+															<svg class="youtube">
+																<use xlink:href="#youtube"></use>
+															</svg>
+														</a>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+	</section>
+	</div>
+	</main>
+	</div>
+	</div>
+	</div>
+	</section>
 </body>
+
 </html>

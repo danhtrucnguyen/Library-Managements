@@ -73,6 +73,9 @@ public class HomeController {
 	
 	@Autowired
     private FeedbackService feedbackService;
+	
+	@Autowired
+    private BlogPostService blogPostService;
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m,
@@ -94,6 +97,11 @@ public class HomeController {
 		
 		List<Book> allActivebook = bookService.getAllActiveBooks( category, publisher);
 		m.addAttribute("books", allActivebook);
+		
+		m.addAttribute("feedbacks", feedbackService.getAllFeedbacks());
+		
+		List<BlogPost> allActivePost = blogPostService.getAllPosts();
+		m.addAttribute("posts", allActivePost);
 
 	}
 
@@ -104,7 +112,6 @@ public class HomeController {
 	
 	@GetMapping("/")
 	public String index(Model m) {
-		 m.addAttribute("feedbacks", feedbackService.getAllFeedbacks());
 		return "index";
 	}
 

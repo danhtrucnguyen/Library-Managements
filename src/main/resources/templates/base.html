@@ -16,8 +16,10 @@
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
 	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
+	   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+	   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap" rel="stylesheet">
+	   <link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;600&display=swap" rel="stylesheet">
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -514,6 +516,61 @@
 	</header>
 
 	<div th:replace="${content}"></div>
+	
+	<section id="customers-reviews" class="position-relative padding-large"
+			style="background-image: url(/images/banner-image-bg.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 600px;">
+			<div class="container offset-md-3 col-md-6 ">
+				<div class="position-absolute top-50 end-0 pe-0 pe-xxl-5 me-0 me-xxl-5 swiper-next testimonial-button-next">
+					<svg class="chevron-forward-circle d-flex justify-content-center align-items-center p-2" width="80"
+						height="80">
+						<use xlink:href="#alt-arrow-right-outline"></use>
+					</svg>
+				</div>
+				<div
+					class="position-absolute top-50 start-0 ps-0 ps-xxl-5 ms-0 ms-xxl-5 swiper-prev testimonial-button-prev">
+					<svg class="chevron-back-circle d-flex justify-content-center align-items-center p-2" width="80"
+						height="80">
+						<use xlink:href="#alt-arrow-left-outline"></use>
+					</svg>
+				</div>
+				<div class="section-title mb-4 text-center">
+					<h3 class="mb-4">Nhận xét của độc giả</h3>
+				</div>
+				<div class="swiper testimonial-swiper ">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide" th:each="feedback : ${feedbacks}">
+							<div class="card position-relative text-left p-5 border rounded-3">
+								<blockquote>"[[${feedback.content}]]"</blockquote>
+
+								<h5 class="mt-1 fw-normal">[[${feedback.name}]]</h5>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</section>
+		
+		<section id="latest-posts" class="padding-large">
+				<div class="container">
+					<div class="section-title d-md-flex justify-content-between align-items-center mb-4">
+						<h3 class="d-flex align-items-center">Bài viết mới nhất</h3>
+						<a href="index.html" class="btn">Xem tất cả</a>
+					</div>
+					<div class="row">
+						<div class="col-md-3 posts mb-4" th:each="post, iterStat : ${posts}" th:if="${iterStat.index < 4}">
+							<img th:src="@{'/images/blog_img/'+${post.image}}" style="padding-bottom: 10px; height: 250px; width: 100%;" alt="post image" class="img-fluid rounded-3">
+							<span>[[${post.formattedCreatedAt}]]</span>
+							<h4 class="card-title mb-2 text-capitalize text-dark" style="padding-top: 10px;"><a th:href="@{'/blog_list/' + ${post.id}}">[[${post.title}]]</a></h4>
+							<p class="mb-2">Dive into the world of cutting-edge technology with our latest blog post, where we
+								highlight
+								five essential gadge. <span><a class="text-decoration-underline text-black-50"
+										href="index.html">Đọc thêm</a></span>
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
 
 	<footer id="footer" class="padding-large" style=" background-color: lightgray;">
 		<div class="container">
@@ -779,6 +836,60 @@
 				stars.forEach(s => s.classList.remove('hover'));  // Loại bỏ hiệu ứng hover khi chuột rời khỏi sao
 			});
 		});
+		
+		document.addEventListener("DOMContentLoaded", function() {
+		    // Lấy tất cả các phần tử giá giảm và giá gốc
+		    const discountPrices = document.querySelectorAll('.price');
+		    const originalPrices = document.querySelectorAll('.price + del');
+
+		    // Hàm để định dạng số với dấu phân cách hàng nghìn
+		    function formatNumber(number) {
+		        return number.toLocaleString('vi-VN');
+		    }
+
+		    // Áp dụng định dạng cho tất cả các phần tử giá giảm
+		    discountPrices.forEach((element) => {
+		        const price = parseInt(element.innerText.replace('đ', '').replace(/\./g, ''), 10);
+		        element.innerText = formatNumber(price) + 'đ';
+		    });
+
+		    // Áp dụng định dạng cho tất cả các phần tử giá gốc
+		    originalPrices.forEach((element) => {
+		        const price = parseInt(element.innerText.replace('đ', '').replace(/\./g, ''), 10);
+		        element.innerText = formatNumber(price) + 'đ';
+		    });
+		});
+		
+		document.addEventListener("DOMContentLoaded", function() {
+		    // Lấy tất cả các phần tử có class 'product-price'
+		    const priceElements = document.querySelectorAll('.product-price');
+
+		    // Hàm để định dạng số với dấu phân cách hàng nghìn
+		    function formatNumber(number) {
+		        return number.toLocaleString('vi-VN');  // Định dạng theo chuẩn Việt Nam
+		    }
+
+		    // Áp dụng định dạng cho tất cả các sản phẩm
+		    priceElements.forEach((element) => {
+		        // Lấy giá giảm giá (discountPrice) và giá gốc (price) từ nội dung
+		        const discountPriceElement = element.querySelector('.text-primary');
+		        const originalPriceElement = element.querySelector('del');
+
+		        // Định dạng giá giảm giá nếu có
+		        if (discountPriceElement) {
+		            const discountPrice = parseInt(discountPriceElement.innerText.replace('đ', '').replace(/\./g, ''), 10);
+		            discountPriceElement.innerText = formatNumber(discountPrice) + 'đ';
+		        }
+
+		        // Định dạng giá gốc nếu có
+		        if (originalPriceElement) {
+		            const originalPrice = parseInt(originalPriceElement.innerText.replace('đ', '').replace(/\./g, ''), 10);
+		            originalPriceElement.innerText = formatNumber(originalPrice) + 'đ';
+		        }
+		    });
+		});
+
+
 	</script>
 
 	<script>
@@ -846,8 +957,8 @@
 		let currentIndex = 0;
 
 		function moveSlide(direction) {
-			const carouselWrapper = document.querySelector('.carousel-wrapper');
-			const totalItems = document.querySelectorAll('.carousel-wrapper .col-md-4').length;
+			const carouselWrapper = document.querySelector('#ctg');
+			const totalItems = document.querySelectorAll('#ctg .ctg').length;
 			const visibleItems = 3; // Số lượng danh mục hiển thị cùng lúc
 
 			currentIndex += direction;
@@ -863,6 +974,27 @@
 			carouselWrapper.style.transform = 'translateX(' + newTransform + ')';
 		}
 	</script>
+	<script>
+			let pcurrentIndex = 0;
+
+			function moveSlide2(direction) {
+				const carouselWrapper = document.querySelector('#pls');
+				const totalItems = document.querySelectorAll('#pls .pls').length;
+				const visibleItems = 6; // Số lượng danh mục hiển thị cùng lúc
+
+				currentIndex += direction;
+
+				// Đảm bảo currentIndex không vượt quá giới hạn
+				if (currentIndex < 0) {
+					currentIndex = totalItems - visibleItems;
+				} else if (currentIndex > totalItems - visibleItems) {
+					currentIndex = 0;
+				}
+
+				const newTransform = -currentIndex * (100 / visibleItems) + '%';
+				carouselWrapper.style.transform = 'translateX(' + newTransform + ')';
+			}
+		</script>
 
 	<script src="/js/jquery-1.11.0.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

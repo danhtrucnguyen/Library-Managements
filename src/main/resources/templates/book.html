@@ -88,7 +88,11 @@
 											<img th:src="@{${#strings.isEmpty(p.image) ? '/images/default-image.jpg' : (p.image.startsWith('http') ? p.image : '/images/book_img/' + p.image)}}"
 												class="img-fluid shadow-sm" alt="product item" style="height: 250px;">
 
-											<h6 class="mt-4 mb-0 fw-bold"><a
+											<h6 class="mt-4 mb-0 fw-bold" style="												display: inline-block;
+												  width: 175px;
+												  white-space: nowrap;
+												  overflow: hidden;
+												  text-overflow: ellipsis;"><a
 													th:href="@{'/book/'+${p.id}}">[[${p.bookName}]]</a>
 											</h6>
 											<div class="review-content d-flex">
@@ -113,10 +117,9 @@
 
 
 											</div>
-											<div style="padding-top: 10px ;">
-												<span
-													class="price text-primary fw-bold mb-2 fs-5">[[${p.formattedDiscountPrice}]]đ</span>
-												<del style="padding-left: 5px;">[[${p.formattedPrice}]]đ</del>
+											<div style="padding-top: 10px;">
+											    <span class="price text-primary fw-bold mb-2 fs-5" id="discountPrice">[[${p.discountPrice}]]</span>
+											    <del class="fs-6" style="padding-left: 5px;" id="originalPrice">[[${p.price}]]</del>
 											</div>
 											<div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
 												<!--<th:block th:if="${p.stock>0}">
@@ -233,7 +236,7 @@
 									</li>
 								</ul>
 							</div>
-							<div class="widget-product-authur pt-5">
+							<!--<div class="widget-product-authur pt-5">
 								<div class="section-title overflow-hidden mb-2">
 									<h3 class="d-flex flex-column mb-0">authur</h3>
 								</div>
@@ -248,7 +251,7 @@
 										<a href="#">D.K John</a>
 									</li>
 								</ul>
-							</div>
+							</div>-->
 							<div class="widget-price-filter pt-5">
 								<div class="section-title overflow-hidden mb-2">
 									<h3 class="d-flex flex-column mb-0">Lọc theo giá</h3>
