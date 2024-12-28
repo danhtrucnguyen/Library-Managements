@@ -39,34 +39,49 @@
 				<div class="row flex-row-reverse g-md-5">
 					<main class="col-md-9">
 						<div class="filter-shop d-flex flex-wrap justify-content-between mb-5">
-							<div class="showing-product">
+							<!--<div class="showing-product">
 								<p>Hiển thị 1–9 của [[${totalElements}]] kết quả</p>
-							</div>
-							<div class="sort-by">
+							</div>-->
+							<!--<div class="sort-by">
 								<select id="sorting" class="form-select" data-filter-sort="" data-filter-order="">
 									<option value="">Sắp xếp mặc đinh</option>
 									<option value="">Theo tên (A - Z)</option>
 									<option value="">Theo tên (Z - A)</option>
 								</select>
-							</div>
+							</div>-->
 						</div>
-						<div class="row product-content product-store">
+						<div class="row post-contents">
+							<th:block th:if="${posts != null and !posts.isEmpty()}">
+						             <div class="col-lg-4 col-md-6 posts mb-5"th:each="post : ${posts}">
+						               <img th:src="@{'/images/blog_img/'+${post.image}}" alt="post image" class="img-fluid rounded-3" style="padding-bottom: 20px; height: 250px; width: 100%;">
+						               <!--<a href="blog.html" class="fs-6 text-primary">Books</a>-->
+						               <h4 class="card-title mb-2 text-capitalize text-dark"><a th:href="@{'/blog_list/' + ${post.id}}">[[${post.title}]]</a></h4>
+						              
+						             </div>
+							</th:block>
+							<th:block th:unless="${posts != null and !posts.isEmpty()}">
+															<p class="fs-4 text-center mt-4 text-danger">Hiện chưa có bài viết nào</p>
+														</th:block>
+						</div>
+						             
+						             
+						<!--<div class="row product-content product-store">
 							<th:block th:if="${posts != null and !posts.isEmpty()}">
 
 								<div class="col-lg-3 col-md-4 mb-4" th:each="post : ${posts}">
 									<div class="card position-relative p-4 border rounded-3">
-										<!-- Hiển thị ảnh -->
-										<img th:src="@{${#strings.isEmpty(post.imageUrl) ? '/images/default-image.jpg' : post.imageUrl}}"
+										
+										<img th:src="@{'/images/blog_img/'+${post.image}}"
 											class="img-fluid shadow-sm" alt="Blog Image">
 
-										<!-- Tiêu đề bài viết -->
+										
 										<h6 class="mt-4 mb-0 fw-bold">
-											<a th:href="@{'/blog-posts/' + ${post.id}}" th:text="${post.title}">Blog
+											<a th:href="@{'/blog_list/' + ${post.id}}" th:text="${post.title}">Blog
 												Title</a>
 										</h6>
 
-										<!-- Nút xem chi tiết -->
-										<a th:href="@{'/blog-posts/' + ${post.id}}" class="btn btn-primary mt-3">Xem
+										
+										<a th:href="@{'/blog_list/' + ${post.id}}" class="btn btn-primary mt-3">Xem
 											thêm</a>
 									</div>
 								</div>
@@ -74,7 +89,7 @@
 							<th:block th:unless="${posts != null and !posts.isEmpty()}">
 								<p class="fs-4 text-center mt-4 text-danger">Hiện chưa có bài viết nào</p>
 							</th:block>
-						</div>
+						</div>-->
 
 						<nav class="py-5" aria-label="Page navigation">
 							<ul class="pagination justify-content-center gap-4">
@@ -108,19 +123,7 @@
 								</div>
 							</div>
 							<div class="widget-product-categories pt-5">
-								<div class="section-title overflow-hidden mb-2">
-									<h3 class="d-flex flex-column mb-0">Danh mục</h3>
-								</div>
-								<ul class="product-categories mb-0 sidebar-list list-unstyled">
-									<li class="cat-item">
-										<a href="#" th:classappend="${paramValue==''} ? 'active':''">Tất cả</a>
-									</li>
-									<li class="cat-item">
-										<a th:each="c:${categories}" th:href="@{'/books?category='+${c.name}}"
-											th:classappend="${paramValue == c.name} ? 'active':''" style="									display: block;  /* Đảm bảo mỗi <a> chiếm toàn bộ dòng */
-    									    ">[[${c.name}]]</a>
-									</li>
-								</ul>
+								<img src="/images/banner-row.jpg" style="width: 100%; height: 500px;">
 							</div>
 						</div>
 					</aside>

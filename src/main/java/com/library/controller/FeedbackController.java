@@ -38,4 +38,5 @@ public class FeedbackController {
         model.addAttribute("feedbacks", feedbackService.getAllFeedbacks());
         return "/admin/feedback_list";
     }
+    
 }

@@ -41,7 +41,7 @@
 					<div class="col-md-4" th:each="c:${categorys}">
 						<div class="card mb-4 border-0 rounded-3 position-relative" >
 							<a href="index.html">
-								<img th:src="@{'images/category_img/'+${c.imageName}}" class="img-fluid rounded-3" alt="cart item">
+								<img th:src="@{'images/category_img/'+${c.imageName}}" class="img-fluid rounded-3" style="height: 250px;" alt="cart item">
 								<h6 class=" position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3"><a
 										th:href="@{'/books?category='+${c.name}}" class="text-white">[[${c.name}]]</a></h6>
 							</a>

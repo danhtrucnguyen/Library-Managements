@@ -74,10 +74,10 @@
 								<td >
 									<th:block th:if="${o.status!='Đã hủy'}">
 										<a th:href="@{'/user/update-status?id='+${o.id}+'&st=6' }"
-											class="btn btn-sm btn-danger">Hủy đơn</a>
+											class="btn btn-sm btn-danger" style="padding-left: 40px;">Hủy đơn</a>
 									</th:block>
 									<th:block th:unless="${o.status!='Đã hủy'}">
-										<a href="#" class="btn btn-sm btn-danger disabled">Hủy đơn</a>
+										<a href="#" class="btn btn-sm btn-danger disabled"  >Hủy đơn</a>
 									</th:block>
 								</td>
 							</tr>

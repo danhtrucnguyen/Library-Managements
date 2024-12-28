@@ -10,12 +10,23 @@ import com.library.repository.BlogPostRepository;
 import com.library.repository.UserRepository;
 import com.library.service.BlogPostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -29,68 +40,75 @@ public class BlogPostServiceImpl implements BlogPostService {
     @Autowired
     private UserRepository userRepository;
 
+    @Override
+	public List<BlogPost> getAllPosts() {
+		return blogPostRepository.findAll(Sort.by(Sort.Order.desc("id")));
+	}
 
     @Override
-    public BlogPost createPost(BlogPost blogPost) {
-        blogPost.setCreatedAt(LocalDateTime.now());
-        blogPost.setUpdatedAt(LocalDateTime.now());
-        return blogPostRepository.save(blogPost);
-    }
+	public BlogPost saveBlogPost(BlogPost blog) {
+		return blogPostRepository.save(blog);
+	}
 
     @Override
-    public BlogPost updatePost(Long id, BlogPost updatedBlogPost) {
-        BlogPost existingPost = blogPostRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
-
-        existingPost.setTitle(updatedBlogPost.getTitle());
-        existingPost.setPcontent(updatedBlogPost.getPcontent());
-        existingPost.setImageUrl(updatedBlogPost.getImageUrl());
-        existingPost.setUpdatedAt(LocalDateTime.now());
-
-        return blogPostRepository.save(existingPost);
-    }
-
-    @Override
-    public void deletePost(Long id) {
-        blogPostRepository.deleteById(id);
-    }
-
-    @Override
-    public List<BlogPost> getAllPosts() {
-        return blogPostRepository.findAll();
-    }
-
-    @Override
-    public BlogPost getPostById(Long id) {
-        return blogPostRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
-    }
-
-//    @Override
-//    public Page<BlogPost> findPaginated(int page, int size) {
-//        Pageable pageable = PageRequest.of(page - 1, size);
-//        return blogPostRepository.findAll(pageable);
-//    }
+	public Page<BlogPost> getAllBlogPostPagination(Integer pageNo, Integer pageSize) {
+		Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Order.desc("createdAt")));
+		return blogPostRepository.findAll(pageable);
+	}
     
     @Override
-    public Page<BlogPost> findPaginated(Integer pageNo, Integer pageSize) {
-    	  Pageable pageable = PageRequest.of(pageNo, pageSize);
-    	  return blogPostRepository.findAll(pageable);
-    }
-
+	public Page<BlogPost> searchBlogPostPagination(Integer pageNo, Integer pageSize, String ch) {
+		Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Order.desc("createdAt")));
+		return blogPostRepository.findByTitle(ch, pageable);
+	}
+    
     @Override
-    public BlogPost createBlogPost(BlogPostDTO blogPostDTO) {
-        Integer authorId = blogPostDTO.getAuthorId();
-        User author = userRepository.findById(authorId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+	public BlogPost getPostById(Long id) {
+		BlogPost blogPost = blogPostRepository.findById(id).orElse(null);
+		return blogPost;
+	}
+    @Override
+    public Boolean deletePost(Long id) {
+		BlogPost blogPost = blogPostRepository.findById(id).orElse(null);
 
-        BlogPost newBlogPost = BlogPost.builder()
-                .title(blogPostDTO.getTitle())
-                .pcontent(blogPostDTO.getPcontent())
-                .imageUrl(blogPostDTO.getImageUrl())
-                .author(author)
-                .createdAt(LocalDateTime.now())
-                .build();
-        return blogPostRepository.save(newBlogPost);
-    }
+		if (!ObjectUtils.isEmpty(blogPost)) {
+			blogPostRepository.delete(blogPost);
+			return true;
+		}
+		return false;
+	}
+    
+    @Override
+	public BlogPost updatePost(BlogPost post, MultipartFile image) {
+
+		BlogPost dbPost = getPostById(post.getId());
+
+		String imageName = image.isEmpty() ? dbPost.getImage() : image.getOriginalFilename();
+		DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		String formattedDateTime = dbPost.getCreatedAt().format(formatters);
+		dbPost.setFormattedCreatedAt(formattedDateTime);
+		dbPost.setTitle(post.getTitle());
+		dbPost.setContents(post.getContents());
+		dbPost.setAuthor(post.getAuthor());
+		dbPost.setImage(imageName);
+		
+
+		BlogPost updatePost = blogPostRepository.save(dbPost);
+
+		if (!ObjectUtils.isEmpty(updatePost)) {
+			if (!image.isEmpty()) {
+				try {
+					File saveFile = new ClassPathResource("static/images").getFile();
+
+					Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "blog_img" + File.separator
+							+ image.getOriginalFilename());
+					Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			return post;
+		}
+		return null;
+	}
 }

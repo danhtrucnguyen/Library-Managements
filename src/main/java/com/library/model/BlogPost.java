@@ -20,16 +20,16 @@ public class BlogPost {
 
     private String title;
 
-    @Column(columnDefinition = "TEXT")
-    private String pcontent;
+    @Column(columnDefinition = "TEXT") 
+    private String contents;
 
-    private String imageUrl;
-
-    @ManyToOne
-    @JoinColumn(name = "author_id", nullable = false)
-    private User author;
+    private String image;
+    
+    private String author;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+    
+    private String formattedCreatedAt;
 }

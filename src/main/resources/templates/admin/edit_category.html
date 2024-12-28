@@ -21,7 +21,7 @@
 				<div class="col-md-3 offset-md-5">
 					<div class="card card-sh">
 						<div class="card-header text-center ">
-							<p class="fs-4">Chỉnh sửa danh mục Sách</p>
+							<p class="fs-4" style="color: black;">Chỉnh sửa danh mục Sách</p>
 							<th:block th:if="${session.succMsg}">
 								<p class="text-success fw-bold">[[${session.succMsg}]]</p>
 								<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
@@ -35,7 +35,7 @@
 						</div>
 						<div class="card-body">
 							<form action="/admin/updateCategory" method="post"
-								enctype="multipart/form-data">
+								enctype="multipart/form-data" style="color: black;">
 								<input type="hidden" name="id" th:value="${category.id}">
 								<div class="mb-3">
 									<label>Nhập danh mục</label> <input type="text" name="name"
@@ -66,7 +66,7 @@
 									<label>Tải ảnh lên</label> <input type="file" name="file"
 										class="form-control">
 								</div>
-								<img th:src="@{'/img/category_images/'+${category.imageName}}"
+								<img th:src="@{'/images/category_img/'+${category.imageName}}"
 									width="100px" height="100px">
 								<button class="btn btn-primary col-md-12 mt-2">Chỉnh sửa</button>
 							</form>

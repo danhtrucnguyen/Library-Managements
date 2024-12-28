@@ -19,7 +19,7 @@
 				<div class="col-md-8 offset-md-2">
 					<div class="card card-sh">
 						<div class="card-header text-center ">
-							<p class="fs-4">Chỉnh sửa sách</p>
+							<p class="fs-4" style="color: black;">Chỉnh sửa sách</p>
 							<th:block th:if="${session.succMsg}">
 								<p class="text-success fw-bold">[[${session.succMsg}]]</p>
 								<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
@@ -31,7 +31,7 @@
 							</th:block>
 						</div>
 						<div class="card-body">
-							<form action="/admin/updateBook" method="post" enctype="multipart/form-data">
+							<form action="/admin/updateBook" method="post" enctype="multipart/form-data" style="color: black;">
 								<input type="hidden" name="id" th:value="${book.id}">
 								<div class="mb-3">
 									<label>Tên sách</label> <input type="text" name="bookName"
@@ -45,8 +45,9 @@
 
 								<div class="mb-3">
 									<label>Miêu tả sách</label>
-									<textarea rows="3" cols="" class="form-control"
-										name="description">[[${book.description}]]</textarea>
+									<!--<textarea rows="3" cols="" class="form-control"
+										name="description">[[${book.description}]]</textarea>-->
+										<textarea name="description" id="description" rows="10" cols="80">[[${book.description}]]</textarea>
 								</div>
 								<div class="row">
 									<div class="mb-3 col">
